@@ -36,6 +36,7 @@ class CalendarRepository(context: Context, account: Account) {
     ).setApplicationName("GCal Search & Add").build()
 
     private val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+    private val dateFormat = SimpleDateFormat("dd/MM", Locale.getDefault())
 
     /**
      * DateTime של Google API לא מקבל (Long, TimeZone) ישירות - צריך Date+TimeZone.
@@ -110,15 +111,15 @@ class CalendarRepository(context: Context, account: Account) {
     }
 
     private fun toEventItem(event: Event): EventItem {
-        val start = event.start?.dateTime ?: event.start?.date
-        val end = event.end?.dateTime ?: event.end?.date
+        val startMillisValue = event.start?.dateTime?.value ?: event.start?.date?.value
+        val dateStr = if (startMillisValue != null) dateFormat.format(java.util.Date(startMillisValue)) else ""
 
         val timeRange = if (event.start?.dateTime != null && event.end?.dateTime != null) {
             val startStr = timeFormat.format(java.util.Date(event.start.dateTime.value))
             val endStr = timeFormat.format(java.util.Date(event.end.dateTime.value))
-            "$startStr - $endStr"
+            "$dateStr  •  $startStr-$endStr"
         } else {
-            "כל היום"
+            "$dateStr  •  כל היום"
         }
 
         return EventItem(
