@@ -2,8 +2,8 @@ package com.magic3d.gcalsearchadd
 
 import android.accounts.Account
 import android.content.Context
-import com.google.api.client.extensions.android.http.AndroidHttp
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
+import com.google.api.client.http.javanet.NetHttpTransport
 import com.google.api.client.json.gson.GsonFactory
 import com.google.api.client.util.DateTime
 import com.google.api.services.calendar.Calendar
@@ -30,7 +30,7 @@ class CalendarRepository(context: Context, account: Account) {
         }
 
     private val service: Calendar = Calendar.Builder(
-        AndroidHttp.newCompatibleTransport(),
+        NetHttpTransport(),
         GsonFactory.getDefaultInstance(),
         credential
     ).setApplicationName("GCal Search & Add").build()
