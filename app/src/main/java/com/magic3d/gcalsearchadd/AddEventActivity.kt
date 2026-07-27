@@ -1,8 +1,6 @@
 package com.magic3d.gcalsearchadd
 
 import android.app.Activity
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -13,7 +11,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar as JavaCalendar
@@ -116,45 +118,50 @@ class AddEventActivity : AppCompatActivity() {
     }
 
     private fun pickDate() {
-        val cal = JavaCalendar.getInstance().apply { timeInMillis = dateMillis }
-        DatePickerDialog(
-            this,
-            R.style.NeonPickerDialog,
-            { _, year, month, day ->
-                val picked = JavaCalendar.getInstance()
-                picked.set(year, month, day, 0, 0, 0)
-                picked.set(JavaCalendar.MILLISECOND, 0)
-                dateMillis = picked.timeInMillis
-                tvDatePicker.text = displayDateFormat.format(dateMillis)
-                loadExistingEventsForDate()
-            },
-            cal.get(JavaCalendar.YEAR),
-            cal.get(JavaCalendar.MONTH),
-            cal.get(JavaCalendar.DAY_OF_MONTH)
-        ).show()
+        val picker = MaterialDatePicker.Builder.datePicker()
+            .setTheme(R.style.ThemeOverlay_App_DatePicker)
+            .setSelection(MainActivity.localStartOfDayToUtcMillis(dateMillis))
+            .setCalendarConstraints(CalendarConstraints.Builder().build())
+            .build()
+
+        picker.addOnPositiveButtonClickListener { utcMillis ->
+            dateMillis = MainActivity.utcMidnightToLocalStartOfDay(utcMillis)
+            tvDatePicker.text = displayDateFormat.format(dateMillis)
+            loadExistingEventsForDate()
+        }
+
+        picker.show(supportFragmentManager, "date_picker")
     }
 
     private fun pickTime(isStart: Boolean) {
         val defaultHour = if (isStart) 14 else 23
         val defaultMinute = if (isStart) 0 else 59
-        TimePickerDialog(
-            this,
-            R.style.NeonPickerDialog,
-            { _, hour, minute ->
-                if (isStart) {
-                    startHour = hour
-                    startMinute = minute
-                    tvStartTimePicker.text = String.format(Locale.getDefault(), "%02d:%02d", hour, minute)
-                } else {
-                    endHour = hour
-                    endMinute = minute
-                    tvEndTimePicker.text = String.format(Locale.getDefault(), "%02d:%02d", hour, minute)
-                }
-            },
-            defaultHour,
-            defaultMinute,
-            true
-        ).show()
+        val currentHour = if (isStart) (startHour ?: defaultHour) else (endHour ?: defaultHour)
+        val currentMinute = if (isStart) (startMinute ?: defaultMinute) else (endMinute ?: defaultMinute)
+
+        val picker = MaterialTimePicker.Builder()
+            .setTimeFormat(TimeFormat.CLOCK_24H)
+            .setHour(currentHour)
+            .setMinute(currentMinute)
+            .setTheme(R.style.ThemeOverlay_App_TimePicker)
+            .setTitleText(if (isStart) getString(R.string.event_start_hint) else getString(R.string.event_end_hint))
+            .build()
+
+        picker.addOnPositiveButtonClickListener {
+            val hour = picker.hour
+            val minute = picker.minute
+            if (isStart) {
+                startHour = hour
+                startMinute = minute
+                tvStartTimePicker.text = String.format(Locale.getDefault(), "%02d:%02d", hour, minute)
+            } else {
+                endHour = hour
+                endMinute = minute
+                tvEndTimePicker.text = String.format(Locale.getDefault(), "%02d:%02d", hour, minute)
+            }
+        }
+
+        picker.show(supportFragmentManager, "time_picker")
     }
 
     private fun saveEvent() {

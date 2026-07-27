@@ -25,4 +25,21 @@
         <item name="android:textColor">@color/neon_cyan</item>
         <item name="android:textAllCaps">false</item>
     </style>
+
+    <!-- עיצוב אמיתי, לא תלוי-יצרן, לבורר תאריך/שעה - זהה בכל מכשיר -->
+    <style name="ThemeOverlay.App.DatePicker" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
+        <item name="colorPrimary">@color/neon_cyan</item>
+        <item name="colorOnPrimary">@color/bg_deep</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        <item name="android:colorBackground">@color/bg_deep</item>
+    </style>
+
+    <style name="ThemeOverlay.App.TimePicker" parent="ThemeOverlay.MaterialComponents.TimePicker">
+        <item name="colorPrimary">@color/neon_cyan</item>
+        <item name="colorOnPrimary">@color/bg_deep</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        <item name="android:colorBackground">@color/bg_deep</item>
+    </style>
 </resources>

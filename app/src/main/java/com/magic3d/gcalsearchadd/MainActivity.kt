@@ -1,7 +1,6 @@
 package com.magic3d.gcalsearchadd
 
 import android.app.Activity
-import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -15,11 +14,14 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.api.services.calendar.CalendarScopes
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar as JavaCalendar
 import java.util.Locale
+import java.util.TimeZone
 
 class MainActivity : AppCompatActivity() {
 
@@ -153,22 +155,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showDatePicker() {
-        val cal = JavaCalendar.getInstance().apply { timeInMillis = selectedDayStartMillis }
-        DatePickerDialog(
-            this,
-            R.style.NeonPickerDialog,
-            { _, year, month, dayOfMonth ->
-                val picked = JavaCalendar.getInstance()
-                picked.set(year, month, dayOfMonth, 0, 0, 0)
-                picked.set(JavaCalendar.MILLISECOND, 0)
-                selectedDayStartMillis = picked.timeInMillis
-                etSearch.setText(displayDateFormat.format(selectedDayStartMillis))
-                loadEventsForSelectedDay()
-            },
-            cal.get(JavaCalendar.YEAR),
-            cal.get(JavaCalendar.MONTH),
-            cal.get(JavaCalendar.DAY_OF_MONTH)
-        ).show()
+        val picker = MaterialDatePicker.Builder.datePicker()
+            .setTheme(R.style.ThemeOverlay_App_DatePicker)
+            .setSelection(localStartOfDayToUtcMillis(selectedDayStartMillis))
+            .setCalendarConstraints(CalendarConstraints.Builder().build())
+            .build()
+
+        picker.addOnPositiveButtonClickListener { utcMillis ->
+            selectedDayStartMillis = utcMidnightToLocalStartOfDay(utcMillis)
+            etSearch.setText(displayDateFormat.format(selectedDayStartMillis))
+            loadEventsForSelectedDay()
+        }
+
+        picker.show(supportFragmentManager, "date_picker")
     }
 
     /**
@@ -259,6 +258,36 @@ class MainActivity : AppCompatActivity() {
                 set(JavaCalendar.MILLISECOND, 0)
             }
             return cal.timeInMillis
+        }
+
+        /**
+         * MaterialDatePicker עובד תמיד ב-UTC. הפונקציות הבאות ממירות בין "תחילת יום מקומי"
+         * (המשמש בכל שאר האפליקציה) ל"חצות UTC" של אותו תאריך קלנדרי (המשמש רק לתקשורת עם הבורר).
+         */
+        fun localStartOfDayToUtcMillis(localMillis: Long): Long {
+            val local = JavaCalendar.getInstance().apply { timeInMillis = localMillis }
+            val utc = JavaCalendar.getInstance(TimeZone.getTimeZone("UTC"))
+            utc.clear()
+            utc.set(
+                local.get(JavaCalendar.YEAR),
+                local.get(JavaCalendar.MONTH),
+                local.get(JavaCalendar.DAY_OF_MONTH),
+                0, 0, 0
+            )
+            return utc.timeInMillis
+        }
+
+        fun utcMidnightToLocalStartOfDay(utcMillis: Long): Long {
+            val utc = JavaCalendar.getInstance(TimeZone.getTimeZone("UTC")).apply { timeInMillis = utcMillis }
+            val local = JavaCalendar.getInstance()
+            local.set(
+                utc.get(JavaCalendar.YEAR),
+                utc.get(JavaCalendar.MONTH),
+                utc.get(JavaCalendar.DAY_OF_MONTH),
+                0, 0, 0
+            )
+            local.set(JavaCalendar.MILLISECOND, 0)
+            return local.timeInMillis
         }
     }
 }
