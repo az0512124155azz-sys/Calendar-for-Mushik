@@ -156,6 +156,7 @@ class MainActivity : AppCompatActivity() {
         val cal = JavaCalendar.getInstance().apply { timeInMillis = selectedDayStartMillis }
         DatePickerDialog(
             this,
+            R.style.NeonPickerDialog,
             { _, year, month, dayOfMonth ->
                 val picked = JavaCalendar.getInstance()
                 picked.set(year, month, dayOfMonth, 0, 0, 0)

@@ -119,6 +119,7 @@ class AddEventActivity : AppCompatActivity() {
         val cal = JavaCalendar.getInstance().apply { timeInMillis = dateMillis }
         DatePickerDialog(
             this,
+            R.style.NeonPickerDialog,
             { _, year, month, day ->
                 val picked = JavaCalendar.getInstance()
                 picked.set(year, month, day, 0, 0, 0)
@@ -138,6 +139,7 @@ class AddEventActivity : AppCompatActivity() {
         val defaultMinute = if (isStart) 0 else 59
         TimePickerDialog(
             this,
+            R.style.NeonPickerDialog,
             { _, hour, minute ->
                 if (isStart) {
                     startHour = hour
