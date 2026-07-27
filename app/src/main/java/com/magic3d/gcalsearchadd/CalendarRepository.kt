@@ -38,12 +38,18 @@ class CalendarRepository(context: Context, account: Account) {
     private val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
 
     /**
+     * DateTime של Google API לא מקבל (Long, TimeZone) ישירות - צריך Date+TimeZone.
+     */
+    private fun dateTimeFor(millis: Long, tz: TimeZone): DateTime =
+        DateTime(java.util.Date(millis), tz)
+
+    /**
      * שולף את כל האירועים ליום נתון (מ-00:00 עד 23:59:59 של אותו יום, לפי אזור הזמן של המכשיר).
      */
     suspend fun getEventsForDate(dateMillisStartOfDay: Long): List<EventItem> = withContext(Dispatchers.IO) {
         val tz = TimeZone.getDefault()
-        val timeMin = DateTime(dateMillisStartOfDay, tz)
-        val timeMax = DateTime(dateMillisStartOfDay + 24L * 60 * 60 * 1000 - 1000, tz)
+        val timeMin = dateTimeFor(dateMillisStartOfDay, tz)
+        val timeMax = dateTimeFor(dateMillisStartOfDay + 24L * 60 * 60 * 1000 - 1000, tz)
 
         val events: List<Event> = service.events().list("primary")
             .setTimeMin(timeMin)
@@ -95,8 +101,8 @@ class CalendarRepository(context: Context, account: Account) {
 
         val event = Event().apply {
             summary = title
-            start = EventDateTime().setDateTime(DateTime(startMillis, tz)).setTimeZone(tz.id)
-            end = EventDateTime().setDateTime(DateTime(endMillis, tz)).setTimeZone(tz.id)
+            start = EventDateTime().setDateTime(dateTimeFor(startMillis, tz)).setTimeZone(tz.id)
+            end = EventDateTime().setDateTime(dateTimeFor(endMillis, tz)).setTimeZone(tz.id)
         }
 
         // POST -> calendars/primary/events, כפי שמופיע במסמך האיפיון
