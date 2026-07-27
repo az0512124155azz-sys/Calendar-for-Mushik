@@ -13,5 +13,7 @@
     <string name="cancel">ביטול</string>
     <string name="saving_event">שומר אירוע…</string>
     <string name="event_saved">האירוע נשמר ביומן בהצלחה</string>
+    <string name="existing_events_label">אירועים קיימים ביום זה:</string>
+    <string name="no_existing_events">אין אירועים אחרים ביום זה</string>
     <string name="error_generic">שגיאה: %1$s</string>
 </resources>

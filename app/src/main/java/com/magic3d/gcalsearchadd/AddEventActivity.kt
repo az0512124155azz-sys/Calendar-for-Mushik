@@ -5,10 +5,13 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.launch
@@ -19,6 +22,7 @@ import java.util.Locale
 /**
  * מסך הוספת אירוע חדש.
  * לפי מסמך האיפיון: אם המשתמש לא בוחר שעות, ברירת המחדל היא 14:00 - 23:59.
+ * בנוסף: בכל פעם שנבחר תאריך, מוצגים כל האירועים הקיימים באותו יום כדי שהמשתמש יראה את הלו"ז לפני שהוא מוסיף אירוע חדש.
  */
 class AddEventActivity : AppCompatActivity() {
 
@@ -26,6 +30,12 @@ class AddEventActivity : AppCompatActivity() {
     private lateinit var tvDatePicker: TextView
     private lateinit var tvStartTimePicker: TextView
     private lateinit var tvEndTimePicker: TextView
+    private lateinit var tvExistingEventsLabel: TextView
+    private lateinit var progressExistingEvents: ProgressBar
+    private lateinit var rvExistingEvents: androidx.recyclerview.widget.RecyclerView
+    private lateinit var existingEventsAdapter: EventAdapter
+
+    private var repository: CalendarRepository? = null
 
     private var dateMillis: Long = MainActivity.startOfDay(System.currentTimeMillis())
     private var startHour: Int? = null
@@ -45,6 +55,18 @@ class AddEventActivity : AppCompatActivity() {
         tvDatePicker = findViewById(R.id.tvDatePicker)
         tvStartTimePicker = findViewById(R.id.tvStartTimePicker)
         tvEndTimePicker = findViewById(R.id.tvEndTimePicker)
+        tvExistingEventsLabel = findViewById(R.id.tvExistingEventsLabel)
+        progressExistingEvents = findViewById(R.id.progressExistingEvents)
+        rvExistingEvents = findViewById(R.id.rvExistingEvents)
+
+        existingEventsAdapter = EventAdapter(emptyList())
+        rvExistingEvents.layoutManager = LinearLayoutManager(this)
+        rvExistingEvents.adapter = existingEventsAdapter
+
+        val account = GoogleSignIn.getLastSignedInAccount(this)?.account
+        if (account != null) {
+            repository = CalendarRepository(this, account)
+        }
 
         tvDatePicker.text = displayDateFormat.format(dateMillis)
 
@@ -54,6 +76,43 @@ class AddEventActivity : AppCompatActivity() {
 
         findViewById<android.view.View>(R.id.btnCancel).setOnClickListener { finish() }
         findViewById<android.view.View>(R.id.btnSave).setOnClickListener { saveEvent() }
+
+        // מציג מיד את האירועים הקיימים בתאריך שהגיע מהמסך הראשי
+        loadExistingEventsForDate()
+    }
+
+    /**
+     * שולף מגוגל קלנדר את כל האירועים שכבר קיימים בתאריך הנבחר ומציג אותם מעל טופס ההוספה,
+     * כדי שהמשתמש יראה את הלו"ז הקיים לפני שהוא מוסיף אירוע נוסף לאותו יום.
+     */
+    private fun loadExistingEventsForDate() {
+        val repo = repository
+        if (repo == null) {
+            tvExistingEventsLabel.visibility = View.GONE
+            rvExistingEvents.visibility = View.GONE
+            return
+        }
+
+        tvExistingEventsLabel.visibility = View.VISIBLE
+        progressExistingEvents.visibility = View.VISIBLE
+        rvExistingEvents.visibility = View.GONE
+
+        lifecycleScope.launch {
+            try {
+                val events = repo.getEventsForDate(dateMillis)
+                existingEventsAdapter.updateItems(events)
+                rvExistingEvents.visibility = if (events.isEmpty()) View.GONE else View.VISIBLE
+                tvExistingEventsLabel.text = if (events.isEmpty()) {
+                    getString(R.string.no_existing_events)
+                } else {
+                    getString(R.string.existing_events_label)
+                }
+            } catch (e: Exception) {
+                tvExistingEventsLabel.text = getString(R.string.error_generic, e.message ?: "")
+            } finally {
+                progressExistingEvents.visibility = View.GONE
+            }
+        }
     }
 
     private fun pickDate() {
@@ -66,6 +125,7 @@ class AddEventActivity : AppCompatActivity() {
                 picked.set(JavaCalendar.MILLISECOND, 0)
                 dateMillis = picked.timeInMillis
                 tvDatePicker.text = displayDateFormat.format(dateMillis)
+                loadExistingEventsForDate()
             },
             cal.get(JavaCalendar.YEAR),
             cal.get(JavaCalendar.MONTH),
@@ -102,20 +162,18 @@ class AddEventActivity : AppCompatActivity() {
             return
         }
 
-        val account = GoogleSignIn.getLastSignedInAccount(this)?.account
-        if (account == null) {
+        val repo = repository
+        if (repo == null) {
             Toast.makeText(this, "יש להתחבר מחדש ל-Google", Toast.LENGTH_LONG).show()
             return
         }
-
-        val repository = CalendarRepository(this, account)
 
         Toast.makeText(this, getString(R.string.saving_event), Toast.LENGTH_SHORT).show()
 
         lifecycleScope.launch {
             try {
                 // אם לא נבחרו שעות, insertEvent יחיל אוטומטית את ברירת המחדל 14:00-23:59
-                repository.insertEvent(
+                repo.insertEvent(
                     title = title,
                     dateMillisStartOfDay = dateMillis,
                     startHour = startHour,
