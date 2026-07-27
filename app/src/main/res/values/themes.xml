@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="Theme.GCalSearchAdd" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/google_blue</item>
-        <item name="colorPrimaryDark">@color/google_blue_dark</item>
-        <item name="colorAccent">@color/google_blue_dark</item>
-        <item name="android:windowBackground">@color/light_gray</item>
+        <item name="colorPrimary">@color/gradient_start</item>
+        <item name="colorPrimaryDark">@color/gradient_start</item>
+        <item name="colorAccent">@color/fab_color</item>
+        <item name="android:windowBackground">@color/app_background</item>
+        <item name="android:statusBarColor">@color/gradient_start</item>
     </style>
 </resources>

@@ -1,23 +1,36 @@
 package com.magic3d.gcalsearchadd
 
+import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.magic3d.gcalsearchadd.model.EventItem
 
 /**
- * אדפטר פשוט להצגת רשימת האירועים בכרטיסיות בסגנון Google Calendar.
+ * אדפטר פשוט להצגת רשימת האירועים בכרטיסיות צבעוניות עם צבע מתחלף לכל אירוע.
  */
 class EventAdapter(private var items: List<EventItem>) :
     RecyclerView.Adapter<EventAdapter.EventViewHolder>() {
 
     inner class EventViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val colorBar: View = view.findViewById(R.id.colorBar)
         val title: TextView = view.findViewById(R.id.tvEventTitle)
         val time: TextView = view.findViewById(R.id.tvEventTime)
         val location: TextView = view.findViewById(R.id.tvEventLocation)
     }
+
+    private val accentColorResIds = listOf(
+        R.color.accent_coral,
+        R.color.accent_orange,
+        R.color.accent_yellow,
+        R.color.accent_green,
+        R.color.accent_teal,
+        R.color.accent_blue,
+        R.color.accent_purple
+    )
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_event, parent, false)
@@ -26,10 +39,22 @@ class EventAdapter(private var items: List<EventItem>) :
 
     override fun onBindViewHolder(holder: EventViewHolder, position: Int) {
         val item = items[position]
+        val context = holder.itemView.context
+        val accentColor = ContextCompat.getColor(context, accentColorResIds[position % accentColorResIds.size])
+
         holder.title.text = item.title
         holder.time.text = item.timeRange
+        holder.time.setTextColor(accentColor)
+
+        val barShape = GradientDrawable().apply {
+            shape = GradientDrawable.RECTANGLE
+            cornerRadius = 6f
+            setColor(accentColor)
+        }
+        holder.colorBar.background = barShape
+
         if (!item.location.isNullOrBlank()) {
-            holder.location.text = item.location
+            holder.location.text = "📍 ${item.location}"
             holder.location.visibility = View.VISIBLE
         } else {
             holder.location.visibility = View.GONE
