@@ -35,6 +35,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:hint="@string/search_hint"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_secondary"
             android:inputType="text"
             android:maxLines="1"
             android:paddingStart="12dp"

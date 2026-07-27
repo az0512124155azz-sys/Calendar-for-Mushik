@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">GCal Search &amp; Add</string>
+    <string name="app_name">FlashCal ⚡</string>
     <string name="sign_in_with_google">התחבר עם Google</string>
-    <string name="search_hint">הזן תאריך (12.04.2026) או מילת מפתח</string>
+    <string name="search_hint">תאריך (12.04.2026) או שם האירוע</string>
     <string name="no_events_found">אין אירועים ביום זה</string>
     <string name="add_event_title">הוספת אירוע חדש</string>
     <string name="event_title_hint">כותרת האירוע</string>
