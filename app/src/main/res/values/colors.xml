@@ -1,31 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- בסיס -->
-    <color name="google_blue">#4285F4</color>
-    <color name="google_blue_dark">#1A73E8</color>
+    <!-- ערכת נושא כהה-עתידנית -->
+    <color name="bg_deep">#0A0E1A</color>
+    <color name="surface">#131A2C</color>
+    <color name="surface_alt">#1B2340</color>
+    <color name="border_neon">#332C5CE0</color>
+
     <color name="white">#FFFFFF</color>
-    <color name="text_primary">#20223B</color>
-    <color name="text_secondary">#6B6F8C</color>
+    <color name="text_primary">#EAF0FF</color>
+    <color name="text_secondary">#7C86A8</color>
 
-    <!-- פלטה חיה חדשה -->
-    <color name="app_background">#F5F6FC</color>
-    <color name="gradient_start">#6C5CE7</color>
-    <color name="gradient_end">#00C2D1</color>
-    <color name="fab_color">#FF6B6B</color>
-    <color name="field_bg">#EEF0FB</color>
-    <color name="pill_bg">#EDEBFC</color>
+    <!-- ניאון -->
+    <color name="neon_cyan">#00E5FF</color>
+    <color name="neon_magenta">#FF2E9F</color>
+    <color name="neon_lime">#C6FF3D</color>
+    <color name="neon_orange">#FF8A3D</color>
+    <color name="neon_violet">#9C6BFF</color>
+    <color name="neon_yellow">#FFD93D</color>
 
-    <!-- צבעי הדגשה לכרטיסיות אירוע (מתחלפים בסבב) -->
-    <color name="accent_coral">#FF6B6B</color>
-    <color name="accent_orange">#FF9F43</color>
-    <color name="accent_yellow">#FFC93C</color>
-    <color name="accent_green">#3DCB7B</color>
-    <color name="accent_teal">#00C2D1</color>
-    <color name="accent_blue">#4D96FF</color>
-    <color name="accent_purple">#9C6BFF</color>
+    <color name="app_background">@color/bg_deep</color>
+    <color name="fab_color">@color/surface</color>
+    <color name="field_bg">@color/surface</color>
+    <color name="pill_bg">@color/surface_alt</color>
 
-    <!-- legacy -->
-    <color name="light_gray">#F5F6FC</color>
-    <color name="event_bar_default">#6C5CE7</color>
-    <color name="ic_launcher_background">#1A73E8</color>
+    <!-- legacy aliases (נשארים כדי לא לשבור קוד קיים) -->
+    <color name="google_blue">@color/neon_cyan</color>
+    <color name="google_blue_dark">@color/neon_cyan</color>
+    <color name="gradient_start">@color/bg_deep</color>
+    <color name="gradient_end">@color/surface</color>
+    <color name="light_gray">@color/bg_deep</color>
+    <color name="event_bar_default">@color/neon_cyan</color>
+    <color name="accent_coral">@color/neon_magenta</color>
+    <color name="accent_orange">@color/neon_orange</color>
+    <color name="accent_yellow">@color/neon_yellow</color>
+    <color name="accent_green">@color/neon_lime</color>
+    <color name="accent_teal">@color/neon_cyan</color>
+    <color name="accent_blue">@color/neon_cyan</color>
+    <color name="accent_purple">@color/neon_violet</color>
+    <color name="ic_launcher_background">@color/bg_deep</color>
 </resources>

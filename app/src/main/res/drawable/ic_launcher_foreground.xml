@@ -1,49 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- לוגו: יומן לבן עם שתי "תפסים" למעלה, שורות תאריכים, ותג פלוס ירוק לציון "הוספת אירוע" -->
+<!-- לוגו עתידני: מסגרת יומן בקו ניאון ציאן, עם זכוכית חיפוש מגנטה חופפת בפינה -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
 
-    <!-- גוף היומן -->
+    <!-- מתאר יומן - קו בלבד, לא מלא, לתחושה טכנולוגית -->
     <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M30,34 L78,34 A6,6 0 0 1 84,40 L84,80 A6,6 0 0 1 78,86 L30,86 A6,6 0 0 1 24,80 L24,40 A6,6 0 0 1 30,34 Z" />
+        android:fillColor="#00000000"
+        android:strokeColor="#00E5FF"
+        android:strokeWidth="3.2"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M32,32 L74,32 A6,6 0 0 1 80,38 L80,76 A6,6 0 0 1 74,82 L32,82 A6,6 0 0 1 26,76 L26,38 A6,6 0 0 1 32,32 Z" />
 
-    <!-- פס עליון כהה יותר (כותרת היומן) -->
+    <!-- קו כותרת פנימי -->
     <path
-        android:fillColor="#E8EEFC"
-        android:pathData="M30,34 L78,34 A6,6 0 0 1 84,40 L84,45 L24,45 L24,40 A6,6 0 0 1 30,34 Z" />
+        android:fillColor="#00000000"
+        android:strokeColor="#00E5FF"
+        android:strokeWidth="2"
+        android:pathData="M26,44 L80,44" />
 
-    <!-- שני תפסי תלייה עליונים -->
-    <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M34,26 h6 v12 h-6 z" />
-    <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M68,26 h6 v12 h-6 z" />
+    <!-- תפסים -->
+    <path android:fillColor="#00000000" android:strokeColor="#00E5FF" android:strokeWidth="3" android:strokeLineCap="round" android:pathData="M38,26 L38,36" />
+    <path android:fillColor="#00000000" android:strokeColor="#00E5FF" android:strokeWidth="3" android:strokeLineCap="round" android:pathData="M68,26 L68,36" />
 
-    <!-- שורות תאריכים בתוך היומן -->
-    <path
-        android:fillColor="#9AB6F5"
-        android:pathData="M32,52 h8 v8 h-8 z" />
-    <path
-        android:fillColor="#9AB6F5"
-        android:pathData="M48,52 h8 v8 h-8 z" />
-    <path
-        android:fillColor="#9AB6F5"
-        android:pathData="M32,68 h8 v8 h-8 z" />
+    <!-- נקודות רשת פנימיות (ימים) -->
+    <path android:fillColor="#00E5FF" android:pathData="M35,54 h6 v6 h-6 z" />
+    <path android:fillColor="#00E5FF33" android:pathData="M47,54 h6 v6 h-6 z" />
+    <path android:fillColor="#00E5FF33" android:pathData="M35,66 h6 v6 h-6 z" />
 
-    <!-- תג פלוס ירוק - הוספת אירוע -->
+    <!-- עדשת חיפוש מגנטה, חופפת פינה -->
     <path
-        android:fillColor="#34A853"
-        android:pathData="M66,82 A14,14 0 1 0 94,82 A14,14 0 1 0 66,82 Z" />
+        android:fillColor="#00000000"
+        android:strokeColor="#FF2E9F"
+        android:strokeWidth="4"
+        android:pathData="M64,64 A11,11 0 1 0 86,64 A11,11 0 1 0 64,64 Z" />
     <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M72,80 h16 v4 h-16 z" />
-    <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M78,74 h4 v16 h-4 z" />
+        android:fillColor="#00000000"
+        android:strokeColor="#FF2E9F"
+        android:strokeWidth="4"
+        android:strokeLineCap="round"
+        android:pathData="M83,81 L91,89" />
 
 </vector>

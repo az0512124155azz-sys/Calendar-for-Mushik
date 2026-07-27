@@ -23,13 +23,12 @@ class EventAdapter(private var items: List<EventItem>) :
     }
 
     private val accentColorResIds = listOf(
-        R.color.accent_coral,
-        R.color.accent_orange,
-        R.color.accent_yellow,
-        R.color.accent_green,
-        R.color.accent_teal,
-        R.color.accent_blue,
-        R.color.accent_purple
+        R.color.neon_cyan,
+        R.color.neon_magenta,
+        R.color.neon_lime,
+        R.color.neon_orange,
+        R.color.neon_violet,
+        R.color.neon_yellow
     )
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventViewHolder {
@@ -54,7 +53,7 @@ class EventAdapter(private var items: List<EventItem>) :
         holder.colorBar.background = barShape
 
         if (!item.location.isNullOrBlank()) {
-            holder.location.text = "📍 ${item.location}"
+            holder.location.text = "— ${item.location}"
             holder.location.visibility = View.VISIBLE
         } else {
             holder.location.visibility = View.GONE
