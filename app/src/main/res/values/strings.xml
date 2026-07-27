@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">GCal Search &amp; Add</string>
+    <string name="sign_in_with_google">התחבר עם Google</string>
+    <string name="search_hint">הזן תאריך (12.04.2026) או מילת מפתח</string>
+    <string name="no_events_found">אין אירועים ביום זה</string>
+    <string name="add_event_title">הוספת אירוע חדש</string>
+    <string name="event_title_hint">כותרת האירוע</string>
+    <string name="event_date_hint">תאריך האירוע</string>
+    <string name="event_start_hint">שעת התחלה (אופציונלי)</string>
+    <string name="event_end_hint">שעת סיום (אופציונלי)</string>
+    <string name="save">שמור</string>
+    <string name="cancel">ביטול</string>
+    <string name="saving_event">שומר אירוע…</string>
+    <string name="event_saved">האירוע נשמר ביומן בהצלחה</string>
+    <string name="error_generic">שגיאה: %1$s</string>
+</resources>

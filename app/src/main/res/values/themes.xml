@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.GCalSearchAdd" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/google_blue</item>
+        <item name="colorPrimaryDark">@color/google_blue_dark</item>
+        <item name="colorAccent">@color/google_blue_dark</item>
+        <item name="android:windowBackground">@color/light_gray</item>
+    </style>
+</resources>
