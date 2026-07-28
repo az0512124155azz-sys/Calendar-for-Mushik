@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/bg_deep"
+    android:background="@drawable/bg_app_background"
     android:padding="20dp">
 
     <TextView
@@ -14,17 +14,17 @@
         android:textSize="20sp"
         android:textStyle="bold"
         android:textColor="@color/text_primary"
-        android:layout_marginBottom="20dp" />
+        android:layout_marginBottom="18dp" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:boxCornerRadiusTopStart="14dp"
-        app:boxCornerRadiusTopEnd="14dp"
-        app:boxCornerRadiusBottomStart="14dp"
-        app:boxCornerRadiusBottomEnd="14dp"
-        app:boxBackgroundColor="@color/surface"
-        app:boxStrokeColor="@color/neon_cyan"
+        app:boxCornerRadiusTopStart="28dp"
+        app:boxCornerRadiusTopEnd="28dp"
+        app:boxCornerRadiusBottomStart="28dp"
+        app:boxCornerRadiusBottomEnd="28dp"
+        app:boxBackgroundColor="@color/glass_card"
+        app:boxStrokeWidth="0dp"
         app:hintTextColor="@color/text_secondary"
         android:textColorHint="@color/text_secondary"
         android:hint="@string/event_title_hint">
@@ -40,50 +40,63 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="14dp"
-        android:padding="14dp"
+        android:padding="16dp"
+        android:gravity="center_vertical"
         android:background="@drawable/bg_rounded_field"
         android:drawableStart="@android:drawable/ic_menu_my_calendar"
         android:drawablePadding="10dp"
-        app:drawableTint="@color/neon_cyan"
+        app:drawableTint="@color/accent_blue"
         android:text="@string/event_date_hint"
         android:textColor="@color/text_primary"
         android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/tvStartTimePicker"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:padding="14dp"
-        android:background="@drawable/bg_rounded_field"
-        android:drawableStart="@android:drawable/ic_menu_recent_history"
-        android:drawablePadding="10dp"
-        app:drawableTint="@color/neon_lime"
-        android:text="@string/event_start_hint"
-        android:textColor="@color/text_primary" />
+        android:orientation="horizontal"
+        android:layout_marginTop="12dp">
 
-    <TextView
-        android:id="@+id/tvEndTimePicker"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:padding="14dp"
-        android:background="@drawable/bg_rounded_field"
-        android:drawableStart="@android:drawable/ic_menu_recent_history"
-        android:drawablePadding="10dp"
-        app:drawableTint="@color/neon_magenta"
-        android:text="@string/event_end_hint"
-        android:textColor="@color/text_primary" />
+        <TextView
+            android:id="@+id/tvStartTimePicker"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="16dp"
+            android:gravity="center_vertical"
+            android:background="@drawable/bg_rounded_field"
+            android:drawableStart="@android:drawable/ic_menu_recent_history"
+            android:drawablePadding="8dp"
+            app:drawableTint="@color/accent_green"
+            android:text="@string/event_start_hint"
+            android:textColor="@color/text_primary"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/tvEndTimePicker"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="10dp"
+            android:padding="16dp"
+            android:gravity="center_vertical"
+            android:background="@drawable/bg_rounded_field"
+            android:drawableStart="@android:drawable/ic_menu_recent_history"
+            android:drawablePadding="8dp"
+            app:drawableTint="@color/accent_red"
+            android:text="@string/event_end_hint"
+            android:textColor="@color/text_primary"
+            android:textSize="13sp" />
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/tvExistingEventsLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="22dp"
+        android:layout_marginTop="20dp"
         android:text="@string/existing_events_label"
         android:textColor="@color/text_secondary"
         android:textSize="13sp"
-        android:letterSpacing="0.03"
         android:visibility="gone" />
 
     <ProgressBar
@@ -91,7 +104,7 @@
         style="?android:attr/progressBarStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:indeterminateTint="@color/neon_cyan"
+        android:indeterminateTint="@color/accent_blue"
         android:layout_marginTop="8dp"
         android:visibility="gone" />
 
@@ -110,7 +123,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginTop="16dp"
-        android:gravity="end">
+        android:gravity="center_vertical|end">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnCancel"
@@ -120,15 +133,23 @@
             android:textColor="@color/text_secondary"
             android:text="@string/cancel" />
 
-        <com.google.android.material.button.MaterialButton
+        <TextView
             android:id="@+id/btnSave"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            app:cornerRadius="8dp"
-            android:backgroundTint="@color/pastel_blue"
-            android:textColor="@color/bg_deep"
-            android:text="@string/save" />
+            android:layout_weight="1"
+            android:layout_marginStart="12dp"
+            android:background="@drawable/bg_save_gradient"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:paddingTop="14dp"
+            android:paddingBottom="14dp"
+            android:text="@string/save"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:textStyle="bold" />
 
     </LinearLayout>
 

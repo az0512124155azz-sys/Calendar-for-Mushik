@@ -25,12 +25,13 @@ class EventAdapter(
     }
 
     private val accentColorResIds = listOf(
-        R.color.neon_cyan,
-        R.color.neon_magenta,
-        R.color.neon_lime,
-        R.color.neon_orange,
-        R.color.neon_violet,
-        R.color.neon_yellow
+        R.color.accent_blue,
+        R.color.accent_red,
+        R.color.accent_green,
+        R.color.accent_orange,
+        R.color.accent_purple,
+        R.color.accent_yellow,
+        R.color.accent_teal
     )
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventViewHolder {
@@ -45,7 +46,14 @@ class EventAdapter(
 
         holder.title.text = item.title
         holder.time.text = if (showDate) "${item.timeLabel}  •  ${item.dateLabel}" else item.timeLabel
-        holder.time.setTextColor(accentColor)
+        holder.time.setTextColor(ContextCompat.getColor(context, R.color.white))
+
+        val pillShape = GradientDrawable().apply {
+            shape = GradientDrawable.RECTANGLE
+            cornerRadius = 200f
+            setColor(accentColor)
+        }
+        holder.time.background = pillShape
 
         val barShape = GradientDrawable().apply {
             shape = GradientDrawable.RECTANGLE

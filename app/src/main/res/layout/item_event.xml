@@ -6,11 +6,10 @@
     android:layout_marginStart="16dp"
     android:layout_marginEnd="16dp"
     android:layout_marginBottom="10dp"
-    app:cardCornerRadius="4dp"
-    app:cardElevation="0dp"
-    app:strokeWidth="1dp"
-    app:strokeColor="@color/hairline"
-    app:cardBackgroundColor="@color/surface">
+    app:cardCornerRadius="20dp"
+    app:cardElevation="3dp"
+    app:strokeWidth="0dp"
+    app:cardBackgroundColor="@color/glass_card">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,12 +17,12 @@
         android:orientation="horizontal"
         android:padding="14dp">
 
-        <!-- פס ניאון דק - צבע מתחלף לפי האירוע -->
+        <!-- פס צבע - מתחלף לפי האירוע -->
         <View
             android:id="@+id/colorBar"
-            android:layout_width="3dp"
+            android:layout_width="4dp"
             android:layout_height="match_parent"
-            android:background="@color/neon_cyan" />
+            android:background="@color/accent_blue" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -45,12 +44,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
                 android:paddingTop="3dp"
                 android:paddingBottom="3dp"
                 android:background="@drawable/bg_pill_time"
-                android:fontFamily="monospace"
+                android:textColor="@color/text_secondary"
                 android:textSize="12sp" />
 
             <TextView
