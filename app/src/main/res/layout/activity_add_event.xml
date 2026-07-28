@@ -123,14 +123,12 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSave"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            app:cornerRadius="4dp"
-            app:strokeColor="@color/neon_cyan"
-            app:strokeWidth="1dp"
-            android:textColor="@color/neon_cyan"
+            app:cornerRadius="8dp"
+            android:backgroundTint="@color/pastel_blue"
+            android:textColor="@color/bg_deep"
             android:text="@string/save" />
 
     </LinearLayout>
