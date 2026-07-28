@@ -100,7 +100,7 @@ class AddEventActivity : AppCompatActivity() {
                 }
                 val runnable = Runnable { searchLocations(query) }
                 pendingSearch = runnable
-                debounceHandler.postDelayed(runnable, 600)
+                debounceHandler.postDelayed(runnable, 400)
             }
         })
 

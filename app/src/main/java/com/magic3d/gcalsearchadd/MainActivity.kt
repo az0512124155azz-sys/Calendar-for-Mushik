@@ -2,6 +2,7 @@ package com.magic3d.gcalsearchadd
 
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -74,6 +75,7 @@ class MainActivity : AppCompatActivity() {
         btnPickDate.setOnClickListener { showDatePicker() }
         btnSearch.setOnClickListener { performSearch() }
         fabAddEvent.setOnClickListener { openAddEvent() }
+        findViewById<View>(R.id.btnSupportEmail).setOnClickListener { openSupportEmail() }
 
         adapter = EventAdapter(emptyList())
         rvEvents.layoutManager = LinearLayoutManager(this)
@@ -240,6 +242,19 @@ class MainActivity : AppCompatActivity() {
 
     private fun setLoading(loading: Boolean) {
         progressBar.visibility = if (loading) View.VISIBLE else View.GONE
+    }
+
+    private fun openSupportEmail() {
+        val email = getString(R.string.support_email_hint)
+        val intent = Intent(Intent.ACTION_SENDTO).apply {
+            data = Uri.parse("mailto:$email")
+            putExtra(Intent.EXTRA_SUBJECT, "${getString(R.string.app_name)} - פנייה מהאפליקציה")
+        }
+        try {
+            startActivity(intent)
+        } catch (e: Exception) {
+            Toast.makeText(this, email, Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun openAddEvent() {

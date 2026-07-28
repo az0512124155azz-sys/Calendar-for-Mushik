@@ -3,6 +3,7 @@ package com.magic3d.gcalsearchadd
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
+import org.json.JSONObject
 import java.net.HttpURLConnection
 import java.net.URL
 import java.net.URLEncoder
@@ -14,6 +15,9 @@ import java.util.Locale
  *
  * חשוב: מדיניות השימוש של Nominatim מגבילה לכ-בקשה אחת בשנייה - ה-debounce
  * ב-AddEventActivity (600ms) שומר על קצב תקין.
+ *
+ * הערה לגבי איכות התוצאות: זהו מנוע חיפוש כתובות/מפות (כמו Google Maps), לא מנוע חיפוש
+ * שמות עסקים חופשי כמו Google Places - לכן הוא הכי מדויק עם רחוב+עיר, ופחות עם שמות מקומות ספציפיים.
  */
 object NominatimClient {
 
@@ -22,11 +26,10 @@ object NominatimClient {
             val lang = Locale.getDefault().language
             val encodedQuery = URLEncoder.encode(query, "UTF-8")
             val urlStr = "https://nominatim.openstreetmap.org/search" +
-                "?q=$encodedQuery&format=json&addressdetails=0&limit=6&accept-language=$lang"
+                "?q=$encodedQuery&format=json&addressdetails=1&limit=6&accept-language=$lang"
 
             val connection = URL(urlStr).openConnection() as HttpURLConnection
             connection.requestMethod = "GET"
-            // Nominatim מחייב User-Agent מזוהה לפי מדיניות השימוש שלהם
             connection.setRequestProperty("User-Agent", "EventSpotAndroidApp/1.0 (info@zoom-out.co.il)")
             connection.connectTimeout = 6000
             connection.readTimeout = 6000
@@ -37,12 +40,47 @@ object NominatimClient {
             val jsonArray = JSONArray(responseText)
             val results = mutableListOf<String>()
             for (i in 0 until jsonArray.length()) {
-                val obj = jsonArray.getJSONObject(i)
-                results.add(obj.getString("display_name"))
+                results.add(buildConciseLabel(jsonArray.getJSONObject(i)))
             }
             results
         } catch (e: Exception) {
             emptyList()
         }
+    }
+
+    /**
+     * בונה תווית קצרה וקריאה ("רחוב ומספר, עיר") במקום הכתובת הארוכה והמלאה
+     * שכוללת מחוז, מיקוד ומדינה שאף אחד לא צריך לראות ברשימת הצעות.
+     */
+    private fun buildConciseLabel(obj: JSONObject): String {
+        val address = obj.optJSONObject("address")
+        if (address != null) {
+            val road = address.optString("road", "")
+            val houseNumber = address.optString("house_number", "")
+            val city = address.optString(
+                "city",
+                address.optString(
+                    "town",
+                    address.optString("village", address.optString("municipality", ""))
+                )
+            )
+
+            val roadPart = when {
+                road.isNotBlank() && houseNumber.isNotBlank() -> "$road $houseNumber"
+                road.isNotBlank() -> road
+                else -> ""
+            }
+
+            val parts = listOfNotNull(
+                roadPart.takeIf { it.isNotBlank() },
+                city.takeIf { it.isNotBlank() }
+            )
+            if (parts.isNotEmpty()) return parts.joinToString(", ")
+        }
+
+        // גיבוי - אם אין פירוט כתובת מובנה, מקצרים את display_name לשני החלקים הראשונים בלבד
+        val displayName = obj.optString("display_name", "")
+        val segments = displayName.split(",").map { it.trim() }.filter { it.isNotBlank() }
+        return if (segments.size > 2) segments.take(2).joinToString(", ") else displayName
     }
 }
