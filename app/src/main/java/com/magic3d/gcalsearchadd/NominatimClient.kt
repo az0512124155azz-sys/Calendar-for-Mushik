@@ -24,15 +24,16 @@ object NominatimClient {
     suspend fun search(query: String): List<String> = withContext(Dispatchers.IO) {
         try {
             val lang = Locale.getDefault().language
+            val acceptLanguage = if (lang == "en") "en" else "$lang,en"
             val encodedQuery = URLEncoder.encode(query, "UTF-8")
             val urlStr = "https://nominatim.openstreetmap.org/search" +
-                "?q=$encodedQuery&format=json&addressdetails=1&limit=6&accept-language=$lang"
+                "?q=$encodedQuery&format=json&addressdetails=1&limit=6&accept-language=$acceptLanguage"
 
             val connection = URL(urlStr).openConnection() as HttpURLConnection
             connection.requestMethod = "GET"
             connection.setRequestProperty("User-Agent", "EventSpotAndroidApp/1.0 (info@zoom-out.co.il)")
-            connection.connectTimeout = 6000
-            connection.readTimeout = 6000
+            connection.connectTimeout = 4000
+            connection.readTimeout = 4000
 
             val responseText = connection.inputStream.bufferedReader().use { it.readText() }
             connection.disconnect()

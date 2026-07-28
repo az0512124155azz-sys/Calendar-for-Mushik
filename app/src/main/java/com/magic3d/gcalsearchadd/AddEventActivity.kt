@@ -100,7 +100,7 @@ class AddEventActivity : AppCompatActivity() {
                 }
                 val runnable = Runnable { searchLocations(query) }
                 pendingSearch = runnable
-                debounceHandler.postDelayed(runnable, 400)
+                debounceHandler.postDelayed(runnable, 250)
             }
         })
 
@@ -162,9 +162,13 @@ class AddEventActivity : AppCompatActivity() {
      * מחפש הצעות מיקום דרך OpenStreetMap (חינמי, בלי API key ובלי חיוב).
      * שפת התוצאות נקבעת אוטומטית לפי שפת המכשיר.
      */
+    private var searchRequestId = 0L
+
     private fun searchLocations(query: String) {
+        val requestId = ++searchRequestId
         lifecycleScope.launch {
             val results = NominatimClient.search(query)
+            if (requestId != searchRequestId) return@launch // תוצאה ישנה שהגיעה באיחור - מתעלמים
             locationAdapter.updateSuggestions(results)
             locationSuggestionsCard.visibility = if (results.isEmpty()) View.GONE else View.VISIBLE
         }
