@@ -50,8 +50,7 @@ dependencies {
     // Google Sign-In
     implementation 'com.google.android.gms:play-services-auth:21.2.0'
 
-    // Places Autocomplete - חיפוש מיקום כמו ב-Google Calendar האמיתי
-    implementation 'com.google.android.libraries.places:places:5.1.1'
+    // (הוסר) Places SDK - דורש חיוב מחובר. הוחלף בחיפוש מיקומים חינמי דרך NominatimClient.kt
 
     // Google Calendar API (REST client)
     implementation 'com.google.api-client:google-api-client-android:2.7.0'

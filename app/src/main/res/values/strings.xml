@@ -14,8 +14,6 @@
     <string name="save">שמור</string>
     <string name="cancel">ביטול</string>
 
-    <!-- מפתח API של Google Places - להחליף במפתח האמיתי שלך אחרי יצירתו ב-Google Cloud Console -->
-    <string name="places_api_key" translatable="false">YOUR_PLACES_API_KEY_HERE</string>
     <string name="saving_event">שומר אירוע…</string>
     <string name="event_saved">האירוע נשמר ביומן בהצלחה</string>
     <string name="existing_events_label">אירועים קיימים ביום זה:</string>

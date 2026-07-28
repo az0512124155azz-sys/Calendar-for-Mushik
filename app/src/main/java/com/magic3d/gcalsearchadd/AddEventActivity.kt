@@ -18,13 +18,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.libraries.places.api.Places
-import com.google.android.libraries.places.api.model.AutocompletePrediction
-import com.google.android.libraries.places.api.model.AutocompleteSessionToken
-import com.google.android.libraries.places.api.model.Place
-import com.google.android.libraries.places.api.net.FetchPlaceRequest
-import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
-import com.google.android.libraries.places.api.net.PlacesClient
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -54,8 +47,6 @@ class AddEventActivity : AppCompatActivity() {
     private lateinit var locationSuggestionsCard: MaterialCardView
     private lateinit var rvLocationSuggestions: androidx.recyclerview.widget.RecyclerView
     private lateinit var locationAdapter: LocationSuggestionAdapter
-    private lateinit var placesClient: PlacesClient
-    private var sessionToken: AutocompleteSessionToken = AutocompleteSessionToken.newInstance()
     private var selectedLocationText: String? = null
     private val debounceHandler = Handler(Looper.getMainLooper())
     private var pendingSearch: Runnable? = null
@@ -92,12 +83,7 @@ class AddEventActivity : AppCompatActivity() {
         locationSuggestionsCard = findViewById(R.id.locationSuggestionsCard)
         rvLocationSuggestions = findViewById(R.id.rvLocationSuggestions)
 
-        if (!Places.isInitialized()) {
-            Places.initialize(applicationContext, getString(R.string.places_api_key))
-        }
-        placesClient = Places.createClient(this)
-
-        locationAdapter = LocationSuggestionAdapter(emptyList()) { prediction -> selectLocationPrediction(prediction) }
+        locationAdapter = LocationSuggestionAdapter(emptyList()) { suggestion -> selectLocationSuggestion(suggestion) }
         rvLocationSuggestions.layoutManager = LinearLayoutManager(this)
         rvLocationSuggestions.adapter = locationAdapter
 
@@ -114,7 +100,7 @@ class AddEventActivity : AppCompatActivity() {
                 }
                 val runnable = Runnable { searchLocations(query) }
                 pendingSearch = runnable
-                debounceHandler.postDelayed(runnable, 300)
+                debounceHandler.postDelayed(runnable, 600)
             }
         })
 
@@ -173,48 +159,26 @@ class AddEventActivity : AppCompatActivity() {
     }
 
     /**
-     * מחפש הצעות מיקום מ-Google Places תוך כדי הקלדה. השפה נקבעת אוטומטית לפי שפת המכשיר.
+     * מחפש הצעות מיקום דרך OpenStreetMap (חינמי, בלי API key ובלי חיוב).
+     * שפת התוצאות נקבעת אוטומטית לפי שפת המכשיר.
      */
     private fun searchLocations(query: String) {
-        val request = FindAutocompletePredictionsRequest.builder()
-            .setSessionToken(sessionToken)
-            .setQuery(query)
-            .build()
-
-        placesClient.findAutocompletePredictions(request)
-            .addOnSuccessListener { response ->
-                val predictions = response.autocompletePredictions
-                locationAdapter.updatePredictions(predictions)
-                locationSuggestionsCard.visibility = if (predictions.isEmpty()) View.GONE else View.VISIBLE
-            }
-            .addOnFailureListener {
-                locationSuggestionsCard.visibility = View.GONE
-            }
+        lifecycleScope.launch {
+            val results = NominatimClient.search(query)
+            locationAdapter.updateSuggestions(results)
+            locationSuggestionsCard.visibility = if (results.isEmpty()) View.GONE else View.VISIBLE
+        }
     }
 
     /**
-     * כשנבחרת הצעה, שולפים את הכתובת המלאה מ-Google Places - כדי שהמיקום השמור באירוע
-     * יהיה כתובת מדויקת שמסתנכרנת עם המפה בתוך Google Calendar, ולא רק שם מקום כללי.
+     * הכתובת שמוחזרת כבר מלאה ומדויקת, כך שהיא נשמרת כמו שהיא באירוע -
+     * וכש-Google Calendar יציג את האירוע, הוא יזהה אותה ככתובת אמיתית ויציג מפה.
      */
-    private fun selectLocationPrediction(prediction: AutocompletePrediction) {
-        val displayText = prediction.getFullText(null).toString()
-        etLocation.setText(displayText)
-        etLocation.setSelection(displayText.length)
+    private fun selectLocationSuggestion(address: String) {
+        etLocation.setText(address)
+        etLocation.setSelection(address.length)
         locationSuggestionsCard.visibility = View.GONE
-        selectedLocationText = displayText
-
-        val placeFields = listOf(Place.Field.ADDRESS, Place.Field.NAME)
-        val request = FetchPlaceRequest.newInstance(prediction.placeId, placeFields)
-        placesClient.fetchPlace(request)
-            .addOnSuccessListener { response ->
-                val address = response.place.address
-                if (!address.isNullOrBlank()) {
-                    selectedLocationText = address
-                }
-            }
-
-        // טוקן חדש לחיפוש הבא, לפי הנחיות החיוב של Google Places
-        sessionToken = AutocompleteSessionToken.newInstance()
+        selectedLocationText = address
     }
 
     private fun openSupportEmail() {

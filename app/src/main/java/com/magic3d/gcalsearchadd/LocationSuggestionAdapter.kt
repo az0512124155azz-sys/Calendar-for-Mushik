@@ -5,14 +5,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.libraries.places.api.model.AutocompletePrediction
 
 /**
- * אדפטר פשוט לרשימת הצעות המיקום מ-Google Places Autocomplete.
+ * אדפטר פשוט לרשימת הצעות המיקום (כתובות מלאות שהוחזרו מ-NominatimClient).
  */
 class LocationSuggestionAdapter(
-    private var predictions: List<AutocompletePrediction>,
-    private val onSelected: (AutocompletePrediction) -> Unit
+    private var suggestions: List<String>,
+    private val onSelected: (String) -> Unit
 ) : RecyclerView.Adapter<LocationSuggestionAdapter.SuggestionViewHolder>() {
 
     inner class SuggestionViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -26,15 +25,15 @@ class LocationSuggestionAdapter(
     }
 
     override fun onBindViewHolder(holder: SuggestionViewHolder, position: Int) {
-        val prediction = predictions[position]
-        holder.text.text = prediction.getFullText(null).toString()
-        holder.itemView.setOnClickListener { onSelected(prediction) }
+        val suggestion = suggestions[position]
+        holder.text.text = suggestion
+        holder.itemView.setOnClickListener { onSelected(suggestion) }
     }
 
-    override fun getItemCount(): Int = predictions.size
+    override fun getItemCount(): Int = suggestions.size
 
-    fun updatePredictions(newPredictions: List<AutocompletePrediction>) {
-        predictions = newPredictions
+    fun updateSuggestions(newSuggestions: List<String>) {
+        suggestions = newSuggestions
         notifyDataSetChanged()
     }
 }
