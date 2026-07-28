@@ -61,7 +61,7 @@ class AddEventActivity : AppCompatActivity() {
         progressExistingEvents = findViewById(R.id.progressExistingEvents)
         rvExistingEvents = findViewById(R.id.rvExistingEvents)
 
-        existingEventsAdapter = EventAdapter(emptyList())
+        existingEventsAdapter = EventAdapter(emptyList(), showDate = false)
         rvExistingEvents.layoutManager = LinearLayoutManager(this)
         rvExistingEvents.adapter = existingEventsAdapter
 

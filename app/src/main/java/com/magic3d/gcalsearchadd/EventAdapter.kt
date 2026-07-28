@@ -12,8 +12,10 @@ import com.magic3d.gcalsearchadd.model.EventItem
 /**
  * אדפטר פשוט להצגת רשימת האירועים בכרטיסיות צבעוניות עם צבע מתחלף לכל אירוע.
  */
-class EventAdapter(private var items: List<EventItem>) :
-    RecyclerView.Adapter<EventAdapter.EventViewHolder>() {
+class EventAdapter(
+    private var items: List<EventItem>,
+    private var showDate: Boolean = true
+) : RecyclerView.Adapter<EventAdapter.EventViewHolder>() {
 
     inner class EventViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val colorBar: View = view.findViewById(R.id.colorBar)
@@ -42,7 +44,7 @@ class EventAdapter(private var items: List<EventItem>) :
         val accentColor = ContextCompat.getColor(context, accentColorResIds[position % accentColorResIds.size])
 
         holder.title.text = item.title
-        holder.time.text = item.timeRange
+        holder.time.text = if (showDate) "${item.timeLabel}  •  ${item.dateLabel}" else item.timeLabel
         holder.time.setTextColor(accentColor)
 
         val barShape = GradientDrawable().apply {
@@ -62,8 +64,9 @@ class EventAdapter(private var items: List<EventItem>) :
 
     override fun getItemCount(): Int = items.size
 
-    fun updateItems(newItems: List<EventItem>) {
+    fun updateItems(newItems: List<EventItem>, showDate: Boolean = this.showDate) {
         items = newItems
+        this.showDate = showDate
         notifyDataSetChanged()
     }
 }

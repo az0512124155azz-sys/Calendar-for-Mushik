@@ -208,7 +208,7 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 val events = repo.getEventsForDate(selectedDayStartMillis)
-                renderEvents(events)
+                renderEvents(events, showDate = false)
             } catch (e: Exception) {
                 Toast.makeText(this@MainActivity, getString(R.string.error_generic, e.message ?: ""), Toast.LENGTH_LONG).show()
             } finally {
@@ -223,7 +223,7 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 val events = repo.searchEventsByKeyword(keyword)
-                renderEvents(events)
+                renderEvents(events, showDate = true)
             } catch (e: Exception) {
                 Toast.makeText(this@MainActivity, getString(R.string.error_generic, e.message ?: ""), Toast.LENGTH_LONG).show()
             } finally {
@@ -232,8 +232,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun renderEvents(events: List<com.magic3d.gcalsearchadd.model.EventItem>) {
-        adapter.updateItems(events)
+    private fun renderEvents(events: List<com.magic3d.gcalsearchadd.model.EventItem>, showDate: Boolean) {
+        adapter.updateItems(events, showDate)
         tvEmpty.visibility = if (events.isEmpty()) View.VISIBLE else View.GONE
         rvEvents.visibility = if (events.isEmpty()) View.GONE else View.VISIBLE
     }

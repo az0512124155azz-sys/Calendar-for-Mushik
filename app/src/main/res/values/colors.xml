@@ -1,41 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- ערכת נושא כהה-עתידנית -->
-    <color name="bg_deep">#0A0E1A</color>
-    <color name="surface">#131A2C</color>
-    <color name="surface_alt">#1B2340</color>
-    <color name="border_neon">#332C5CE0</color>
+    <!-- ערכת נושא כהה-פחמית, בהשראת Google Calendar Dark Mode -->
+    <color name="bg_deep">#202124</color>
+    <color name="surface">#2D2E31</color>
+    <color name="surface_alt">#35363A</color>
+    <color name="hairline">#3C4043</color>
 
     <color name="white">#FFFFFF</color>
-    <color name="text_primary">#EAF0FF</color>
-    <color name="text_secondary">#7C86A8</color>
+    <color name="text_primary">#E8EAED</color>
+    <color name="text_secondary">#9AA0A6</color>
 
-    <!-- ניאון -->
-    <color name="neon_cyan">#00E5FF</color>
-    <color name="neon_magenta">#FF2E9F</color>
-    <color name="neon_lime">#C6FF3D</color>
-    <color name="neon_orange">#FF8A3D</color>
-    <color name="neon_violet">#9C6BFF</color>
-    <color name="neon_yellow">#FFD93D</color>
+    <!-- גוונים פסטליים לאירועים, כמו האירועים הרשמיים של Google Calendar במצב כהה -->
+    <color name="pastel_blue">#8AB4F8</color>
+    <color name="pastel_green">#81C995</color>
+    <color name="pastel_red">#F28B82</color>
+    <color name="pastel_yellow">#FDD663</color>
+    <color name="pastel_purple">#C58AF9</color>
+    <color name="pastel_teal">#78D9EC</color>
+    <color name="pastel_orange">#FCAD70</color>
 
     <color name="app_background">@color/bg_deep</color>
-    <color name="fab_color">@color/surface</color>
+    <color name="fab_color">@color/pastel_blue</color>
     <color name="field_bg">@color/surface</color>
     <color name="pill_bg">@color/surface_alt</color>
 
     <!-- legacy aliases (נשארים כדי לא לשבור קוד קיים) -->
-    <color name="google_blue">@color/neon_cyan</color>
-    <color name="google_blue_dark">@color/neon_cyan</color>
+    <color name="google_blue">@color/pastel_blue</color>
+    <color name="google_blue_dark">@color/pastel_blue</color>
     <color name="gradient_start">@color/bg_deep</color>
-    <color name="gradient_end">@color/surface</color>
+    <color name="gradient_end">@color/bg_deep</color>
     <color name="light_gray">@color/bg_deep</color>
-    <color name="event_bar_default">@color/neon_cyan</color>
-    <color name="accent_coral">@color/neon_magenta</color>
-    <color name="accent_orange">@color/neon_orange</color>
-    <color name="accent_yellow">@color/neon_yellow</color>
-    <color name="accent_green">@color/neon_lime</color>
-    <color name="accent_teal">@color/neon_cyan</color>
-    <color name="accent_blue">@color/neon_cyan</color>
-    <color name="accent_purple">@color/neon_violet</color>
+    <color name="event_bar_default">@color/pastel_blue</color>
+    <color name="accent_coral">@color/pastel_red</color>
+    <color name="accent_orange">@color/pastel_orange</color>
+    <color name="accent_yellow">@color/pastel_yellow</color>
+    <color name="accent_green">@color/pastel_green</color>
+    <color name="accent_teal">@color/pastel_teal</color>
+    <color name="accent_blue">@color/pastel_blue</color>
+    <color name="accent_purple">@color/pastel_purple</color>
     <color name="ic_launcher_background">@color/bg_deep</color>
+
+    <!-- legacy neon aliases -> ממופים עכשיו לגוונים הפסטליים -->
+    <color name="neon_cyan">@color/pastel_blue</color>
+    <color name="neon_magenta">@color/pastel_red</color>
+    <color name="neon_lime">@color/pastel_green</color>
+    <color name="neon_orange">@color/pastel_orange</color>
+    <color name="neon_violet">@color/pastel_purple</color>
+    <color name="neon_yellow">@color/pastel_yellow</color>
 </resources>

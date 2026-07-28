@@ -6,6 +6,7 @@ package com.magic3d.gcalsearchadd.model
 data class EventItem(
     val id: String,
     val title: String,
-    val timeRange: String,   // לדוגמה "14:00 - 15:30" או "כל היום"
+    val dateLabel: String,   // לדוגמה "29/07"
+    val timeLabel: String,   // לדוגמה "14:00-15:30" או "כל היום"
     val location: String?
 )

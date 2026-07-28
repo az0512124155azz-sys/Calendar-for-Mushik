@@ -114,18 +114,19 @@ class CalendarRepository(context: Context, account: Account) {
         val startMillisValue = event.start?.dateTime?.value ?: event.start?.date?.value
         val dateStr = if (startMillisValue != null) dateFormat.format(java.util.Date(startMillisValue)) else ""
 
-        val timeRange = if (event.start?.dateTime != null && event.end?.dateTime != null) {
+        val timeLabel = if (event.start?.dateTime != null && event.end?.dateTime != null) {
             val startStr = timeFormat.format(java.util.Date(event.start.dateTime.value))
             val endStr = timeFormat.format(java.util.Date(event.end.dateTime.value))
-            "$dateStr  •  $startStr-$endStr"
+            "$startStr-$endStr"
         } else {
-            "$dateStr  •  כל היום"
+            "כל היום"
         }
 
         return EventItem(
             id = event.id ?: "",
             title = event.summary ?: "(ללא כותרת)",
-            timeRange = timeRange,
+            dateLabel = dateStr,
+            timeLabel = timeLabel,
             location = event.location
         )
     }
