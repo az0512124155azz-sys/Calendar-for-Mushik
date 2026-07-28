@@ -30,6 +30,7 @@ android {
     }
     buildFeatures {
         viewBinding true
+        buildConfig true
     }
     packagingOptions {
         resources {
@@ -48,6 +49,9 @@ dependencies {
 
     // Google Sign-In
     implementation 'com.google.android.gms:play-services-auth:21.2.0'
+
+    // Places Autocomplete - חיפוש מיקום כמו ב-Google Calendar האמיתי
+    implementation 'com.google.android.libraries.places:places:5.1.1'
 
     // Google Calendar API (REST client)
     implementation 'com.google.api-client:google-api-client-android:2.7.0'

@@ -88,7 +88,8 @@ class CalendarRepository(context: Context, account: Account) {
         startHour: Int?,
         startMinute: Int?,
         endHour: Int?,
-        endMinute: Int?
+        endMinute: Int?,
+        location: String? = null
     ): Event = withContext(Dispatchers.IO) {
         val tz = TimeZone.getDefault()
 
@@ -102,6 +103,9 @@ class CalendarRepository(context: Context, account: Account) {
 
         val event = Event().apply {
             summary = title
+            if (!location.isNullOrBlank()) {
+                setLocation(location)
+            }
             start = EventDateTime().setDateTime(dateTimeFor(startMillis, tz)).setTimeZone(tz.id)
             end = EventDateTime().setDateTime(dateTimeFor(endMillis, tz)).setTimeZone(tz.id)
         }
