@@ -50,10 +50,6 @@ object NominatimClient {
     }
 
     /**
-     * בונה תווית קצרה וקריאה ("רחוב ומספר, עיר") במקום הכתובת הארוכה והמלאה
-     * שכוללת מחוז, מיקוד ומדינה שאף אחד לא צריך לראות ברשימת הצעות.
-     */
-    /**
      * ל-Hebrew, Java/Android עדיין מחזירים את הקוד הישן "iw" במקום "he" הסטנדרטי -
      * ובלי התיקון הזה, Nominatim לא מזהה את השפה ומחזיר תוצאות מעורבות (כולל ערבית).
      */
@@ -61,6 +57,10 @@ object NominatimClient {
         return if (code == "iw") "he" else code
     }
 
+    /**
+     * בונה תווית קצרה וקריאה ("רחוב ומספר, עיר") במקום הכתובת הארוכה והמלאה
+     * שכוללת מחוז, מיקוד ומדינה שאף אחד לא צריך לראות ברשימת הצעות.
+     */
     private fun buildConciseLabel(obj: JSONObject): String {
         val address = obj.optJSONObject("address")
         if (address != null) {
