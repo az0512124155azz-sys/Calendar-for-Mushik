@@ -23,7 +23,7 @@ object NominatimClient {
 
     suspend fun search(query: String): List<String> = withContext(Dispatchers.IO) {
         try {
-            val lang = Locale.getDefault().language
+            val lang = normalizeLanguageCode(Locale.getDefault().language)
             val acceptLanguage = if (lang == "en") "en" else "$lang,en"
             val encodedQuery = URLEncoder.encode(query, "UTF-8")
             val urlStr = "https://nominatim.openstreetmap.org/search" +
@@ -53,6 +53,14 @@ object NominatimClient {
      * בונה תווית קצרה וקריאה ("רחוב ומספר, עיר") במקום הכתובת הארוכה והמלאה
      * שכוללת מחוז, מיקוד ומדינה שאף אחד לא צריך לראות ברשימת הצעות.
      */
+    /**
+     * ל-Hebrew, Java/Android עדיין מחזירים את הקוד הישן "iw" במקום "he" הסטנדרטי -
+     * ובלי התיקון הזה, Nominatim לא מזהה את השפה ומחזיר תוצאות מעורבות (כולל ערבית).
+     */
+    private fun normalizeLanguageCode(code: String): String {
+        return if (code == "iw") "he" else code
+    }
+
     private fun buildConciseLabel(obj: JSONObject): String {
         val address = obj.optJSONObject("address")
         if (address != null) {
