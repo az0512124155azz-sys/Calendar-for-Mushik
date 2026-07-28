@@ -13,8 +13,7 @@
         android:text="@string/add_event_title"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:textColor="@color/neon_cyan"
-        android:letterSpacing="0.03"
+        android:textColor="@color/text_primary"
         android:layout_marginBottom="20dp" />
 
     <com.google.android.material.textfield.TextInputLayout

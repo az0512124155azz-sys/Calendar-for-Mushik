@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">FlashCal ⚡</string>
+    <string name="app_name">EventSpot</string>
     <string name="sign_in_with_google">התחבר עם Google</string>
     <string name="search_hint">תאריך (12.04.2026) או שם האירוע</string>
     <string name="no_events_found">אין אירועים ביום זה</string>

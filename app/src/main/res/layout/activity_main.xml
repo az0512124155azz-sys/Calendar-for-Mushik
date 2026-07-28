@@ -38,10 +38,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="@string/app_name"
-        android:textColor="@color/neon_cyan"
+        android:textColor="@color/text_primary"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:letterSpacing="0.08"
         app:layout_constraintTop_toBottomOf="@id/ivHeaderIcon"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
