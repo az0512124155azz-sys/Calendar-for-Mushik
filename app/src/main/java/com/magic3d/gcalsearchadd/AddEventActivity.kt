@@ -1,6 +1,7 @@
 package com.magic3d.gcalsearchadd
 
 import android.app.Activity
+import android.app.TimePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -14,8 +15,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.timepicker.MaterialTimePicker
-import com.google.android.material.timepicker.TimeFormat
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar as JavaCalendar
@@ -139,29 +138,24 @@ class AddEventActivity : AppCompatActivity() {
         val currentHour = if (isStart) (startHour ?: defaultHour) else (endHour ?: defaultHour)
         val currentMinute = if (isStart) (startMinute ?: defaultMinute) else (endMinute ?: defaultMinute)
 
-        val picker = MaterialTimePicker.Builder()
-            .setTimeFormat(TimeFormat.CLOCK_24H)
-            .setHour(currentHour)
-            .setMinute(currentMinute)
-            .setTheme(R.style.ThemeOverlay_App_TimePicker)
-            .setTitleText(if (isStart) getString(R.string.event_start_hint) else getString(R.string.event_end_hint))
-            .build()
-
-        picker.addOnPositiveButtonClickListener {
-            val hour = picker.hour
-            val minute = picker.minute
-            if (isStart) {
-                startHour = hour
-                startMinute = minute
-                tvStartTimePicker.text = String.format(Locale.getDefault(), "%02d:%02d", hour, minute)
-            } else {
-                endHour = hour
-                endMinute = minute
-                tvEndTimePicker.text = String.format(Locale.getDefault(), "%02d:%02d", hour, minute)
-            }
-        }
-
-        picker.show(supportFragmentManager, "time_picker")
+        TimePickerDialog(
+            this,
+            R.style.LightSpinnerTimePickerDialog,
+            { _, hour, minute ->
+                if (isStart) {
+                    startHour = hour
+                    startMinute = minute
+                    tvStartTimePicker.text = String.format(Locale.getDefault(), "%02d:%02d", hour, minute)
+                } else {
+                    endHour = hour
+                    endMinute = minute
+                    tvEndTimePicker.text = String.format(Locale.getDefault(), "%02d:%02d", hour, minute)
+                }
+            },
+            currentHour,
+            currentMinute,
+            true
+        ).show()
     }
 
     private fun saveEvent() {
