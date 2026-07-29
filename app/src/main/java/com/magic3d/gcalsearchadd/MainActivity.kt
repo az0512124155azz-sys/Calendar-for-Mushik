@@ -157,11 +157,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showDatePicker() {
+        val originalLocale = Locale.getDefault()
+        Locale.setDefault(sundayStartLocale(originalLocale))
+
         val picker = MaterialDatePicker.Builder.datePicker()
             .setTheme(R.style.ThemeOverlay_App_DatePicker)
             .setSelection(localStartOfDayToUtcMillis(selectedDayStartMillis))
             .setCalendarConstraints(CalendarConstraints.Builder().build())
             .build()
+
+        picker.addOnDismissListener { Locale.setDefault(originalLocale) }
 
         picker.addOnPositiveButtonClickListener { utcMillis ->
             selectedDayStartMillis = utcMidnightToLocalStartOfDay(utcMillis)
@@ -303,6 +308,17 @@ class MainActivity : AppCompatActivity() {
             )
             local.set(JavaCalendar.MILLISECOND, 0)
             return local.timeInMillis
+        }
+
+        /**
+         * שומר על כל שאר הפורמט של השפה (חודשים, שמות ימים וכו') אבל מכריח את היומן
+         * להתחיל ביום ראשון - בלי קשר להגדרת "יום ראשון בשבוע" שמגיעה עם השפה של המכשיר.
+         */
+        fun sundayStartLocale(base: Locale): Locale {
+            return Locale.Builder()
+                .setLocale(base)
+                .setExtension(Locale.UNICODE_LOCALE_EXTENSION, "fw-sun")
+                .build()
         }
     }
 }

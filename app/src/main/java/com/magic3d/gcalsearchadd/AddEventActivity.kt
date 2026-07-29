@@ -48,6 +48,8 @@ class AddEventActivity : AppCompatActivity() {
     private lateinit var rvLocationSuggestions: androidx.recyclerview.widget.RecyclerView
     private lateinit var locationAdapter: LocationSuggestionAdapter
     private var selectedLocationText: String? = null
+    private var selectedRecurrenceRule: String? = null
+    private lateinit var tvRecurrencePicker: TextView
     private val debounceHandler = Handler(Looper.getMainLooper())
     private var pendingSearch: Runnable? = null
 
@@ -116,6 +118,9 @@ class AddEventActivity : AppCompatActivity() {
         tvDatePicker.setOnClickListener { pickDate() }
         tvStartTimePicker.setOnClickListener { pickTime(isStart = true) }
         tvEndTimePicker.setOnClickListener { pickTime(isStart = false) }
+
+        tvRecurrencePicker = findViewById(R.id.tvRecurrencePicker)
+        tvRecurrencePicker.setOnClickListener { pickRecurrence() }
 
         findViewById<android.view.View>(R.id.btnCancel).setOnClickListener { finish() }
         findViewById<android.view.View>(R.id.btnSave).setOnClickListener { saveEvent() }
@@ -198,12 +203,36 @@ class AddEventActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * דיאלוג בחירה פשוט לחזרה על האירוע. הבחירה נשמרת כ-RRULE תקני של Google Calendar.
+     */
+    private fun pickRecurrence() {
+        val options = resources.getStringArray(R.array.recurrence_options)
+        val rrules = arrayOf(null, "RRULE:FREQ=DAILY", "RRULE:FREQ=WEEKLY", "RRULE:FREQ=MONTHLY", "RRULE:FREQ=YEARLY")
+        val currentIndex = rrules.indexOf(selectedRecurrenceRule).coerceAtLeast(0)
+
+        androidx.appcompat.app.AlertDialog.Builder(this, R.style.LightSpinnerTimePickerDialog)
+            .setTitle(R.string.recurrence_title)
+            .setSingleChoiceItems(options, currentIndex) { dialog, which ->
+                selectedRecurrenceRule = rrules[which]
+                tvRecurrencePicker.text = if (which == 0) getString(R.string.recurrence_none) else "חזרה: ${options[which]}"
+                dialog.dismiss()
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
+    }
+
     private fun pickDate() {
+        val originalLocale = Locale.getDefault()
+        Locale.setDefault(MainActivity.sundayStartLocale(originalLocale))
+
         val picker = MaterialDatePicker.Builder.datePicker()
             .setTheme(R.style.ThemeOverlay_App_DatePicker)
             .setSelection(MainActivity.localStartOfDayToUtcMillis(dateMillis))
             .setCalendarConstraints(CalendarConstraints.Builder().build())
             .build()
+
+        picker.addOnDismissListener { Locale.setDefault(originalLocale) }
 
         picker.addOnPositiveButtonClickListener { utcMillis ->
             dateMillis = MainActivity.utcMidnightToLocalStartOfDay(utcMillis)
@@ -265,7 +294,8 @@ class AddEventActivity : AppCompatActivity() {
                     startMinute = startMinute,
                     endHour = endHour,
                     endMinute = endMinute,
-                    location = selectedLocationText ?: etLocation.text?.toString()?.trim()?.ifBlank { null }
+                    location = selectedLocationText ?: etLocation.text?.toString()?.trim()?.ifBlank { null },
+                    recurrenceRule = selectedRecurrenceRule
                 )
                 Toast.makeText(this@AddEventActivity, getString(R.string.event_saved), Toast.LENGTH_SHORT).show()
                 setResult(Activity.RESULT_OK)

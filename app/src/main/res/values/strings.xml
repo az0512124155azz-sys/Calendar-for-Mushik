@@ -10,6 +10,15 @@
     <string name="event_start_hint">שעת התחלה (אופציונלי)</string>
     <string name="event_end_hint">שעת סיום (אופציונלי)</string>
     <string name="event_location_hint">מיקום (אופציונלי)</string>
+    <string name="recurrence_none">חזרה: לא חוזר</string>
+    <string name="recurrence_title">האירוע חוזר על עצמו</string>
+    <string-array name="recurrence_options">
+        <item>לא חוזר</item>
+        <item>כל יום</item>
+        <item>כל שבוע</item>
+        <item>כל חודש</item>
+        <item>כל שנה</item>
+    </string-array>
     <string name="support_email_hint">info@zoom-out.co.il</string>
     <string name="save">שמור</string>
     <string name="cancel">ביטול</string>
