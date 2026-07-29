@@ -22,13 +22,36 @@ import java.util.Locale
 object NominatimClient {
 
     suspend fun search(query: String): List<String> = withContext(Dispatchers.IO) {
-        try {
-            val lang = normalizeLanguageCode(Locale.getDefault().language)
-            val acceptLanguage = if (lang == "en") "en" else "$lang,en"
-            val encodedQuery = URLEncoder.encode(query, "UTF-8")
-            val urlStr = "https://nominatim.openstreetmap.org/search" +
-                "?q=$encodedQuery&format=json&addressdetails=1&limit=6&accept-language=$acceptLanguage"
+        val acceptLanguage = detectQueryLanguage(query)
+        val freeTextResults = fetchResults(buildFreeTextUrl(query, acceptLanguage))
+        if (freeTextResults.isNotEmpty()) return@withContext freeTextResults
 
+        // אם חיפוש חופשי לא מצא כלום וזו כתובת מלאה (רחוב + עיר מופרדים בפסיק),
+        // מנסים שוב עם חיפוש מובנה - זה הרבה יותר אמין לכתובות מדויקות
+        val parts = query.split(",").map { it.trim() }.filter { it.isNotBlank() }
+        if (parts.size >= 2) {
+            val street = parts.first()
+            val city = parts.last()
+            return@withContext fetchResults(buildStructuredUrl(street, city, acceptLanguage))
+        }
+        emptyList()
+    }
+
+    private fun buildFreeTextUrl(query: String, acceptLanguage: String): String {
+        val encodedQuery = URLEncoder.encode(query, "UTF-8")
+        return "https://nominatim.openstreetmap.org/search" +
+            "?q=$encodedQuery&format=json&addressdetails=1&limit=6&accept-language=$acceptLanguage"
+    }
+
+    private fun buildStructuredUrl(street: String, city: String, acceptLanguage: String): String {
+        val encodedStreet = URLEncoder.encode(street, "UTF-8")
+        val encodedCity = URLEncoder.encode(city, "UTF-8")
+        return "https://nominatim.openstreetmap.org/search" +
+            "?street=$encodedStreet&city=$encodedCity&format=json&addressdetails=1&limit=6&accept-language=$acceptLanguage"
+    }
+
+    private fun fetchResults(urlStr: String): List<String> {
+        return try {
             val connection = URL(urlStr).openConnection() as HttpURLConnection
             connection.requestMethod = "GET"
             connection.setRequestProperty("User-Agent", "EventSpotAndroidApp/1.0 (info@zoom-out.co.il)")
@@ -46,6 +69,20 @@ object NominatimClient {
             results
         } catch (e: Exception) {
             emptyList()
+        }
+    }
+
+    /**
+     * קובע את שפת התוצאות לפי מה שהמשתמש בפועל הקליד (לפי סוג התווים בטקסט),
+     * ולא לפי שפת המכשיר - כך שהקלדה באנגלית תחזיר תוצאות באנגלית, וכן הלאה.
+     */
+    private fun detectQueryLanguage(query: String): String {
+        val hasHebrew = query.any { it in '\u0590'..'\u05FF' }
+        val hasLatin = query.any { it in 'a'..'z' || it in 'A'..'Z' }
+        return when {
+            hasHebrew -> "he,en"
+            hasLatin -> "en,he"
+            else -> "${normalizeLanguageCode(Locale.getDefault().language)},en"
         }
     }
 
