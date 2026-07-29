@@ -204,25 +204,31 @@ class AddEventActivity : AppCompatActivity() {
     }
 
     /**
-     * דיאלוג בחירה פשוט לחזרה על האירוע. הבחירה נשמרת כ-RRULE תקני של Google Calendar.
-     * "מותאם אישית" פותח דיאלוג נוסף לבחירת ימים ספציפיים בשבוע.
+     * דיאלוג בחירה לחזרה על האירוע. אחרי שנבחרת תדירות (או ימים מותאמים אישית),
+     * שואלים גם מתי החזרה נגמרת - אף פעם / אחרי מספר פעמים / עד תאריך.
      */
     private fun pickRecurrence() {
         val options = resources.getStringArray(R.array.recurrence_options)
-        val rrules = arrayOf(null, "RRULE:FREQ=DAILY", "RRULE:FREQ=WEEKLY", "RRULE:FREQ=MONTHLY", "RRULE:FREQ=YEARLY")
-        val currentIndex = rrules.indexOf(selectedRecurrenceRule).coerceAtLeast(0)
 
         androidx.appcompat.app.AlertDialog.Builder(this, R.style.LightSpinnerTimePickerDialog)
             .setTitle(R.string.recurrence_title)
-            .setSingleChoiceItems(options, currentIndex) { dialog, which ->
-                if (which == options.size - 1) {
-                    // "מותאם אישית" - פותחים דיאלוג בחירת ימים במקום לסגור מיד
-                    dialog.dismiss()
-                    pickCustomRecurrenceDays()
-                } else {
-                    selectedRecurrenceRule = rrules[which]
-                    tvRecurrencePicker.text = if (which == 0) getString(R.string.recurrence_none) else "חזרה: ${options[which]}"
-                    dialog.dismiss()
+            .setItems(options) { dialog, which ->
+                dialog.dismiss()
+                when (which) {
+                    0 -> {
+                        selectedRecurrenceRule = null
+                        tvRecurrencePicker.text = getString(R.string.recurrence_none)
+                    }
+                    options.size - 1 -> pickCustomRecurrenceDays()
+                    else -> {
+                        val freqRule = when (which) {
+                            1 -> "RRULE:FREQ=DAILY"
+                            2 -> "RRULE:FREQ=WEEKLY"
+                            3 -> "RRULE:FREQ=MONTHLY"
+                            else -> "RRULE:FREQ=YEARLY"
+                        }
+                        askRecurrenceEnd(freqRule, options[which])
+                    }
                 }
             }
             .setNegativeButton(R.string.cancel, null)
@@ -244,14 +250,84 @@ class AddEventActivity : AppCompatActivity() {
                 if (selectedCodes.isEmpty()) {
                     Toast.makeText(this, R.string.recurrence_custom_title, Toast.LENGTH_SHORT).show()
                 } else {
-                    selectedRecurrenceRule = "RRULE:FREQ=WEEKLY;BYDAY=${selectedCodes.joinToString(",")}"
                     val selectedDayNames = dayNames.filterIndexed { index, _ -> checked[index] }
-                    tvRecurrencePicker.text = "חזרה: ${selectedDayNames.joinToString(", ")}"
+                    val baseRule = "RRULE:FREQ=WEEKLY;BYDAY=${selectedCodes.joinToString(",")}"
+                    askRecurrenceEnd(baseRule, selectedDayNames.joinToString(", "))
                 }
                 dialog.dismiss()
             }
             .setNegativeButton(R.string.cancel, null)
             .show()
+    }
+
+    /**
+     * שלב שני: מתי החזרה נגמרת. מוסיף COUNT= או UNTIL= ל-RRULE הבסיסי לפי הבחירה.
+     */
+    private fun askRecurrenceEnd(baseRule: String, label: String) {
+        val endOptions = arrayOf(
+            getString(R.string.recurrence_end_never),
+            getString(R.string.recurrence_end_count),
+            getString(R.string.recurrence_end_until)
+        )
+
+        androidx.appcompat.app.AlertDialog.Builder(this, R.style.LightSpinnerTimePickerDialog)
+            .setTitle(R.string.recurrence_end_title)
+            .setItems(endOptions) { dialog, which ->
+                dialog.dismiss()
+                when (which) {
+                    0 -> {
+                        selectedRecurrenceRule = baseRule
+                        tvRecurrencePicker.text = "חזרה: $label"
+                    }
+                    1 -> askRecurrenceCount(baseRule, label)
+                    2 -> askRecurrenceUntilDate(baseRule, label)
+                }
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
+    }
+
+    private fun askRecurrenceCount(baseRule: String, label: String) {
+        val input = android.widget.EditText(this).apply {
+            inputType = android.text.InputType.TYPE_CLASS_NUMBER
+            hint = "לדוגמה: 10"
+        }
+
+        androidx.appcompat.app.AlertDialog.Builder(this, R.style.LightSpinnerTimePickerDialog)
+            .setTitle(R.string.recurrence_end_count)
+            .setView(input)
+            .setPositiveButton(R.string.save) { dialog, _ ->
+                val count = input.text?.toString()?.trim()?.toIntOrNull()
+                if (count == null || count <= 0) {
+                    Toast.makeText(this, "יש להזין מספר תקין", Toast.LENGTH_SHORT).show()
+                } else {
+                    selectedRecurrenceRule = "$baseRule;COUNT=$count"
+                    tvRecurrencePicker.text = "חזרה: $label ($count פעמים)"
+                }
+                dialog.dismiss()
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
+    }
+
+    private fun askRecurrenceUntilDate(baseRule: String, label: String) {
+        val picker = MaterialDatePicker.Builder.datePicker()
+            .setTheme(R.style.ThemeOverlay_App_DatePicker)
+            .setSelection(MainActivity.localStartOfDayToUtcMillis(dateMillis))
+            .build()
+
+        picker.addOnPositiveButtonClickListener { utcMillis ->
+            val localEndOfDay = MainActivity.utcMidnightToLocalStartOfDay(utcMillis) + (23 * 60 + 59) * 60_000L + 59_000L
+            val untilFormat = SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'", Locale.US).apply {
+                timeZone = java.util.TimeZone.getTimeZone("UTC")
+            }
+            val untilStr = untilFormat.format(java.util.Date(localEndOfDay))
+            selectedRecurrenceRule = "$baseRule;UNTIL=$untilStr"
+            val untilDisplay = displayDateFormat.format(localEndOfDay)
+            tvRecurrencePicker.text = "חזרה: $label (עד $untilDisplay)"
+        }
+
+        picker.show(supportFragmentManager, "recurrence_until_picker")
     }
 
     private fun pickDate() {
