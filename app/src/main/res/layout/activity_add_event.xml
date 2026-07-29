@@ -16,21 +16,45 @@
         android:textColor="@color/text_primary"
         android:layout_marginBottom="16dp" />
 
-    <!-- תאריך - השדה הראשון והבולט ביותר -->
-    <TextView
-        android:id="@+id/tvDatePicker"
+    <!-- תאריך וחזרה - אותה שורה, כמו שעת התחלה/סיום -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="20dp"
-        android:gravity="center_vertical"
-        android:background="@drawable/bg_rounded_field"
-        android:drawableStart="@android:drawable/ic_menu_my_calendar"
-        android:drawablePadding="12dp"
-        app:drawableTint="@color/accent_blue"
-        android:text="@string/event_date_hint"
-        android:textColor="@color/text_primary"
-        android:textSize="19sp"
-        android:textStyle="bold" />
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvDatePicker"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="16dp"
+            android:gravity="center_vertical"
+            android:background="@drawable/bg_rounded_field"
+            android:drawableStart="@android:drawable/ic_menu_my_calendar"
+            android:drawablePadding="8dp"
+            app:drawableTint="@color/accent_blue"
+            android:text="@string/event_date_hint"
+            android:textColor="@color/text_primary"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvRecurrencePicker"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="10dp"
+            android:padding="16dp"
+            android:gravity="center_vertical"
+            android:background="@drawable/bg_rounded_field"
+            android:drawableStart="@android:drawable/ic_menu_rotate"
+            android:drawablePadding="8dp"
+            app:drawableTint="@color/accent_teal"
+            android:text="@string/recurrence_none"
+            android:textColor="@color/text_primary"
+            android:textSize="13sp" />
+
+    </LinearLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
@@ -111,22 +135,6 @@
         </com.google.android.material.card.MaterialCardView>
 
     </FrameLayout>
-
-    <!-- חזרה על האירוע (יומי/שבועי/חודשי/שנתי) -->
-    <TextView
-        android:id="@+id/tvRecurrencePicker"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:padding="16dp"
-        android:gravity="center_vertical"
-        android:background="@drawable/bg_rounded_field"
-        android:drawableStart="@android:drawable/ic_menu_rotate"
-        android:drawablePadding="10dp"
-        app:drawableTint="@color/accent_teal"
-        android:text="@string/recurrence_none"
-        android:textColor="@color/text_primary"
-        android:textSize="13sp" />
 
     <!-- שעות התחלה/סיום -->
     <LinearLayout

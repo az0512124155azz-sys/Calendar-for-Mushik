@@ -99,24 +99,28 @@ object NominatimClient {
      * שכוללת מחוז, מיקוד ומדינה שאף אחד לא צריך לראות ברשימת הצעות.
      */
     private fun buildConciseLabel(obj: JSONObject): String {
+        val name = obj.optString("name", "")
         val address = obj.optJSONObject("address")
+        val city = address?.let {
+            it.optString(
+                "city",
+                it.optString("town", it.optString("village", it.optString("municipality", "")))
+            )
+        } ?: ""
+
+        // אם ל-OpenStreetMap יש שם ידוע למקום (אולם, אתר, עסק וכו') - זה מה שמוצג, לא רק כתובת
+        if (name.isNotBlank()) {
+            return if (city.isNotBlank() && !name.contains(city)) "$name, $city" else name
+        }
+
         if (address != null) {
             val road = address.optString("road", "")
             val houseNumber = address.optString("house_number", "")
-            val city = address.optString(
-                "city",
-                address.optString(
-                    "town",
-                    address.optString("village", address.optString("municipality", ""))
-                )
-            )
-
             val roadPart = when {
                 road.isNotBlank() && houseNumber.isNotBlank() -> "$road $houseNumber"
                 road.isNotBlank() -> road
                 else -> ""
             }
-
             val parts = listOfNotNull(
                 roadPart.takeIf { it.isNotBlank() },
                 city.takeIf { it.isNotBlank() }
