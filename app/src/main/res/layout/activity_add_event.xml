@@ -35,7 +35,7 @@
             app:drawableTint="@color/accent_blue"
             android:text="@string/event_date_hint"
             android:textColor="@color/text_primary"
-            android:textSize="14sp"
+            android:textSize="17sp"
             android:textStyle="bold" />
 
         <TextView
@@ -52,7 +52,7 @@
             app:drawableTint="@color/accent_teal"
             android:text="@string/recurrence_none"
             android:textColor="@color/text_primary"
-            android:textSize="13sp" />
+            android:textSize="14sp" />
 
     </LinearLayout>
 
