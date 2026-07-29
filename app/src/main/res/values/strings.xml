@@ -11,7 +11,7 @@
     <string name="event_end_hint">שעת סיום (אופציונלי)</string>
     <string name="event_location_hint">מיקום (אופציונלי)</string>
     <string name="recurrence_none">חזרה: לא חוזר</string>
-    <string name="recurrence_title">האירוע חוזר על עצמו</string>
+    <string name="recurrence_title">כל כמה זמן האירוע חוזר?</string>
     <string-array name="recurrence_options">
         <item>לא חוזר</item>
         <item>כל יום</item>
@@ -21,7 +21,7 @@
         <item>מותאם אישית (ימים)</item>
     </string-array>
     <string name="recurrence_custom_title">כל כמה ימים לחזור?</string>
-    <string name="recurrence_end_title">מתי החזרה נגמרת?</string>
+    <string name="recurrence_end_title">מצוין! עכשיו - מתי לעצור את החזרה?</string>
     <string name="recurrence_end_never">אף פעם</string>
     <string name="recurrence_end_count">אחרי מספר פעמים</string>
     <string name="recurrence_end_until">עד תאריך מסוים</string>
