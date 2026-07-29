@@ -20,20 +20,11 @@
         <item>כל שנה</item>
         <item>מותאם אישית (ימים)</item>
     </string-array>
-    <string name="recurrence_custom_title">בחר ימים בשבוע</string>
+    <string name="recurrence_custom_title">כל כמה ימים לחזור?</string>
     <string name="recurrence_end_title">מתי החזרה נגמרת?</string>
     <string name="recurrence_end_never">אף פעם</string>
     <string name="recurrence_end_count">אחרי מספר פעמים</string>
     <string name="recurrence_end_until">עד תאריך מסוים</string>
-    <string-array name="weekday_names">
-        <item>ראשון</item>
-        <item>שני</item>
-        <item>שלישי</item>
-        <item>רביעי</item>
-        <item>חמישי</item>
-        <item>שישי</item>
-        <item>שבת</item>
-    </string-array>
     <string name="support_email_hint">info@zoom-out.co.il</string>
     <string name="save">שמור</string>
     <string name="cancel">ביטול</string>

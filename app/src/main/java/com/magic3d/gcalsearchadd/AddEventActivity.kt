@@ -236,23 +236,27 @@ class AddEventActivity : AppCompatActivity() {
     }
 
     private fun pickCustomRecurrenceDays() {
-        val dayNames = resources.getStringArray(R.array.weekday_names)
-        val byDayCodes = arrayOf("SU", "MO", "TU", "WE", "TH", "FR", "SA")
-        val checked = BooleanArray(dayNames.size)
+        val input = android.widget.EditText(this).apply {
+            inputType = android.text.InputType.TYPE_CLASS_NUMBER
+            hint = "לדוגמה: 3"
+            setText("1")
+        }
 
         androidx.appcompat.app.AlertDialog.Builder(this, R.style.LightSpinnerTimePickerDialog)
             .setTitle(R.string.recurrence_custom_title)
-            .setMultiChoiceItems(dayNames, checked) { _, which, isChecked ->
-                checked[which] = isChecked
-            }
+            .setView(input)
             .setPositiveButton(R.string.save) { dialog, _ ->
-                val selectedCodes = byDayCodes.filterIndexed { index, _ -> checked[index] }
-                if (selectedCodes.isEmpty()) {
-                    Toast.makeText(this, R.string.recurrence_custom_title, Toast.LENGTH_SHORT).show()
+                val interval = input.text?.toString()?.trim()?.toIntOrNull()
+                if (interval == null || interval <= 0) {
+                    Toast.makeText(this, "יש להזין מספר תקין", Toast.LENGTH_SHORT).show()
                 } else {
-                    val selectedDayNames = dayNames.filterIndexed { index, _ -> checked[index] }
-                    val baseRule = "RRULE:FREQ=WEEKLY;BYDAY=${selectedCodes.joinToString(",")}"
-                    askRecurrenceEnd(baseRule, selectedDayNames.joinToString(", "))
+                    val baseRule = if (interval == 1) {
+                        "RRULE:FREQ=DAILY"
+                    } else {
+                        "RRULE:FREQ=DAILY;INTERVAL=$interval"
+                    }
+                    val label = if (interval == 1) "כל יום" else "כל $interval ימים"
+                    askRecurrenceEnd(baseRule, label)
                 }
                 dialog.dismiss()
             }
