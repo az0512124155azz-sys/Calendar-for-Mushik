@@ -4,233 +4,213 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/bg_app_background">
+    android:background="@drawable/bg_app_background"
+    android:padding="20dp">
 
-    <!-- כל התוכן גולל יחד כיחידה אחת - אין יותר גלילה פנימית נפרדת לרשימת האירועים -->
-    <androidx.core.widget.NestedScrollView
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add_event_title"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/text_primary"
+        android:layout_marginBottom="16dp" />
+
+    <!-- תאריך וחזרה - אותה שורה -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:fillViewport="true"
-        android:clipToPadding="false">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvDatePicker"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="18dp"
+            android:gravity="center_vertical"
+            android:background="@drawable/bg_rounded_field"
+            android:drawableStart="@android:drawable/ic_menu_my_calendar"
+            android:drawablePadding="8dp"
+            app:drawableTint="@color/accent_blue"
+            android:text="@string/event_date_hint"
+            android:textColor="@color/text_primary"
+            android:textSize="19sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvRecurrencePicker"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="10dp"
+            android:padding="18dp"
+            android:gravity="center_vertical"
+            android:background="@drawable/bg_rounded_field"
+            android:drawableStart="@android:drawable/ic_menu_rotate"
+            android:drawablePadding="8dp"
+            app:drawableTint="@color/accent_teal"
+            android:text="@string/recurrence_none"
+            android:textColor="@color/text_primary"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        app:boxCornerRadiusTopStart="28dp"
+        app:boxCornerRadiusTopEnd="28dp"
+        app:boxCornerRadiusBottomStart="28dp"
+        app:boxCornerRadiusBottomEnd="28dp"
+        app:boxBackgroundColor="@color/glass_card"
+        app:boxStrokeWidth="0dp"
+        app:hintTextColor="@color/text_secondary"
+        android:textColorHint="@color/text_secondary"
+        android:hint="@string/event_title_hint">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_primary" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- שדה מיקום עם חיפוש והשלמה אוטומטית -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="20dp">
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@drawable/bg_rounded_field"
+            android:paddingStart="16dp"
+            android:paddingEnd="12dp">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@android:drawable/ic_menu_mylocation"
+                app:tint="@color/accent_purple" />
+
+            <EditText
+                android:id="@+id/etLocation"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@string/add_event_title"
-                android:textSize="20sp"
-                android:textStyle="bold"
+                android:layout_weight="1"
+                android:layout_marginStart="10dp"
+                android:background="@android:color/transparent"
+                android:hint="@string/event_location_hint"
                 android:textColor="@color/text_primary"
-                android:layout_marginBottom="16dp" />
-
-            <!-- תאריך וחזרה - אותה שורה -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/tvDatePicker"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:padding="16dp"
-                    android:gravity="center_vertical"
-                    android:background="@drawable/bg_rounded_field"
-                    android:drawableStart="@android:drawable/ic_menu_my_calendar"
-                    android:drawablePadding="8dp"
-                    app:drawableTint="@color/accent_blue"
-                    android:text="@string/event_date_hint"
-                    android:textColor="@color/text_primary"
-                    android:textSize="17sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tvRecurrencePicker"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="10dp"
-                    android:padding="16dp"
-                    android:gravity="center_vertical"
-                    android:background="@drawable/bg_rounded_field"
-                    android:drawableStart="@android:drawable/ic_menu_rotate"
-                    android:drawablePadding="8dp"
-                    app:drawableTint="@color/accent_teal"
-                    android:text="@string/recurrence_none"
-                    android:textColor="@color/text_primary"
-                    android:textSize="14sp" />
-
-            </LinearLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                app:boxCornerRadiusTopStart="28dp"
-                app:boxCornerRadiusTopEnd="28dp"
-                app:boxCornerRadiusBottomStart="28dp"
-                app:boxCornerRadiusBottomEnd="28dp"
-                app:boxBackgroundColor="@color/glass_card"
-                app:boxStrokeWidth="0dp"
-                app:hintTextColor="@color/text_secondary"
                 android:textColorHint="@color/text_secondary"
-                android:hint="@string/event_title_hint">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/text_primary" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <!-- שדה מיקום עם חיפוש והשלמה אוטומטית -->
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:background="@drawable/bg_rounded_field"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="12dp">
-
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:src="@android:drawable/ic_menu_mylocation"
-                        app:tint="@color/accent_purple" />
-
-                    <EditText
-                        android:id="@+id/etLocation"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginStart="10dp"
-                        android:background="@android:color/transparent"
-                        android:hint="@string/event_location_hint"
-                        android:textColor="@color/text_primary"
-                        android:textColorHint="@color/text_secondary"
-                        android:inputType="text"
-                        android:maxLines="1"
-                        android:paddingTop="12dp"
-                        android:paddingBottom="12dp" />
-
-                </LinearLayout>
-
-                <!-- רשימת הצעות מיקום -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/locationSuggestionsCard"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="54dp"
-                    android:visibility="gone"
-                    app:cardCornerRadius="18dp"
-                    app:cardElevation="8dp"
-                    app:strokeWidth="0dp"
-                    app:cardBackgroundColor="@color/white">
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvLocationSuggestions"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:maxHeight="220dp"
-                        android:nestedScrollingEnabled="false" />
-
-                </com.google.android.material.card.MaterialCardView>
-
-            </FrameLayout>
-
-            <!-- שעות התחלה/סיום -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="12dp">
-
-                <TextView
-                    android:id="@+id/tvStartTimePicker"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:padding="16dp"
-                    android:gravity="center_vertical"
-                    android:background="@drawable/bg_rounded_field"
-                    android:drawableStart="@android:drawable/ic_menu_recent_history"
-                    android:drawablePadding="8dp"
-                    app:drawableTint="@color/accent_green"
-                    android:text="@string/event_start_hint"
-                    android:textColor="@color/text_primary"
-                    android:textSize="13sp" />
-
-                <TextView
-                    android:id="@+id/tvEndTimePicker"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="10dp"
-                    android:padding="16dp"
-                    android:gravity="center_vertical"
-                    android:background="@drawable/bg_rounded_field"
-                    android:drawableStart="@android:drawable/ic_menu_recent_history"
-                    android:drawablePadding="8dp"
-                    app:drawableTint="@color/accent_red"
-                    android:text="@string/event_end_hint"
-                    android:textColor="@color/text_primary"
-                    android:textSize="13sp" />
-
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/tvExistingEventsLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="@string/existing_events_label"
-                android:textColor="@color/text_secondary"
-                android:textSize="13sp"
-                android:visibility="gone" />
-
-            <ProgressBar
-                android:id="@+id/progressExistingEvents"
-                style="?android:attr/progressBarStyleSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:indeterminateTint="@color/accent_blue"
-                android:layout_marginTop="8dp"
-                android:visibility="gone" />
-
-            <!-- שים לב: בלי weight ובלי גובה קבוע - זה גדל לפי התוכן, וה-scroll החיצוני מטפל בגלילה -->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvExistingEvents"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="8dp"
-                android:layout_marginTop="4dp"
-                android:nestedScrollingEnabled="false"
-                android:visibility="gone" />
+                android:inputType="text"
+                android:maxLines="1"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp" />
 
         </LinearLayout>
 
-    </androidx.core.widget.NestedScrollView>
+        <!-- רשימת הצעות מיקום -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/locationSuggestionsCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="54dp"
+            android:visibility="gone"
+            app:cardCornerRadius="18dp"
+            app:cardElevation="8dp"
+            app:strokeWidth="0dp"
+            app:cardBackgroundColor="@color/white">
 
-    <!-- כפתורים - קבועים בתחתית, מחוץ לגלילה -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvLocationSuggestions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxHeight="220dp" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </FrameLayout>
+
+    <!-- שעות התחלה/סיום -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingStart="20dp"
-        android:paddingEnd="20dp"
-        android:paddingTop="12dp"
+        android:layout_marginTop="12dp">
+
+        <TextView
+            android:id="@+id/tvStartTimePicker"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="16dp"
+            android:gravity="center_vertical"
+            android:background="@drawable/bg_rounded_field"
+            android:drawableStart="@android:drawable/ic_menu_recent_history"
+            android:drawablePadding="8dp"
+            app:drawableTint="@color/accent_green"
+            android:text="@string/event_start_hint"
+            android:textColor="@color/text_primary"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/tvEndTimePicker"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="10dp"
+            android:padding="16dp"
+            android:gravity="center_vertical"
+            android:background="@drawable/bg_rounded_field"
+            android:drawableStart="@android:drawable/ic_menu_recent_history"
+            android:drawablePadding="8dp"
+            app:drawableTint="@color/accent_red"
+            android:text="@string/event_end_hint"
+            android:textColor="@color/text_primary"
+            android:textSize="13sp" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvExistingEventsLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/existing_events_label"
+        android:textColor="@color/text_secondary"
+        android:textSize="13sp"
+        android:visibility="gone" />
+
+    <ProgressBar
+        android:id="@+id/progressExistingEvents"
+        style="?android:attr/progressBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminateTint="@color/accent_blue"
+        android:layout_marginTop="8dp"
+        android:visibility="gone" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvExistingEvents"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:paddingTop="8dp"
+        android:layout_marginTop="4dp"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp"
         android:gravity="center_vertical|end">
 
         <com.google.android.material.button.MaterialButton
@@ -265,8 +245,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="14dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="14dp"
         android:gravity="center"
         android:orientation="horizontal">
 

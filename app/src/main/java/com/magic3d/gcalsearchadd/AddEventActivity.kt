@@ -205,6 +205,7 @@ class AddEventActivity : AppCompatActivity() {
 
     /**
      * דיאלוג בחירה פשוט לחזרה על האירוע. הבחירה נשמרת כ-RRULE תקני של Google Calendar.
+     * "מותאם אישית" פותח דיאלוג נוסף לבחירת ימים ספציפיים בשבוע.
      */
     private fun pickRecurrence() {
         val options = resources.getStringArray(R.array.recurrence_options)
@@ -214,8 +215,39 @@ class AddEventActivity : AppCompatActivity() {
         androidx.appcompat.app.AlertDialog.Builder(this, R.style.LightSpinnerTimePickerDialog)
             .setTitle(R.string.recurrence_title)
             .setSingleChoiceItems(options, currentIndex) { dialog, which ->
-                selectedRecurrenceRule = rrules[which]
-                tvRecurrencePicker.text = if (which == 0) getString(R.string.recurrence_none) else "חזרה: ${options[which]}"
+                if (which == options.size - 1) {
+                    // "מותאם אישית" - פותחים דיאלוג בחירת ימים במקום לסגור מיד
+                    dialog.dismiss()
+                    pickCustomRecurrenceDays()
+                } else {
+                    selectedRecurrenceRule = rrules[which]
+                    tvRecurrencePicker.text = if (which == 0) getString(R.string.recurrence_none) else "חזרה: ${options[which]}"
+                    dialog.dismiss()
+                }
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
+    }
+
+    private fun pickCustomRecurrenceDays() {
+        val dayNames = resources.getStringArray(R.array.weekday_names)
+        val byDayCodes = arrayOf("SU", "MO", "TU", "WE", "TH", "FR", "SA")
+        val checked = BooleanArray(dayNames.size)
+
+        androidx.appcompat.app.AlertDialog.Builder(this, R.style.LightSpinnerTimePickerDialog)
+            .setTitle(R.string.recurrence_custom_title)
+            .setMultiChoiceItems(dayNames, checked) { _, which, isChecked ->
+                checked[which] = isChecked
+            }
+            .setPositiveButton(R.string.save) { dialog, _ ->
+                val selectedCodes = byDayCodes.filterIndexed { index, _ -> checked[index] }
+                if (selectedCodes.isEmpty()) {
+                    Toast.makeText(this, R.string.recurrence_custom_title, Toast.LENGTH_SHORT).show()
+                } else {
+                    selectedRecurrenceRule = "RRULE:FREQ=WEEKLY;BYDAY=${selectedCodes.joinToString(",")}"
+                    val selectedDayNames = dayNames.filterIndexed { index, _ -> checked[index] }
+                    tvRecurrencePicker.text = "חזרה: ${selectedDayNames.joinToString(", ")}"
+                }
                 dialog.dismiss()
             }
             .setNegativeButton(R.string.cancel, null)
