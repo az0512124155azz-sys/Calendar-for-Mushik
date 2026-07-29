@@ -235,34 +235,59 @@ class AddEventActivity : AppCompatActivity() {
             .show()
     }
 
-    private fun pickCustomRecurrenceDays() {
-        val input = android.widget.EditText(this).apply {
-            inputType = android.text.InputType.TYPE_CLASS_NUMBER
-            hint = "לדוגמה: 3"
-            setText("1")
-        }
+    /**
+     * דיאלוג קלט מספר בעיצוב מותאם אישית של האפליקציה (במקום דיאלוג ברירת המחדל הלבן והגנרי של אנדרואיד).
+     */
+    private fun showNumberInputDialog(
+        title: String,
+        message: String,
+        prefill: String = "",
+        onConfirm: (Int) -> Unit
+    ) {
+        val view = layoutInflater.inflate(R.layout.dialog_number_input, null)
+        val tvTitle = view.findViewById<TextView>(R.id.tvDialogTitle)
+        val tvMessage = view.findViewById<TextView>(R.id.tvDialogMessage)
+        val etNumber = view.findViewById<EditText>(R.id.etDialogNumber)
+        val btnCancel = view.findViewById<View>(R.id.btnDialogCancel)
+        val btnSaveDialog = view.findViewById<View>(R.id.btnDialogSave)
 
-        androidx.appcompat.app.AlertDialog.Builder(this, R.style.LightSpinnerTimePickerDialog)
-            .setTitle(R.string.recurrence_custom_title)
-            .setMessage("לדוגמה: תזין 3 כדי שהאירוע יחזור כל 3 ימים")
-            .setView(input)
-            .setPositiveButton(R.string.save) { dialog, _ ->
-                val interval = input.text?.toString()?.trim()?.toIntOrNull()
-                if (interval == null || interval <= 0) {
-                    Toast.makeText(this, "יש להזין מספר תקין", Toast.LENGTH_SHORT).show()
-                } else {
-                    val baseRule = if (interval == 1) {
-                        "RRULE:FREQ=DAILY"
-                    } else {
-                        "RRULE:FREQ=DAILY;INTERVAL=$interval"
-                    }
-                    val label = if (interval == 1) "כל יום" else "כל $interval ימים"
-                    askRecurrenceEnd(baseRule, label)
-                }
+        tvTitle.text = title
+        tvMessage.text = message
+        etNumber.setText(prefill)
+
+        val dialog = androidx.appcompat.app.AlertDialog.Builder(this)
+            .setView(view)
+            .create()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+
+        btnCancel.setOnClickListener { dialog.dismiss() }
+        btnSaveDialog.setOnClickListener {
+            val value = etNumber.text?.toString()?.trim()?.toIntOrNull()
+            if (value == null || value <= 0) {
+                Toast.makeText(this, "יש להזין מספר תקין", Toast.LENGTH_SHORT).show()
+            } else {
+                onConfirm(value)
                 dialog.dismiss()
             }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+        }
+
+        dialog.show()
+    }
+
+    private fun pickCustomRecurrenceDays() {
+        showNumberInputDialog(
+            title = getString(R.string.recurrence_custom_title),
+            message = "לדוגמה: תזין 3 כדי שהאירוע יחזור כל 3 ימים",
+            prefill = "1"
+        ) { interval ->
+            val baseRule = if (interval == 1) {
+                "RRULE:FREQ=DAILY"
+            } else {
+                "RRULE:FREQ=DAILY;INTERVAL=$interval"
+            }
+            val label = if (interval == 1) "כל יום" else "כל $interval ימים"
+            askRecurrenceEnd(baseRule, label)
+        }
     }
 
     /**
@@ -293,27 +318,13 @@ class AddEventActivity : AppCompatActivity() {
     }
 
     private fun askRecurrenceCount(baseRule: String, label: String) {
-        val input = android.widget.EditText(this).apply {
-            inputType = android.text.InputType.TYPE_CLASS_NUMBER
-            hint = "לדוגמה: 10"
+        showNumberInputDialog(
+            title = getString(R.string.recurrence_end_count),
+            message = "לדוגמה: תזין 10 כדי שהאירוע יחזור 10 פעמים ואז ייפסק"
+        ) { count ->
+            selectedRecurrenceRule = "$baseRule;COUNT=$count"
+            tvRecurrencePicker.text = "חזרה: $label ($count פעמים)"
         }
-
-        androidx.appcompat.app.AlertDialog.Builder(this, R.style.LightSpinnerTimePickerDialog)
-            .setTitle(R.string.recurrence_end_count)
-            .setMessage("לדוגמה: תזין 10 כדי שהאירוע יחזור 10 פעמים ואז ייפסק")
-            .setView(input)
-            .setPositiveButton(R.string.save) { dialog, _ ->
-                val count = input.text?.toString()?.trim()?.toIntOrNull()
-                if (count == null || count <= 0) {
-                    Toast.makeText(this, "יש להזין מספר תקין", Toast.LENGTH_SHORT).show()
-                } else {
-                    selectedRecurrenceRule = "$baseRule;COUNT=$count"
-                    tvRecurrencePicker.text = "חזרה: $label ($count פעמים)"
-                }
-                dialog.dismiss()
-            }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
     }
 
     private fun askRecurrenceUntilDate(baseRule: String, label: String) {
