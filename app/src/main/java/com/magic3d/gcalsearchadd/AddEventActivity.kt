@@ -244,6 +244,7 @@ class AddEventActivity : AppCompatActivity() {
 
         androidx.appcompat.app.AlertDialog.Builder(this, R.style.LightSpinnerTimePickerDialog)
             .setTitle(R.string.recurrence_custom_title)
+            .setMessage("לדוגמה: תזין 3 כדי שהאירוע יחזור כל 3 ימים")
             .setView(input)
             .setPositiveButton(R.string.save) { dialog, _ ->
                 val interval = input.text?.toString()?.trim()?.toIntOrNull()
@@ -275,7 +276,7 @@ class AddEventActivity : AppCompatActivity() {
         )
 
         androidx.appcompat.app.AlertDialog.Builder(this, R.style.LightSpinnerTimePickerDialog)
-            .setTitle(R.string.recurrence_end_title)
+            .setTitle("$label - ${getString(R.string.recurrence_end_title)}")
             .setItems(endOptions) { dialog, which ->
                 dialog.dismiss()
                 when (which) {
@@ -299,6 +300,7 @@ class AddEventActivity : AppCompatActivity() {
 
         androidx.appcompat.app.AlertDialog.Builder(this, R.style.LightSpinnerTimePickerDialog)
             .setTitle(R.string.recurrence_end_count)
+            .setMessage("לדוגמה: תזין 10 כדי שהאירוע יחזור 10 פעמים ואז ייפסק")
             .setView(input)
             .setPositiveButton(R.string.save) { dialog, _ ->
                 val count = input.text?.toString()?.trim()?.toIntOrNull()
