@@ -45,4 +45,6 @@
     <string name="recurrence_prefix">التكرار: %1$s</string>
     <string name="recurrence_with_count">التكرار: %1$s (%2$d مرات)</string>
     <string name="recurrence_with_until">التكرار: %1$s (حتى %2$s)</string>
+    <string name="language_picker_title">لغة التطبيق</string>
+    <string name="language_system_default">كما في الهاتف</string>
 </resources>

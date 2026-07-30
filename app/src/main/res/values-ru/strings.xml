@@ -45,4 +45,6 @@
     <string name="recurrence_prefix">Повтор: %1$s</string>
     <string name="recurrence_with_count">Повтор: %1$s (%2$d раз)</string>
     <string name="recurrence_with_until">Повтор: %1$s (до %2$s)</string>
+    <string name="language_picker_title">Язык приложения</string>
+    <string name="language_system_default">Как в телефоне</string>
 </resources>
