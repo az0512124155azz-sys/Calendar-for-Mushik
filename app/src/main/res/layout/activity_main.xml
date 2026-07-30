@@ -33,6 +33,26 @@
             android:textStyle="bold" />
     </LinearLayout>
 
+    <!-- תג שפה קטן - לוחצים ובוחרים שפת אפליקציה, בלי קשר לשפת המכשיר -->
+    <TextView
+        android:id="@+id/tvLanguageBadge"
+        android:layout_width="34dp"
+        android:layout_height="34dp"
+        android:layout_marginTop="14dp"
+        android:layout_marginEnd="14dp"
+        android:background="@drawable/bg_widget_circle"
+        android:backgroundTint="#33FFFFFF"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
+        android:gravity="center"
+        android:text="עב"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <!-- כפתור התחברות - מוצג רק כשהמשתמש עדיין לא מחובר -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSignIn"

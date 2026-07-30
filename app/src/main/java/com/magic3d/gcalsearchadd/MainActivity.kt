@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -45,6 +46,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tvEmpty: android.widget.TextView
     private lateinit var progressBar: android.widget.ProgressBar
     private lateinit var fabAddEvent: View
+    private lateinit var tvLanguageBadge: TextView
 
     private val signInLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -77,6 +79,9 @@ class MainActivity : AppCompatActivity() {
         fabAddEvent.setOnClickListener { openAddEvent() }
         findViewById<View>(R.id.btnSupportEmail).setOnClickListener { openSupportEmail() }
 
+        tvLanguageBadge.text = LanguagePicker.currentBadgeText()
+        tvLanguageBadge.setOnClickListener { LanguagePicker.show(this) }
+
         adapter = EventAdapter(emptyList())
         rvEvents.layoutManager = LinearLayoutManager(this)
         rvEvents.adapter = adapter
@@ -100,6 +105,7 @@ class MainActivity : AppCompatActivity() {
         tvEmpty = findViewById(R.id.tvEmpty)
         progressBar = findViewById(R.id.progressBar)
         fabAddEvent = findViewById(R.id.fabAddEvent)
+        tvLanguageBadge = findViewById(R.id.tvLanguageBadge)
     }
 
     private fun setupGoogleSignIn() {

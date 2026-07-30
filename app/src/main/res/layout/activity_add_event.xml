@@ -35,8 +35,10 @@
             app:drawableTint="@color/accent_blue"
             android:text="@string/event_date_hint"
             android:textColor="@color/text_primary"
-            android:textSize="15sp"
             android:maxLines="1"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="10sp"
+            android:autoSizeMaxTextSize="19sp"
             android:textStyle="bold" />
 
         <TextView
@@ -53,8 +55,10 @@
             app:drawableTint="@color/accent_teal"
             android:text="@string/recurrence_none"
             android:textColor="@color/text_primary"
-            android:textSize="14sp"
             android:maxLines="1"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="9sp"
+            android:autoSizeMaxTextSize="16sp"
             android:ellipsize="end"
             android:textStyle="bold" />
 
