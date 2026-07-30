@@ -245,10 +245,22 @@ class AddEventActivity : AppCompatActivity() {
         val etNumber = view.findViewById<EditText>(R.id.etDialogNumber)
         val btnCancel = view.findViewById<View>(R.id.btnDialogCancel)
         val btnSaveDialog = view.findViewById<View>(R.id.btnDialogSave)
+        val btnStepDown = view.findViewById<View>(R.id.btnStepDown)
+        val btnStepUp = view.findViewById<View>(R.id.btnStepUp)
 
         tvTitle.text = title
         tvMessage.text = message
-        etNumber.setText(prefill)
+        etNumber.setText(prefill.ifBlank { "1" })
+
+        btnStepDown.setOnClickListener {
+            val current = etNumber.text?.toString()?.trim()?.toIntOrNull() ?: 1
+            val newValue = (current - 1).coerceAtLeast(1)
+            etNumber.setText(newValue.toString())
+        }
+        btnStepUp.setOnClickListener {
+            val current = etNumber.text?.toString()?.trim()?.toIntOrNull() ?: 0
+            etNumber.setText((current + 1).toString())
+        }
 
         val dialog = androidx.appcompat.app.AlertDialog.Builder(this)
             .setView(view)
