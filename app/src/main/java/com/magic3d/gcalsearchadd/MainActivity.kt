@@ -132,7 +132,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun onSignedIn(account: GoogleSignInAccount) {
         val androidAccount = account.account ?: run {
-            Toast.makeText(this, "לא נמצא חשבון Google תקין", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.error_no_valid_account), Toast.LENGTH_LONG).show()
             return
         }
         repository = CalendarRepository(this, androidAccount)
@@ -253,7 +253,7 @@ class MainActivity : AppCompatActivity() {
         val email = getString(R.string.support_email_hint)
         val intent = Intent(Intent.ACTION_SENDTO).apply {
             data = Uri.parse("mailto:$email")
-            putExtra(Intent.EXTRA_SUBJECT, "${getString(R.string.app_name)} - פנייה מהאפליקציה")
+            putExtra(Intent.EXTRA_SUBJECT, getString(R.string.support_email_subject, getString(R.string.app_name)))
         }
         try {
             startActivity(intent)

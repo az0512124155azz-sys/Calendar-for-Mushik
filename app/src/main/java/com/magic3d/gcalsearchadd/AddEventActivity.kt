@@ -194,7 +194,7 @@ class AddEventActivity : AppCompatActivity() {
         val email = getString(R.string.support_email_hint)
         val intent = Intent(Intent.ACTION_SENDTO).apply {
             data = Uri.parse("mailto:$email")
-            putExtra(Intent.EXTRA_SUBJECT, "${getString(R.string.app_name)} - פנייה מהאפליקציה")
+            putExtra(Intent.EXTRA_SUBJECT, getString(R.string.support_email_subject, getString(R.string.app_name)))
         }
         try {
             startActivity(intent)
@@ -259,7 +259,7 @@ class AddEventActivity : AppCompatActivity() {
         btnSaveDialog.setOnClickListener {
             val value = etNumber.text?.toString()?.trim()?.toIntOrNull()
             if (value == null || value <= 0) {
-                Toast.makeText(this, "יש להזין מספר תקין", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.error_invalid_number), Toast.LENGTH_SHORT).show()
             } else {
                 onConfirm(value)
                 dialog.dismiss()
@@ -272,7 +272,7 @@ class AddEventActivity : AppCompatActivity() {
     private fun pickCustomRecurrenceDays() {
         showNumberInputDialog(
             title = getString(R.string.recurrence_custom_title),
-            message = "לדוגמה: תזין 3 כדי שהאירוע יחזור כל 3 ימים",
+            message = getString(R.string.recurrence_custom_message),
             prefill = "1"
         ) { interval ->
             val baseRule = if (interval == 1) {
@@ -280,7 +280,7 @@ class AddEventActivity : AppCompatActivity() {
             } else {
                 "RRULE:FREQ=DAILY;INTERVAL=$interval"
             }
-            val label = if (interval == 1) "כל יום" else "כל $interval ימים"
+            val label = if (interval == 1) getString(R.string.every_day) else getString(R.string.every_n_days, interval)
             askRecurrenceEnd(baseRule, label)
         }
     }
@@ -299,7 +299,7 @@ class AddEventActivity : AppCompatActivity() {
             when (which) {
                 0 -> {
                     selectedRecurrenceRule = baseRule
-                    tvRecurrencePicker.text = "חזרה: $label"
+                    tvRecurrencePicker.text = getString(R.string.recurrence_prefix, label)
                 }
                 1 -> askRecurrenceCount(baseRule, label)
                 2 -> askRecurrenceUntilDate(baseRule, label)
@@ -310,10 +310,10 @@ class AddEventActivity : AppCompatActivity() {
     private fun askRecurrenceCount(baseRule: String, label: String) {
         showNumberInputDialog(
             title = getString(R.string.recurrence_end_count),
-            message = "לדוגמה: תזין 10 כדי שהאירוע יחזור 10 פעמים ואז ייפסק"
+            message = getString(R.string.recurrence_count_message)
         ) { count ->
             selectedRecurrenceRule = "$baseRule;COUNT=$count"
-            tvRecurrencePicker.text = "חזרה: $label ($count פעמים)"
+            tvRecurrencePicker.text = getString(R.string.recurrence_with_count, label, count)
         }
     }
 
@@ -331,7 +331,7 @@ class AddEventActivity : AppCompatActivity() {
             val untilStr = untilFormat.format(java.util.Date(localEndOfDay))
             selectedRecurrenceRule = "$baseRule;UNTIL=$untilStr"
             val untilDisplay = displayDateFormat.format(localEndOfDay)
-            tvRecurrencePicker.text = "חזרה: $label (עד $untilDisplay)"
+            tvRecurrencePicker.text = getString(R.string.recurrence_with_until, label, untilDisplay)
         }
 
         picker.show(supportFragmentManager, "recurrence_until_picker")
@@ -440,7 +440,7 @@ class AddEventActivity : AppCompatActivity() {
 
         val repo = repository
         if (repo == null) {
-            Toast.makeText(this, "יש להתחבר מחדש ל-Google", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.error_reconnect_google), Toast.LENGTH_LONG).show()
             return
         }
 
