@@ -208,31 +208,26 @@ class AddEventActivity : AppCompatActivity() {
      * שואלים גם מתי החזרה נגמרת - אף פעם / אחרי מספר פעמים / עד תאריך.
      */
     private fun pickRecurrence() {
-        val options = resources.getStringArray(R.array.recurrence_options)
+        val options = resources.getStringArray(R.array.recurrence_options).toList()
 
-        androidx.appcompat.app.AlertDialog.Builder(this, R.style.LightSpinnerTimePickerDialog)
-            .setTitle(R.string.recurrence_title)
-            .setItems(options) { dialog, which ->
-                dialog.dismiss()
-                when (which) {
-                    0 -> {
-                        selectedRecurrenceRule = null
-                        tvRecurrencePicker.text = getString(R.string.recurrence_none)
+        showOptionListDialog(getString(R.string.recurrence_title), options) { which ->
+            when (which) {
+                0 -> {
+                    selectedRecurrenceRule = null
+                    tvRecurrencePicker.text = getString(R.string.recurrence_none)
+                }
+                options.size - 1 -> pickCustomRecurrenceDays()
+                else -> {
+                    val freqRule = when (which) {
+                        1 -> "RRULE:FREQ=DAILY"
+                        2 -> "RRULE:FREQ=WEEKLY"
+                        3 -> "RRULE:FREQ=MONTHLY"
+                        else -> "RRULE:FREQ=YEARLY"
                     }
-                    options.size - 1 -> pickCustomRecurrenceDays()
-                    else -> {
-                        val freqRule = when (which) {
-                            1 -> "RRULE:FREQ=DAILY"
-                            2 -> "RRULE:FREQ=WEEKLY"
-                            3 -> "RRULE:FREQ=MONTHLY"
-                            else -> "RRULE:FREQ=YEARLY"
-                        }
-                        askRecurrenceEnd(freqRule, options[which])
-                    }
+                    askRecurrenceEnd(freqRule, options[which])
                 }
             }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+        }
     }
 
     /**
@@ -294,27 +289,22 @@ class AddEventActivity : AppCompatActivity() {
      * שלב שני: מתי החזרה נגמרת. מוסיף COUNT= או UNTIL= ל-RRULE הבסיסי לפי הבחירה.
      */
     private fun askRecurrenceEnd(baseRule: String, label: String) {
-        val endOptions = arrayOf(
+        val endOptions = listOf(
             getString(R.string.recurrence_end_never),
             getString(R.string.recurrence_end_count),
             getString(R.string.recurrence_end_until)
         )
 
-        androidx.appcompat.app.AlertDialog.Builder(this, R.style.LightSpinnerTimePickerDialog)
-            .setTitle("$label - ${getString(R.string.recurrence_end_title)}")
-            .setItems(endOptions) { dialog, which ->
-                dialog.dismiss()
-                when (which) {
-                    0 -> {
-                        selectedRecurrenceRule = baseRule
-                        tvRecurrencePicker.text = "חזרה: $label"
-                    }
-                    1 -> askRecurrenceCount(baseRule, label)
-                    2 -> askRecurrenceUntilDate(baseRule, label)
+        showOptionListDialog("$label - ${getString(R.string.recurrence_end_title)}", endOptions) { which ->
+            when (which) {
+                0 -> {
+                    selectedRecurrenceRule = baseRule
+                    tvRecurrencePicker.text = "חזרה: $label"
                 }
+                1 -> askRecurrenceCount(baseRule, label)
+                2 -> askRecurrenceUntilDate(baseRule, label)
             }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+        }
     }
 
     private fun askRecurrenceCount(baseRule: String, label: String) {
@@ -345,6 +335,53 @@ class AddEventActivity : AppCompatActivity() {
         }
 
         picker.show(supportFragmentManager, "recurrence_until_picker")
+    }
+
+    /**
+     * דיאלוג רשימת אפשרויות בעיצוב מותאם אישית של האפליקציה (כרטיסייה לבנה מעוגלת,
+     * לא חלון ברירת המחדל הלבן-מלבני של אנדרואיד).
+     */
+    private fun showOptionListDialog(title: String, options: List<String>, onSelect: (Int) -> Unit) {
+        val view = layoutInflater.inflate(R.layout.dialog_option_list, null)
+        val tvTitle = view.findViewById<TextView>(R.id.tvDialogTitle)
+        val container = view.findViewById<android.widget.LinearLayout>(R.id.optionsContainer)
+        val btnCancel = view.findViewById<View>(R.id.btnDialogCancel)
+
+        tvTitle.text = title
+
+        val dialog = androidx.appcompat.app.AlertDialog.Builder(this)
+            .setView(view)
+            .create()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+
+        options.forEachIndexed { index, optionText ->
+            val rippleValue = android.util.TypedValue()
+            theme.resolveAttribute(android.R.attr.selectableItemBackground, rippleValue, true)
+
+            val row = TextView(this).apply {
+                text = optionText
+                textSize = 15f
+                setTextColor(androidx.core.content.ContextCompat.getColor(context, R.color.text_primary))
+                setPadding(36, 30, 36, 30)
+                background = androidx.core.content.ContextCompat.getDrawable(context, R.drawable.bg_rounded_field)
+                foreground = androidx.core.content.ContextCompat.getDrawable(context, rippleValue.resourceId)
+                isClickable = true
+                isFocusable = true
+                setOnClickListener {
+                    dialog.dismiss()
+                    onSelect(index)
+                }
+            }
+            val params = android.widget.LinearLayout.LayoutParams(
+                android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
+                android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            params.topMargin = if (index == 0) 0 else 20
+            container.addView(row, params)
+        }
+
+        btnCancel.setOnClickListener { dialog.dismiss() }
+        dialog.show()
     }
 
     private fun pickDate() {
