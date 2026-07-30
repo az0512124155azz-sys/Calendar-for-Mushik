@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">EventSpot</string>
+    <string name="sign_in_with_google">Se connecter avec Google</string>
+    <string name="search_hint">Date (12/04/2026) ou nom de l\'événement</string>
+    <string name="no_events_found">Aucun événement ce jour-là</string>
+    <string name="add_event_title">Ajouter un nouvel événement</string>
+    <string name="event_title_hint">Titre de l\'événement</string>
+    <string name="event_date_hint">Date de l\'événement</string>
+    <string name="event_start_hint">Heure de début (facultatif)</string>
+    <string name="event_end_hint">Heure de fin (facultatif)</string>
+    <string name="event_location_hint">Lieu (facultatif)</string>
+    <string name="recurrence_none">Répétition : jamais</string>
+    <string name="recurrence_title">À quelle fréquence l\'événement se répète-t-il ?</string>
+    <string-array name="recurrence_options">
+        <item>Jamais</item>
+        <item>Chaque jour</item>
+        <item>Chaque semaine</item>
+        <item>Chaque mois</item>
+        <item>Chaque année</item>
+        <item>Personnalisé (jours)</item>
+    </string-array>
+    <string name="recurrence_custom_title">Répéter tous les combien de jours ?</string>
+    <string name="recurrence_end_title">Parfait ! Maintenant - quand la répétition doit-elle s\'arrêter ?</string>
+    <string name="recurrence_end_never">Jamais</string>
+    <string name="recurrence_end_count">Après un certain nombre de fois</string>
+    <string name="recurrence_end_until">Jusqu\'à une date précise</string>
+    <string name="support_email_hint">info@zoom-out.co.il</string>
+    <string name="support_email_subject">%1$s - Demande depuis l\'application</string>
+    <string name="save">Enregistrer</string>
+    <string name="cancel">Annuler</string>
+
+    <string name="saving_event">Enregistrement de l\'événement…</string>
+    <string name="event_saved">Événement enregistré avec succès dans le calendrier</string>
+    <string name="existing_events_label">Événements existants ce jour-là :</string>
+    <string name="no_existing_events">Aucun autre événement ce jour-là</string>
+    <string name="error_generic">Erreur : %1$s</string>
+    <string name="error_invalid_number">Veuillez entrer un nombre valide</string>
+    <string name="error_reconnect_google">Veuillez vous reconnecter à Google</string>
+    <string name="error_no_valid_account">Aucun compte Google valide trouvé</string>
+    <string name="recurrence_custom_message">Par exemple : entrez 3 pour que l\'événement se répète tous les 3 jours</string>
+    <string name="recurrence_count_message">Par exemple : entrez 10 pour que l\'événement se répète 10 fois puis s\'arrête</string>
+    <string name="every_day">Chaque jour</string>
+    <string name="every_n_days">Tous les %1$d jours</string>
+    <string name="recurrence_prefix">Répétition : %1$s</string>
+    <string name="recurrence_with_count">Répétition : %1$s (%2$d fois)</string>
+    <string name="recurrence_with_until">Répétition : %1$s (jusqu\'au %2$s)</string>
+</resources>

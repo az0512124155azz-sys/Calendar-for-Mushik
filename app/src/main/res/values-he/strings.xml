@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">EventSpot</string>
+    <string name="sign_in_with_google">התחבר עם Google</string>
+    <string name="search_hint">תאריך (12.04.2026) או שם האירוע</string>
+    <string name="no_events_found">אין אירועים ביום זה</string>
+    <string name="add_event_title">הוספת אירוע חדש</string>
+    <string name="event_title_hint">כותרת האירוע</string>
+    <string name="event_date_hint">תאריך האירוע</string>
+    <string name="event_start_hint">שעת התחלה (אופציונלי)</string>
+    <string name="event_end_hint">שעת סיום (אופציונלי)</string>
+    <string name="event_location_hint">מיקום (אופציונלי)</string>
+    <string name="recurrence_none">חזרה: לא חוזר</string>
+    <string name="recurrence_title">כל כמה זמן האירוע חוזר?</string>
+    <string-array name="recurrence_options">
+        <item>לא חוזר</item>
+        <item>כל יום</item>
+        <item>כל שבוע</item>
+        <item>כל חודש</item>
+        <item>כל שנה</item>
+        <item>מותאם אישית (ימים)</item>
+    </string-array>
+    <string name="recurrence_custom_title">כל כמה ימים לחזור?</string>
+    <string name="recurrence_end_title">מצוין! עכשיו - מתי לעצור את החזרה?</string>
+    <string name="recurrence_end_never">אף פעם</string>
+    <string name="recurrence_end_count">אחרי מספר פעמים</string>
+    <string name="recurrence_end_until">עד תאריך מסוים</string>
+    <string name="support_email_hint">info@zoom-out.co.il</string>
+    <string name="support_email_subject">%1$s - App inquiry</string>
+    <string name="save">שמור</string>
+    <string name="cancel">ביטול</string>
+
+    <string name="saving_event">שומר אירוע…</string>
+    <string name="event_saved">האירוע נשמר ביומן בהצלחה</string>
+    <string name="existing_events_label">אירועים קיימים ביום זה:</string>
+    <string name="no_existing_events">אין אירועים אחרים ביום זה</string>
+    <string name="error_generic">שגיאה: %1$s</string>
+    <string name="error_invalid_number">יש להזין מספר תקין</string>
+    <string name="error_reconnect_google">יש להתחבר מחדש ל-Google</string>
+    <string name="error_no_valid_account">לא נמצא חשבון Google תקין</string>
+    <string name="recurrence_custom_message">לדוגמה: תזין 3 כדי שהאירוע יחזור כל 3 ימים</string>
+    <string name="recurrence_count_message">לדוגמה: תזין 10 כדי שהאירוע יחזור 10 פעמים ואז ייפסק</string>
+    <string name="every_day">כל יום</string>
+    <string name="every_n_days">כל %1$d ימים</string>
+    <string name="recurrence_prefix">חזרה: %1$s</string>
+    <string name="recurrence_with_count">חזרה: %1$s (%2$d פעמים)</string>
+    <string name="recurrence_with_until">חזרה: %1$s (עד %2$s)</string>
+</resources>
