@@ -64,6 +64,11 @@ object LanguagePicker {
         val rippleValue = TypedValue()
         activity.theme.resolveAttribute(android.R.attr.selectableItemBackground, rippleValue, true)
 
+        val currentTag: String? = run {
+            val applied = AppCompatDelegate.getApplicationLocales()
+            if (applied.isEmpty) null else applied[0]?.language
+        }
+
         buildOptions(activity).forEachIndexed { index, option ->
             val row = LinearLayout(activity).apply {
                 orientation = LinearLayout.HORIZONTAL
@@ -93,6 +98,19 @@ object LanguagePicker {
 
             row.addView(dot)
             row.addView(label)
+
+            // וי ✓ ליד השפה הפעילה כרגע
+            val isSelected = (option.tag == null && currentTag == null) || (option.tag != null && option.tag == currentTag)
+            if (isSelected) {
+                val check = TextView(activity).apply {
+                    text = "✓"
+                    textSize = 17f
+                    textAlignment = View.TEXT_ALIGNMENT_CENTER
+                    setTextColor(ContextCompat.getColor(context, R.color.accent_blue))
+                    setTypeface(typeface, android.graphics.Typeface.BOLD)
+                }
+                row.addView(check)
+            }
 
             row.setOnClickListener {
                 dialog.dismiss()
