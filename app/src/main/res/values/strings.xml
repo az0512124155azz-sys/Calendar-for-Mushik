@@ -20,7 +20,7 @@
         <item>Every year</item>
         <item>Custom (days)</item>
     </string-array>
-    <string name="recurrence_custom_title">Repeat every how many days?</string>
+    <string name="recurrence_custom_title">How many consecutive days?</string>
     <string name="recurrence_end_title">Great! Now - when should the repetition stop?</string>
     <string name="recurrence_end_never">Never</string>
     <string name="recurrence_end_count">After a number of times</string>
@@ -38,7 +38,7 @@
     <string name="error_invalid_number">Please enter a valid number</string>
     <string name="error_reconnect_google">Please reconnect to Google</string>
     <string name="error_no_valid_account">No valid Google account found</string>
-    <string name="recurrence_custom_message">For example: enter 3 for the event to repeat every 3 days</string>
+    <string name="recurrence_custom_message">For example: enter 3 for the event to repeat daily for 3 days in a row, starting from the event date</string>
     <string name="recurrence_count_message">For example: enter 10 for the event to repeat 10 times and then stop</string>
     <string name="every_day">Every day</string>
     <string name="every_n_days">Every %1$d days</string>
@@ -47,4 +47,5 @@
     <string name="recurrence_with_until">Repeat: %1$s (until %2$s)</string>
     <string name="language_picker_title">App language</string>
     <string name="language_system_default">System default</string>
+    <string name="recurrence_custom_days_label">%1$d consecutive days</string>
 </resources>

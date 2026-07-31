@@ -20,7 +20,7 @@
         <item>Каждый год</item>
         <item>Настраиваемо (дни)</item>
     </string-array>
-    <string name="recurrence_custom_title">Повторять через сколько дней?</string>
+    <string name="recurrence_custom_title">Сколько дней подряд?</string>
     <string name="recurrence_end_title">Отлично! Теперь - когда остановить повтор?</string>
     <string name="recurrence_end_never">Никогда</string>
     <string name="recurrence_end_count">После определённого числа раз</string>
@@ -38,7 +38,7 @@
     <string name="error_invalid_number">Введите корректное число</string>
     <string name="error_reconnect_google">Пожалуйста, переподключитесь к Google</string>
     <string name="error_no_valid_account">Действительный аккаунт Google не найден</string>
-    <string name="recurrence_custom_message">Например: введите 3, чтобы событие повторялось каждые 3 дня</string>
+    <string name="recurrence_custom_message">Например: введите 3, чтобы событие повторялось каждый день в течение 3 дней подряд, начиная с даты события</string>
     <string name="recurrence_count_message">Например: введите 10, чтобы событие повторилось 10 раз и остановилось</string>
     <string name="every_day">Каждый день</string>
     <string name="every_n_days">Каждые %1$d дней</string>
@@ -47,4 +47,5 @@
     <string name="recurrence_with_until">Повтор: %1$s (до %2$s)</string>
     <string name="language_picker_title">Язык приложения</string>
     <string name="language_system_default">Как в телефоне</string>
+    <string name="recurrence_custom_days_label">%1$d дней подряд</string>
 </resources>

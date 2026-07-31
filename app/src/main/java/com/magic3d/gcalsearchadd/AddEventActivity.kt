@@ -285,15 +285,13 @@ class AddEventActivity : AppCompatActivity() {
         showNumberInputDialog(
             title = getString(R.string.recurrence_custom_title),
             message = getString(R.string.recurrence_custom_message),
-            prefill = "1"
-        ) { interval ->
-            val baseRule = if (interval == 1) {
-                "RRULE:FREQ=DAILY"
-            } else {
-                "RRULE:FREQ=DAILY;INTERVAL=$interval"
-            }
-            val label = if (interval == 1) getString(R.string.every_day) else getString(R.string.every_n_days, interval)
-            askRecurrenceEnd(baseRule, label)
+            prefill = "3"
+        ) { daysCount ->
+            // "מותאם אישית (ימים)" = האירוע חוזר כל יום ברציפות, בסך הכל daysCount ימים כולל יום ההתחלה
+            val baseRule = "RRULE:FREQ=DAILY;COUNT=$daysCount"
+            val label = getString(R.string.recurrence_custom_days_label, daysCount)
+            selectedRecurrenceRule = baseRule
+            tvRecurrencePicker.text = getString(R.string.recurrence_prefix, label)
         }
     }
 
