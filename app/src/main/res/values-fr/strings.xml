@@ -38,7 +38,7 @@
     <string name="error_invalid_number">Veuillez entrer un nombre valide</string>
     <string name="error_reconnect_google">Veuillez vous reconnecter à Google</string>
     <string name="error_no_valid_account">Aucun compte Google valide trouvé</string>
-    <string name="recurrence_custom_message">Par exemple : entrez 3 pour que l'événement se répète chaque jour pendant 3 jours consécutifs, à partir de la date de l'événement</string>
+    <string name="recurrence_custom_message">Par exemple : entrez 3 pour que l\'événement se répète chaque jour pendant 3 jours consécutifs, à partir de la date de l\'événement</string>
     <string name="recurrence_count_message">Par exemple : entrez 10 pour que l\'événement se répète 10 fois puis s\'arrête</string>
     <string name="every_day">Chaque jour</string>
     <string name="every_n_days">Tous les %1$d jours</string>
