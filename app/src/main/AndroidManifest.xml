@@ -7,9 +7,10 @@
 
     <application
         android:allowBackup="true"
-        android:label="GCal Search &amp; Add"
+        android:label="@string/app_name"
         android:icon="@mipmap/ic_launcher"
         android:theme="@style/Theme.GCalSearchAdd"
+        android:localeConfig="@xml/locales_config"
         android:supportsRtl="true">
 
         <activity

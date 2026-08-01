@@ -27,10 +27,7 @@ object LanguagePicker {
 
     private fun buildOptions(activity: Activity): List<LangOption> = listOf(
         LangOption(activity.getString(R.string.language_system_default), null, R.color.text_secondary),
-        // הערה: יש באג ידוע ב-AndroidX שבו "he" כתג שפה בזמן-ריצה לא תמיד מתאים לתיקיית
-        // המשאבים values-he. "iw" (הקוד ההיסטורי) כן מתאים נכון בזמן ריצה, אז משתמשים בו כאן -
-        // בעוד שתיקיית המשאבים עצמה עדיין נקראת values-he (השם היחיד שכלי הבנייה מקבלים).
-        LangOption("עברית", "iw", R.color.accent_blue),
+        LangOption("עברית", "he", R.color.accent_blue),
         LangOption("English", "en", R.color.accent_green),
         LangOption("Français", "fr", R.color.accent_purple),
         LangOption("Русский", "ru", R.color.accent_orange),
