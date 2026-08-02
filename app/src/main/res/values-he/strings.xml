@@ -46,6 +46,6 @@
     <string name="recurrence_with_count">חזרה: %1$s (%2$d פעמים)</string>
     <string name="recurrence_with_until">חזרה: %1$s (עד %2$s)</string>
     <string name="language_picker_title">שפת האפליקציה</string>
-    <string name="language_system_default">כמו בטלפון</string>
+    <string name="language_system_default">שפת מערכת</string>
     <string name="recurrence_custom_days_label">%1$d ימים ברציפות</string>
 </resources>

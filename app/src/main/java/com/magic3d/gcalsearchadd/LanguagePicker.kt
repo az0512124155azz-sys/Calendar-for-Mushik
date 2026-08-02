@@ -28,10 +28,10 @@ object LanguagePicker {
     private fun buildOptions(activity: Activity): List<LangOption> = listOf(
         LangOption(activity.getString(R.string.language_system_default), null, R.color.text_secondary),
         LangOption("עברית", "he", R.color.accent_blue),
+        LangOption("العربية", "ar", R.color.accent_red),
         LangOption("English", "en", R.color.accent_green),
         LangOption("Français", "fr", R.color.accent_purple),
-        LangOption("Русский", "ru", R.color.accent_orange),
-        LangOption("العربية", "ar", R.color.accent_red)
+        LangOption("Русский", "ru", R.color.accent_orange)
     )
 
     fun currentBadgeText(): String {
