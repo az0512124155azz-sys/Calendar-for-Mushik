@@ -81,6 +81,10 @@ class MainActivity : AppCompatActivity() {
 
         tvLanguageBadge.text = LanguagePicker.currentBadgeText()
         tvLanguageBadge.setOnClickListener { LanguagePicker.show(this) }
+        tvLanguageBadge.setOnLongClickListener {
+            LanguagePicker.showDebugInfo(this)
+            true
+        }
 
         adapter = EventAdapter(emptyList())
         rvEvents.layoutManager = LinearLayoutManager(this)

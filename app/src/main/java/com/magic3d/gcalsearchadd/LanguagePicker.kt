@@ -47,6 +47,40 @@ object LanguagePicker {
         }
     }
 
+    /**
+     * כלי אבחון זמני - מציג בדיוק מה אנדרואיד חושב שהשפה הנוכחית, כדי לדעת בוודאות
+     * איפה בדיוק התהליך נשבר, במקום לנחש.
+     */
+    fun showDebugInfo(activity: Activity) {
+        val appLocales = AppCompatDelegate.getApplicationLocales()
+        val appLocalesStr = if (appLocales.isEmpty) "(ריק - עוקב אחרי המערכת)" else appLocales.toLanguageTags()
+        val javaDefault = Locale.getDefault().toString()
+        val javaDefaultTag = Locale.getDefault().toLanguageTag()
+        val configLocales = activity.resources.configuration.locales.toString()
+        val resolvedAppName = activity.getString(R.string.app_name)
+        val resolvedTitle = activity.getString(R.string.recurrence_title)
+
+        val message = """
+            AppCompatDelegate.getApplicationLocales: $appLocalesStr
+            Locale.getDefault(): $javaDefault
+            Locale.getDefault().toLanguageTag(): $javaDefaultTag
+            resources.configuration.locales: $configLocales
+            
+            R.string.recurrence_title בפועל:
+            "$resolvedTitle"
+        """.trimIndent()
+
+        AlertDialog.Builder(activity)
+            .setTitle("מידע אבחון")
+            .setMessage(message)
+            .setPositiveButton("העתק", { _, _ ->
+                val clipboard = activity.getSystemService(android.content.Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
+                clipboard.setPrimaryClip(android.content.ClipData.newPlainText("debug", message))
+            })
+            .setNegativeButton("סגור", null)
+            .show()
+    }
+
     fun show(activity: Activity) {
         val inflater = LayoutInflater.from(activity)
         val view = inflater.inflate(R.layout.dialog_option_list, null)
