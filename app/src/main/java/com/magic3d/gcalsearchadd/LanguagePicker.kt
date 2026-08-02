@@ -100,7 +100,12 @@ object LanguagePicker {
 
         val currentTag: String? = run {
             val applied = AppCompatDelegate.getApplicationLocales()
-            if (applied.isEmpty) null else applied[0]?.language
+            if (applied.isEmpty) {
+                null
+            } else {
+                val lang = applied[0]?.language
+                if (lang == "iw") "he" else lang
+            }
         }
 
         buildOptions(activity).forEachIndexed { index, option ->
