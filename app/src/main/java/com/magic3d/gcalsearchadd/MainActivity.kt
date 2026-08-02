@@ -163,16 +163,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showDatePicker() {
-        val originalLocale = Locale.getDefault()
-        Locale.setDefault(sundayStartLocale(originalLocale))
-
         val picker = MaterialDatePicker.Builder.datePicker()
             .setTheme(R.style.ThemeOverlay_App_DatePicker)
             .setSelection(localStartOfDayToUtcMillis(selectedDayStartMillis))
             .setCalendarConstraints(CalendarConstraints.Builder().build())
             .build()
-
-        picker.addOnDismissListener { Locale.setDefault(originalLocale) }
 
         picker.addOnPositiveButtonClickListener { utcMillis ->
             selectedDayStartMillis = utcMidnightToLocalStartOfDay(utcMillis)
