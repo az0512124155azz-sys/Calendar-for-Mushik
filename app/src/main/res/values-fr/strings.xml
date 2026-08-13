@@ -48,4 +48,5 @@
     <string name="language_picker_title">Langue de l\'application</string>
     <string name="language_system_default">Langue du système</string>
     <string name="recurrence_custom_days_label">%1$d jours consécutifs</string>
+    <string name="edit_event_title">Modifier l\'événement</string>
 </resources>

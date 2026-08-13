@@ -55,6 +55,7 @@ class AddEventActivity : AppCompatActivity() {
 
     private var repository: CalendarRepository? = null
 
+    private var editingEventId: String? = null
     private var dateMillis: Long = MainActivity.startOfDay(System.currentTimeMillis())
     private var startHour: Int? = null
     private var startMinute: Int? = null
@@ -68,6 +69,7 @@ class AddEventActivity : AppCompatActivity() {
         setContentView(R.layout.activity_add_event)
 
         dateMillis = intent.getLongExtra(EXTRA_DATE_MILLIS, dateMillis)
+        editingEventId = intent.getStringExtra(EXTRA_EVENT_ID)
 
         etTitle = findViewById(R.id.etTitle)
         tvDatePicker = findViewById(R.id.tvDatePicker)
@@ -113,6 +115,10 @@ class AddEventActivity : AppCompatActivity() {
             repository = CalendarRepository(this, account)
         }
 
+        if (editingEventId != null) {
+            findViewById<TextView>(R.id.tvScreenTitle).text = getString(R.string.edit_event_title)
+        }
+
         tvDatePicker.text = displayDateFormat.format(dateMillis)
 
         tvDatePicker.setOnClickListener { pickDate() }
@@ -127,7 +133,53 @@ class AddEventActivity : AppCompatActivity() {
 
         // מציג מיד את האירועים הקיימים בתאריך שהגיע מהמסך הראשי
         loadExistingEventsForDate()
+
+        // אם הגענו לכאן דרך העיפרון (עריכה) - טוענים את פרטי האירוע הקיים לתוך הטופס
+        editingEventId?.let { loadEventForEditing(it) }
     }
+
+    /**
+     * טוען אירוע קיים לעריכה - ממלא את כל השדות בדיוק כמו שהם שמורים היום ביומן,
+     * כדי שהמשתמש יוכל לשנות מה שהוא רוצה ולשמור בחזרה על אותו אירוע (לא ליצור חדש).
+     */
+    private fun loadEventForEditing(eventId: String) {
+        val repo = repository ?: return
+        lifecycleScope.launch {
+            try {
+                val details = repo.getEventDetails(eventId)
+                etTitle.setText(details.title)
+                dateMillis = details.dateMillisStartOfDay
+                tvDatePicker.text = displayDateFormat.format(dateMillis)
+
+                startHour = details.startHour
+                startMinute = details.startMinute
+                if (startHour != null && startMinute != null) {
+                    tvStartTimePicker.text = String.format(Locale.getDefault(), "%02d:%02d", startHour, startMinute)
+                }
+                endHour = details.endHour
+                endMinute = details.endMinute
+                if (endHour != null && endMinute != null) {
+                    tvEndTimePicker.text = String.format(Locale.getDefault(), "%02d:%02d", endHour, endMinute)
+                }
+
+                if (!details.location.isNullOrBlank()) {
+                    etLocation.setText(details.location)
+                    selectedLocationText = details.location
+                }
+
+                selectedRecurrenceRule = details.recurrenceRule
+                tvRecurrencePicker.text = if (details.recurrenceRule.isNullOrBlank()) {
+                    getString(R.string.recurrence_none)
+                } else {
+                    getString(R.string.recurrence_prefix, humanReadableRecurrence(details.recurrenceRule))
+                }
+
+                // התאריך יכול היה להשתנות מה-extra המקורי - מרעננים את רשימת "אירועים קיימים ביום זה"
+                loadExistingEventsForDate()
+            } catch (e: Exception) {
+                Toast.makeText(this@AddEventActivity, getString(R.string.error_generic, e.message ?: ""), Toast.LENGTH_LONG).show()
+            }
+        }
 
     /**
      * שולף מגוגל קלנדר את כל האירועים שכבר קיימים בתאריך הנבחר ומציג אותם מעל טופס ההוספה,
@@ -207,6 +259,26 @@ class AddEventActivity : AppCompatActivity() {
      * דיאלוג בחירה לחזרה על האירוע. אחרי שנבחרת תדירות (או ימים מותאמים אישית),
      * שואלים גם מתי החזרה נגמרת - אף פעם / אחרי מספר פעמים / עד תאריך.
      */
+    /**
+     * הופך RRULE גולמי (למשל "RRULE:FREQ=DAILY;COUNT=3") לתווית קריאה, כדי שמסך העריכה
+     * לא יציג למשתמש טקסט טכני גולמי.
+     */
+    private fun humanReadableRecurrence(rule: String): String {
+        val options = resources.getStringArray(R.array.recurrence_options)
+        return when {
+            rule.contains("BYDAY") -> options.getOrElse(5) { rule }
+            rule.contains("FREQ=DAILY") && rule.contains("COUNT=") -> {
+                val count = Regex("COUNT=(\\d+)").find(rule)?.groupValues?.get(1)?.toIntOrNull()
+                if (count != null) getString(R.string.recurrence_custom_days_label, count) else options[1]
+            }
+            rule.contains("FREQ=DAILY") -> options[1]
+            rule.contains("FREQ=WEEKLY") -> options[2]
+            rule.contains("FREQ=MONTHLY") -> options[3]
+            rule.contains("FREQ=YEARLY") -> options[4]
+            else -> rule
+        }
+    }
+
     private fun pickRecurrence() {
         val options = resources.getStringArray(R.array.recurrence_options).toList()
 
@@ -453,17 +525,32 @@ class AddEventActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             try {
-                // אם לא נבחרו שעות, insertEvent יחיל אוטומטית את ברירת המחדל 14:00-23:59
-                repo.insertEvent(
-                    title = title,
-                    dateMillisStartOfDay = dateMillis,
-                    startHour = startHour,
-                    startMinute = startMinute,
-                    endHour = endHour,
-                    endMinute = endMinute,
-                    location = selectedLocationText ?: etLocation.text?.toString()?.trim()?.ifBlank { null },
-                    recurrenceRule = selectedRecurrenceRule
-                )
+                val currentEditingId = editingEventId
+                // אם לא נבחרו שעות, ברירת המחדל היא 14:00-23:59 - גם בהוספה וגם בעריכה
+                if (currentEditingId != null) {
+                    repo.updateEvent(
+                        eventId = currentEditingId,
+                        title = title,
+                        dateMillisStartOfDay = dateMillis,
+                        startHour = startHour,
+                        startMinute = startMinute,
+                        endHour = endHour,
+                        endMinute = endMinute,
+                        location = selectedLocationText ?: etLocation.text?.toString()?.trim()?.ifBlank { null },
+                        recurrenceRule = selectedRecurrenceRule
+                    )
+                } else {
+                    repo.insertEvent(
+                        title = title,
+                        dateMillisStartOfDay = dateMillis,
+                        startHour = startHour,
+                        startMinute = startMinute,
+                        endHour = endHour,
+                        endMinute = endMinute,
+                        location = selectedLocationText ?: etLocation.text?.toString()?.trim()?.ifBlank { null },
+                        recurrenceRule = selectedRecurrenceRule
+                    )
+                }
                 Toast.makeText(this@AddEventActivity, getString(R.string.event_saved), Toast.LENGTH_SHORT).show()
                 setResult(Activity.RESULT_OK)
                 finish()
@@ -475,5 +562,6 @@ class AddEventActivity : AppCompatActivity() {
 
     companion object {
         const val EXTRA_DATE_MILLIS = "extra_date_millis"
+        const val EXTRA_EVENT_ID = "extra_event_id"
     }
 }

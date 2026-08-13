@@ -14,7 +14,8 @@ import com.magic3d.gcalsearchadd.model.EventItem
  */
 class EventAdapter(
     private var items: List<EventItem>,
-    private var showDate: Boolean = true
+    private var showDate: Boolean = true,
+    private val onEditClick: ((EventItem) -> Unit)? = null
 ) : RecyclerView.Adapter<EventAdapter.EventViewHolder>() {
 
     inner class EventViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -22,6 +23,7 @@ class EventAdapter(
         val title: TextView = view.findViewById(R.id.tvEventTitle)
         val time: TextView = view.findViewById(R.id.tvEventTime)
         val location: TextView = view.findViewById(R.id.tvEventLocation)
+        val editButton: View = view.findViewById(R.id.btnEditEvent)
     }
 
     private val accentColorResIds = listOf(
@@ -67,6 +69,13 @@ class EventAdapter(
             holder.location.visibility = View.VISIBLE
         } else {
             holder.location.visibility = View.GONE
+        }
+
+        if (onEditClick != null) {
+            holder.editButton.visibility = View.VISIBLE
+            holder.editButton.setOnClickListener { onEditClick.invoke(item) }
+        } else {
+            holder.editButton.visibility = View.GONE
         }
     }
 

@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
-        adapter = EventAdapter(emptyList())
+        adapter = EventAdapter(emptyList(), onEditClick = { event -> openEditEvent(event) })
         rvEvents.layoutManager = LinearLayoutManager(this)
         rvEvents.adapter = adapter
 
@@ -270,6 +270,13 @@ class MainActivity : AppCompatActivity() {
     private fun openAddEvent() {
         val intent = Intent(this, AddEventActivity::class.java)
         intent.putExtra(AddEventActivity.EXTRA_DATE_MILLIS, selectedDayStartMillis)
+        addEventLauncher.launch(intent)
+    }
+
+    private fun openEditEvent(event: com.magic3d.gcalsearchadd.model.EventItem) {
+        val intent = Intent(this, AddEventActivity::class.java)
+        intent.putExtra(AddEventActivity.EXTRA_DATE_MILLIS, selectedDayStartMillis)
+        intent.putExtra(AddEventActivity.EXTRA_EVENT_ID, event.id)
         addEventLauncher.launch(intent)
     }
 

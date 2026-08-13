@@ -63,6 +63,16 @@
 
         </LinearLayout>
 
+        <ImageButton
+            android:id="@+id/btnEditEvent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@android:color/transparent"
+            android:src="@android:drawable/ic_menu_edit"
+            app:tint="@color/text_secondary"
+            android:contentDescription="@string/edit_event_title" />
+
     </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>

@@ -18,6 +18,22 @@ import java.util.Locale
 import java.util.TimeZone
 
 /**
+ * פרטים מלאים של אירוע קיים, כדי למלא מראש את טופס העריכה - שדות "גולמיים"
+ * (לא מעוצבים לתצוגה כמו EventItem).
+ */
+data class EventDetails(
+    val id: String,
+    val title: String,
+    val dateMillisStartOfDay: Long,
+    val startHour: Int?,
+    val startMinute: Int?,
+    val endHour: Int?,
+    val endMinute: Int?,
+    val location: String?,
+    val recurrenceRule: String?
+)
+
+/**
  * שכבת גישה ל-Google Calendar API.
  * כל קריאה רשתית מבוצעת ב-Dispatchers.IO כי ה-Google API Client הוא סינכרוני (חוסם).
  */
@@ -116,6 +132,91 @@ class CalendarRepository(context: Context, account: Account) {
 
         // POST -> calendars/primary/events, כפי שמופיע במסמך האיפיון
         service.events().insert("primary", event).execute()
+    }
+
+    /**
+     * שולף את הפרטים המלאים של אירוע קיים, כדי למלא מראש את מסך העריכה.
+     */
+    suspend fun getEventDetails(eventId: String): EventDetails = withContext(Dispatchers.IO) {
+        val event = service.events().get("primary", eventId).execute()
+        val cal = java.util.Calendar.getInstance()
+
+        val startMillis = event.start?.dateTime?.value
+        val endMillis = event.end?.dateTime?.value
+
+        var dateMillisStartOfDay = 0L
+        var startHour: Int? = null
+        var startMinute: Int? = null
+        var endHour: Int? = null
+        var endMinute: Int? = null
+
+        if (startMillis != null) {
+            cal.timeInMillis = startMillis
+            startHour = cal.get(java.util.Calendar.HOUR_OF_DAY)
+            startMinute = cal.get(java.util.Calendar.MINUTE)
+            cal.set(java.util.Calendar.HOUR_OF_DAY, 0)
+            cal.set(java.util.Calendar.MINUTE, 0)
+            cal.set(java.util.Calendar.SECOND, 0)
+            cal.set(java.util.Calendar.MILLISECOND, 0)
+            dateMillisStartOfDay = cal.timeInMillis
+        }
+        if (endMillis != null) {
+            cal.timeInMillis = endMillis
+            endHour = cal.get(java.util.Calendar.HOUR_OF_DAY)
+            endMinute = cal.get(java.util.Calendar.MINUTE)
+        }
+
+        EventDetails(
+            id = event.id ?: eventId,
+            title = event.summary ?: "",
+            dateMillisStartOfDay = dateMillisStartOfDay,
+            startHour = startHour,
+            startMinute = startMinute,
+            endHour = endHour,
+            endMinute = endMinute,
+            location = event.location,
+            recurrenceRule = event.recurrence?.firstOrNull()
+        )
+    }
+
+    /**
+     * מעדכן אירוע קיים (במקום ליצור חדש). אם לא סופקו שעות, ברירת המחדל היא 14:00-23:59,
+     * בדיוק כמו בהוספת אירוע חדש.
+     */
+    suspend fun updateEvent(
+        eventId: String,
+        title: String,
+        dateMillisStartOfDay: Long,
+        startHour: Int?,
+        startMinute: Int?,
+        endHour: Int?,
+        endMinute: Int?,
+        location: String? = null,
+        recurrenceRule: String? = null
+    ): Event = withContext(Dispatchers.IO) {
+        val tz = TimeZone.getDefault()
+
+        val actualStartHour = startHour ?: 14
+        val actualStartMinute = startMinute ?: 0
+        val actualEndHour = endHour ?: 23
+        val actualEndMinute = endMinute ?: 59
+
+        val startMillis = dateMillisStartOfDay + (actualStartHour * 60 + actualStartMinute) * 60_000L
+        val endMillis = dateMillisStartOfDay + (actualEndHour * 60 + actualEndMinute) * 60_000L
+
+        val event = Event().apply {
+            summary = title
+            if (!location.isNullOrBlank()) {
+                setLocation(location)
+            }
+            if (!recurrenceRule.isNullOrBlank()) {
+                recurrence = listOf(recurrenceRule)
+            }
+            start = EventDateTime().setDateTime(dateTimeFor(startMillis, tz)).setTimeZone(tz.id)
+            end = EventDateTime().setDateTime(dateTimeFor(endMillis, tz)).setTimeZone(tz.id)
+        }
+
+        service.events().update("primary", eventId, event).execute()
     }
 
     private fun toEventItem(event: Event): EventItem {

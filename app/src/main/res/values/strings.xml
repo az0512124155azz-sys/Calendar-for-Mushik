@@ -48,4 +48,5 @@
     <string name="language_picker_title">App language</string>
     <string name="language_system_default">System default</string>
     <string name="recurrence_custom_days_label">%1$d consecutive days</string>
+    <string name="edit_event_title">Edit Event</string>
 </resources>
