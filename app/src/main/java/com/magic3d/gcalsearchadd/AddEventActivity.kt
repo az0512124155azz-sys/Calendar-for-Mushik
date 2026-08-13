@@ -180,6 +180,7 @@ class AddEventActivity : AppCompatActivity() {
                 Toast.makeText(this@AddEventActivity, getString(R.string.error_generic, e.message ?: ""), Toast.LENGTH_LONG).show()
             }
         }
+    }
 
     /**
      * שולף מגוגל קלנדר את כל האירועים שכבר קיימים בתאריך הנבחר ומציג אותם מעל טופס ההוספה,
