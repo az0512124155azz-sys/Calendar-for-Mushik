@@ -79,7 +79,7 @@ class AddEventActivity : AppCompatActivity() {
         progressExistingEvents = findViewById(R.id.progressExistingEvents)
         rvExistingEvents = findViewById(R.id.rvExistingEvents)
 
-        existingEventsAdapter = EventAdapter(emptyList(), showDate = false)
+        existingEventsAdapter = EventAdapter(emptyList(), showDate = false, onEditClick = { event -> switchToEditingEvent(event.id) })
         rvExistingEvents.layoutManager = LinearLayoutManager(this)
         rvExistingEvents.adapter = existingEventsAdapter
 
@@ -180,6 +180,16 @@ class AddEventActivity : AppCompatActivity() {
                 Toast.makeText(this@AddEventActivity, getString(R.string.error_generic, e.message ?: ""), Toast.LENGTH_LONG).show()
             }
         }
+    }
+
+    /**
+     * מאפשר לעבור למצב עריכה של אירוע אחר בלי לפתוח מסך חדש - נקרא מהעיפרון ברשימת
+     * "אירועים קיימים ביום זה" שבתוך מסך ההוספה עצמו.
+     */
+    private fun switchToEditingEvent(eventId: String) {
+        editingEventId = eventId
+        findViewById<TextView>(R.id.tvScreenTitle).text = getString(R.string.edit_event_title)
+        loadEventForEditing(eventId)
     }
 
     /**
