@@ -81,6 +81,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        selectedDayStartMillis = if (
+            savedInstanceState?.containsKey(STATE_SELECTED_DAY_START_MILLIS) == true
+        ) {
+            savedInstanceState.getLong(STATE_SELECTED_DAY_START_MILLIS)
+        } else {
+            startOfDay(System.currentTimeMillis())
+        }
+
         bindViews()
         setupGoogleSignIn()
 
@@ -113,6 +121,11 @@ class MainActivity : AppCompatActivity() {
         } else {
             showSignedOutState()
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putLong(STATE_SELECTED_DAY_START_MILLIS, selectedDayStartMillis)
+        super.onSaveInstanceState(outState)
     }
 
     private fun bindViews() {
@@ -476,6 +489,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
+        private const val STATE_SELECTED_DAY_START_MILLIS = "selected_day_start_millis"
+
         fun startOfDay(millis: Long): Long {
             val cal = JavaCalendar.getInstance().apply {
                 timeInMillis = millis

@@ -50,17 +50,19 @@
             android:layout_marginTop="22dp"
             android:orientation="horizontal">
 
-            <com.google.android.material.button.MaterialButton
+            <TextView
                 android:id="@+id/btnDeleteCancel"
                 android:layout_width="0dp"
                 android:layout_height="52dp"
                 android:layout_weight="1"
+                android:background="@drawable/bg_cancel_button"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
                 android:text="@string/cancel"
                 android:textColor="@color/text_secondary"
-                app:backgroundTint="@android:color/transparent"
-                app:cornerRadius="16dp"
-                app:strokeColor="@color/text_secondary"
-                app:strokeWidth="1dp" />
+                android:textSize="15sp"
+                android:textStyle="bold" />
 
             <Space
                 android:layout_width="12dp"
