@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.magic3d.gcalsearchadd
 
 import android.app.Activity

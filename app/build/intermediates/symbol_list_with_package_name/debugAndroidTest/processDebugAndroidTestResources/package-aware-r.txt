@@ -1,3 +1,0 @@
-com.magic3d.gcalsearchadd.test
-style WhiteBackgroundDialogTheme
-style WhiteBackgroundTheme

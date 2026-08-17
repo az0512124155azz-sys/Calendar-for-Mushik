@@ -1,134 +1,126 @@
 [
     {
-        "merged": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-debug-35:\\layout_dialog_add_event.xml.flat",
-        "source": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-main-37:\\layout\\dialog_add_event.xml"
+        "merged": "com.magic3d.gcalsearchadd.app-debug-35:/drawable_bg_header_gradient.xml.flat",
+        "source": "com.magic3d.gcalsearchadd.app-main-37:/drawable/bg_header_gradient.xml"
     },
     {
-        "merged": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-debug-35:\\layout_activity_add_event.xml.flat",
-        "source": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-main-37:\\layout\\activity_add_event.xml"
+        "merged": "com.magic3d.gcalsearchadd.app-debug-35:/drawable_bg_neon_divider.xml.flat",
+        "source": "com.magic3d.gcalsearchadd.app-main-37:/drawable/bg_neon_divider.xml"
     },
     {
-        "merged": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-debug-35:\\mipmap-hdpi_ic_launcher.png.flat",
-        "source": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-main-37:\\mipmap-hdpi\\ic_launcher.png"
+        "merged": "com.magic3d.gcalsearchadd.app-debug-35:/drawable_bg_pill_time.xml.flat",
+        "source": "com.magic3d.gcalsearchadd.app-main-37:/drawable/bg_pill_time.xml"
     },
     {
-        "merged": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-debug-35:\\drawable_bg_neon_divider.xml.flat",
-        "source": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-main-37:\\drawable\\bg_neon_divider.xml"
+        "merged": "com.magic3d.gcalsearchadd.app-debug-35:/drawable_bg_rounded_field.xml.flat",
+        "source": "com.magic3d.gcalsearchadd.app-main-37:/drawable/bg_rounded_field.xml"
     },
     {
-        "merged": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-debug-35:\\layout_widget_add_event.xml.flat",
-        "source": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-main-37:\\layout\\widget_add_event.xml"
+        "merged": "com.magic3d.gcalsearchadd.app-debug-35:/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "com.magic3d.gcalsearchadd.app-main-37:/mipmap-anydpi-v26/ic_launcher.xml"
+    },
+    {
+        "merged": "com.magic3d.gcalsearchadd.app-debug-35:/drawable_ic_launcher_foreground.xml.flat",
+        "source": "com.magic3d.gcalsearchadd.app-main-37:/drawable/ic_launcher_foreground.xml"
+    },
+    {
+        "merged": "com.magic3d.gcalsearchadd.app-debug-35:/drawable_bg_delete_button.xml.flat",
+        "source": "com.magic3d.gcalsearchadd.app-main-37:/drawable/bg_delete_button.xml"
+    },
+    {
+        "merged": "com.magic3d.gcalsearchadd.app-debug-35:/drawable_ic_calendar_badge.xml.flat",
+        "source": "com.magic3d.gcalsearchadd.app-main-37:/drawable/ic_calendar_badge.xml"
+    },
+    {
+        "merged": "com.magic3d.gcalsearchadd.app-debug-35:/drawable_bg_option_row.xml.flat",
+        "source": "com.magic3d.gcalsearchadd.app-main-37:/drawable/bg_option_row.xml"
     },
     {
         "merged": "com.magic3d.gcalsearchadd.app-debug-35:/layout_activity_main.xml.flat",
         "source": "com.magic3d.gcalsearchadd.app-main-37:/layout/activity_main.xml"
     },
     {
-        "merged": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-debug-35:\\drawable_bg_rounded_field.xml.flat",
-        "source": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-main-37:\\drawable\\bg_rounded_field.xml"
+        "merged": "com.magic3d.gcalsearchadd.app-debug-35:/xml_locales_config.xml.flat",
+        "source": "com.magic3d.gcalsearchadd.app-main-37:/xml/locales_config.xml"
     },
     {
-        "merged": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-debug-35:\\layout_dialog_delete_event.xml.flat",
-        "source": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-main-37:\\layout\\dialog_delete_event.xml"
+        "merged": "com.magic3d.gcalsearchadd.app-debug-35:/drawable_bg_cancel_button.xml.flat",
+        "source": "com.magic3d.gcalsearchadd.app-main-37:/drawable/bg_cancel_button.xml"
     },
     {
-        "merged": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-debug-35:\\drawable_bg_save_gradient.xml.flat",
-        "source": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-main-37:\\drawable\\bg_save_gradient.xml"
+        "merged": "com.magic3d.gcalsearchadd.app-debug-35:/mipmap-hdpi_ic_launcher.png.flat",
+        "source": "com.magic3d.gcalsearchadd.app-main-37:/mipmap-hdpi/ic_launcher.png"
     },
     {
-        "merged": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-debug-35:\\mipmap-anydpi-v26_ic_launcher_round.xml.flat",
-        "source": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-main-37:\\mipmap-anydpi-v26\\ic_launcher_round.xml"
+        "merged": "com.magic3d.gcalsearchadd.app-debug-35:/drawable_bg_widget_circle.xml.flat",
+        "source": "com.magic3d.gcalsearchadd.app-main-37:/drawable/bg_widget_circle.xml"
     },
     {
-        "merged": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-debug-35:\\mipmap-xxhdpi_ic_launcher.png.flat",
-        "source": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-main-37:\\mipmap-xxhdpi\\ic_launcher.png"
+        "merged": "com.magic3d.gcalsearchadd.app-debug-35:/layout_dialog_option_list.xml.flat",
+        "source": "com.magic3d.gcalsearchadd.app-main-37:/layout/dialog_option_list.xml"
     },
     {
-        "merged": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-debug-35:\\drawable_ic_calendar_badge.xml.flat",
-        "source": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-main-37:\\drawable\\ic_calendar_badge.xml"
+        "merged": "com.magic3d.gcalsearchadd.app-debug-35:/drawable_bg_app_background.xml.flat",
+        "source": "com.magic3d.gcalsearchadd.app-main-37:/drawable/bg_app_background.xml"
     },
     {
-        "merged": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-debug-35:\\layout_activity_main.xml.flat",
-        "source": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-main-37:\\layout\\activity_main.xml"
+        "merged": "com.magic3d.gcalsearchadd.app-debug-35:/layout_dialog_number_input.xml.flat",
+        "source": "com.magic3d.gcalsearchadd.app-main-37:/layout/dialog_number_input.xml"
     },
     {
-        "merged": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-debug-35:\\drawable_ic_app_badge.xml.flat",
-        "source": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-main-37:\\drawable\\ic_app_badge.xml"
+        "merged": "com.magic3d.gcalsearchadd.app-debug-35:/drawable_ic_app_badge.xml.flat",
+        "source": "com.magic3d.gcalsearchadd.app-main-37:/drawable/ic_app_badge.xml"
     },
     {
-        "merged": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-debug-35:\\mipmap-mdpi_ic_launcher.png.flat",
-        "source": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-main-37:\\mipmap-mdpi\\ic_launcher.png"
+        "merged": "com.magic3d.gcalsearchadd.app-debug-35:/layout_widget_add_event.xml.flat",
+        "source": "com.magic3d.gcalsearchadd.app-main-37:/layout/widget_add_event.xml"
     },
     {
-        "merged": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-debug-35:\\drawable_bg_cancel_button.xml.flat",
-        "source": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-main-37:\\drawable\\bg_cancel_button.xml"
+        "merged": "com.magic3d.gcalsearchadd.app-debug-35:/drawable_bg_dialog_card.xml.flat",
+        "source": "com.magic3d.gcalsearchadd.app-main-37:/drawable/bg_dialog_card.xml"
     },
     {
-        "merged": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-debug-35:\\drawable_bg_pill_time.xml.flat",
-        "source": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-main-37:\\drawable\\bg_pill_time.xml"
+        "merged": "com.magic3d.gcalsearchadd.app-debug-35:/mipmap-xhdpi_ic_launcher.png.flat",
+        "source": "com.magic3d.gcalsearchadd.app-main-37:/mipmap-xhdpi/ic_launcher.png"
     },
     {
-        "merged": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-debug-35:\\drawable_bg_option_row.xml.flat",
-        "source": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-main-37:\\drawable\\bg_option_row.xml"
+        "merged": "com.magic3d.gcalsearchadd.app-debug-35:/drawable_bg_save_gradient.xml.flat",
+        "source": "com.magic3d.gcalsearchadd.app-main-37:/drawable/bg_save_gradient.xml"
     },
     {
-        "merged": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-debug-35:\\drawable_ic_launcher_foreground.xml.flat",
-        "source": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-main-37:\\drawable\\ic_launcher_foreground.xml"
+        "merged": "com.magic3d.gcalsearchadd.app-debug-35:/xml_widget_add_event_info.xml.flat",
+        "source": "com.magic3d.gcalsearchadd.app-main-37:/xml/widget_add_event_info.xml"
     },
     {
-        "merged": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-debug-35:\\xml_locales_config.xml.flat",
-        "source": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-main-37:\\xml\\locales_config.xml"
+        "merged": "com.magic3d.gcalsearchadd.app-debug-35:/layout_dialog_delete_event.xml.flat",
+        "source": "com.magic3d.gcalsearchadd.app-main-37:/layout/dialog_delete_event.xml"
     },
     {
-        "merged": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-debug-35:\\xml_widget_add_event_info.xml.flat",
-        "source": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-main-37:\\xml\\widget_add_event_info.xml"
+        "merged": "com.magic3d.gcalsearchadd.app-debug-35:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "com.magic3d.gcalsearchadd.app-main-37:/mipmap-anydpi-v26/ic_launcher_round.xml"
     },
     {
-        "merged": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-debug-35:\\drawable_bg_app_background.xml.flat",
-        "source": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-main-37:\\drawable\\bg_app_background.xml"
+        "merged": "com.magic3d.gcalsearchadd.app-debug-35:/layout_item_event.xml.flat",
+        "source": "com.magic3d.gcalsearchadd.app-main-37:/layout/item_event.xml"
     },
     {
-        "merged": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-debug-35:\\layout_item_location_suggestion.xml.flat",
-        "source": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-main-37:\\layout\\item_location_suggestion.xml"
+        "merged": "com.magic3d.gcalsearchadd.app-debug-35:/mipmap-mdpi_ic_launcher.png.flat",
+        "source": "com.magic3d.gcalsearchadd.app-main-37:/mipmap-mdpi/ic_launcher.png"
     },
     {
-        "merged": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-debug-35:\\drawable_bg_dialog_card.xml.flat",
-        "source": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-main-37:\\drawable\\bg_dialog_card.xml"
+        "merged": "com.magic3d.gcalsearchadd.app-debug-35:/layout_activity_add_event.xml.flat",
+        "source": "com.magic3d.gcalsearchadd.app-main-37:/layout/activity_add_event.xml"
     },
     {
-        "merged": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-debug-35:\\drawable_bg_delete_button.xml.flat",
-        "source": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-main-37:\\drawable\\bg_delete_button.xml"
+        "merged": "com.magic3d.gcalsearchadd.app-debug-35:/drawable_bg_event_clip.xml.flat",
+        "source": "com.magic3d.gcalsearchadd.app-main-37:/drawable/bg_event_clip.xml"
     },
     {
-        "merged": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-debug-35:\\layout_dialog_number_input.xml.flat",
-        "source": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-main-37:\\layout\\dialog_number_input.xml"
+        "merged": "com.magic3d.gcalsearchadd.app-debug-35:/layout_item_location_suggestion.xml.flat",
+        "source": "com.magic3d.gcalsearchadd.app-main-37:/layout/item_location_suggestion.xml"
     },
     {
-        "merged": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-debug-35:\\layout_dialog_option_list.xml.flat",
-        "source": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-main-37:\\layout\\dialog_option_list.xml"
-    },
-    {
-        "merged": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-debug-35:\\mipmap-anydpi-v26_ic_launcher.xml.flat",
-        "source": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-main-37:\\mipmap-anydpi-v26\\ic_launcher.xml"
-    },
-    {
-        "merged": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-debug-35:\\mipmap-xhdpi_ic_launcher.png.flat",
-        "source": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-main-37:\\mipmap-xhdpi\\ic_launcher.png"
-    },
-    {
-        "merged": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-debug-35:\\drawable_bg_widget_circle.xml.flat",
-        "source": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-main-37:\\drawable\\bg_widget_circle.xml"
-    },
-    {
-        "merged": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-debug-35:\\drawable_bg_header_gradient.xml.flat",
-        "source": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-main-37:\\drawable\\bg_header_gradient.xml"
-    },
-    {
-        "merged": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-debug-35:\\drawable_bg_event_clip.xml.flat",
-        "source": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-main-37:\\drawable\\bg_event_clip.xml"
-    },
-    {
-        "merged": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-debug-35:\\layout_item_event.xml.flat",
-        "source": "C:\\Users\\az051\\.gradle\\daemon\\9.0.0\\com.magic3d.gcalsearchadd.app-main-37:\\layout\\item_event.xml"
+        "merged": "com.magic3d.gcalsearchadd.app-debug-35:/mipmap-xxhdpi_ic_launcher.png.flat",
+        "source": "com.magic3d.gcalsearchadd.app-main-37:/mipmap-xxhdpi/ic_launcher.png"
     }
 ]

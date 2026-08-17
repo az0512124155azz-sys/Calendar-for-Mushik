@@ -1,5 +1,0 @@
-com.magic3d.gcalsearchadd.test.app-core-1.6.1-0 C:\Users\az051\.gradle\caches\9.0.0\transforms\3965e295a6068e88923c9a5fcb466425\transformed\core-1.6.1\res
-com.magic3d.gcalsearchadd.test.app-androidTest-1 C:\Users\az051\AndroidStudioProjects\Calendar-for-Mushik\app\build\generated\res\resValues\androidTest\debug
-com.magic3d.gcalsearchadd.test.app-mergeDebugAndroidTestResources-2 C:\Users\az051\AndroidStudioProjects\Calendar-for-Mushik\app\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\merged.dir
-com.magic3d.gcalsearchadd.test.app-mergeDebugAndroidTestResources-3 C:\Users\az051\AndroidStudioProjects\Calendar-for-Mushik\app\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\stripped.dir
-com.magic3d.gcalsearchadd.test.app-debugAndroidTest-4 C:\Users\az051\AndroidStudioProjects\Calendar-for-Mushik\app\build\intermediates\merged_res\debugAndroidTest\mergeDebugAndroidTestResources

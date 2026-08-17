@@ -14,15 +14,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.os.LocaleListCompat
 import java.util.Locale
 
-/**
- * בורר שפה ידני לאפליקציה - עצמאי משפת המכשיר. הבחירה נשמרת אוטומטית
- * (AppCompatDelegate) ותחול על כל המסכים באפליקציה מיידית.
- * שמות השפות עצמן תמיד מוצגים בשפתם המקורית (מוסכמה סטנדרטית) - שאר טקסטי הדיאלוג
- * מתורגמים לפי השפה הפעילה הנוכחית, כדי שלא ייראו מעורבבים.
- */
 object LanguagePicker {
 
-    // צבע הדגשה קטן לכל שפה - לזיהוי ויזואלי מהיר, תואם לפלטת האפליקציה
     private data class LangOption(val label: String, val tag: String?, val accentColorRes: Int)
 
     private fun buildOptions(activity: Activity): List<LangOption> = listOf(
@@ -47,17 +40,12 @@ object LanguagePicker {
         }
     }
 
-    /**
-     * כלי אבחון זמני - מציג בדיוק מה אנדרואיד חושב שהשפה הנוכחית, כדי לדעת בוודאות
-     * איפה בדיוק התהליך נשבר, במקום לנחש.
-     */
     fun showDebugInfo(activity: Activity) {
         val appLocales = AppCompatDelegate.getApplicationLocales()
         val appLocalesStr = if (appLocales.isEmpty) "(ריק - עוקב אחרי המערכת)" else appLocales.toLanguageTags()
         val javaDefault = Locale.getDefault().toString()
         val javaDefaultTag = Locale.getDefault().toLanguageTag()
         val configLocales = activity.resources.configuration.locales.toString()
-        val resolvedAppName = activity.getString(R.string.app_name)
         val resolvedTitle = activity.getString(R.string.recurrence_title)
 
         val message = """
@@ -65,7 +53,7 @@ object LanguagePicker {
             Locale.getDefault(): $javaDefault
             Locale.getDefault().toLanguageTag(): $javaDefaultTag
             resources.configuration.locales: $configLocales
-            
+
             R.string.recurrence_title בפועל:
             "$resolvedTitle"
         """.trimIndent()
@@ -138,7 +126,6 @@ object LanguagePicker {
             row.addView(dot)
             row.addView(label)
 
-            // וי ✓ ליד השפה הפעילה כרגע
             val isSelected = (option.tag == null && currentTag == null) || (option.tag != null && option.tag == currentTag)
             if (isSelected) {
                 val check = TextView(activity).apply {
