@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="recurrence_options">
+        <item>Never</item>
+        <item>Every day</item>
+        <item>Every week</item>
+        <item>Every month</item>
+        <item>Every year</item>
+        <item>Custom (days)</item>
+    </string-array>
+    <color name="accent_blue">#4F8EF7</color>
+    <color name="accent_coral">@color/accent_red</color>
+    <color name="accent_green">#34C759</color>
+    <color name="accent_orange">#FF9F43</color>
+    <color name="accent_purple">#A66BF5</color>
+    <color name="accent_red">#FF6B57</color>
+    <color name="accent_teal">#22C1D6</color>
+    <color name="accent_teal_legacy">@color/accent_teal</color>
+    <color name="accent_yellow">#FFB020</color>
+    <color name="app_background">@color/bg_gradient_2</color>
+    <color name="bg_deep">@color/glass_header</color>
+    <color name="bg_gradient_1">#BBD3F7</color>
+    <color name="bg_gradient_2">#D6C6F2</color>
+    <color name="bg_gradient_3">#F3CBDD</color>
+    <color name="event_bar_default">@color/accent_blue</color>
+    <color name="fab_color">@color/accent_blue</color>
+    <color name="field_bg">@color/glass_card</color>
+    <color name="glass_card">#E8FFFFFF</color>
+    <color name="glass_header">#992F3B52</color>
+    <color name="google_blue">@color/accent_blue</color>
+    <color name="google_blue_dark">@color/accent_blue</color>
+    <color name="gradient_btn_end">#00D4FF</color>
+    <color name="gradient_btn_start">#4F8EF7</color>
+    <color name="gradient_end">@color/glass_header</color>
+    <color name="gradient_start">@color/glass_header</color>
+    <color name="hairline">#22FFFFFF</color>
+    <color name="ic_launcher_background">@color/accent_blue</color>
+    <color name="light_gray">@color/glass_card</color>
+    <color name="neon_cyan">@color/accent_blue</color>
+    <color name="neon_lime">@color/accent_green</color>
+    <color name="neon_magenta">@color/accent_red</color>
+    <color name="neon_orange">@color/accent_orange</color>
+    <color name="neon_violet">@color/accent_purple</color>
+    <color name="neon_yellow">@color/accent_yellow</color>
+    <color name="pill_bg">#F0F2F8</color>
+    <color name="surface">@color/glass_card</color>
+    <color name="surface_alt">#F0F2F8</color>
+    <color name="text_primary">#23262B</color>
+    <color name="text_secondary">#6B7280</color>
+    <color name="white">#FFFFFF</color>
+    <string name="add_event_title">Add New Event</string>
+    <string name="app_name">EventSpot</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete_event_action">Delete</string>
+    <string name="delete_event_message">Are you sure you want to delete \"%1$s\" from your calendar?</string>
+    <string name="delete_event_title">Delete event?</string>
+    <string name="edit_event_title">Edit Event</string>
+    <string name="error_generic">Error: %1$s</string>
+    <string name="error_invalid_number">Please enter a valid number</string>
+    <string name="error_no_valid_account">No valid Google account found</string>
+    <string name="error_reconnect_google">Please reconnect to Google</string>
+    <string name="event_date_hint">Event date</string>
+    <string name="event_deleted">Event deleted from calendar</string>
+    <string name="event_end_hint">End time (optional)</string>
+    <string name="event_location_hint">Location (optional)</string>
+    <string name="event_saved">Event saved to calendar successfully</string>
+    <string name="event_start_hint">Start time (optional)</string>
+    <string name="event_title_hint">Event title</string>
+    <string name="every_day">Every day</string>
+    <string name="every_n_days">Every %1$d days</string>
+    <string name="existing_events_label">Existing events on this day:</string>
+    <string name="language_picker_title">App language</string>
+    <string name="language_system_default">System default</string>
+    <string name="no_events_found">No events on this day</string>
+    <string name="no_existing_events">No other events on this day</string>
+    <string name="recurrence_count_message">For example: enter 10 for the event to repeat 10 times and then stop</string>
+    <string name="recurrence_custom_days_label">%1$d consecutive days</string>
+    <string name="recurrence_custom_message">For example: enter 3 for the event to repeat daily for 3 days in a row, starting from the event date</string>
+    <string name="recurrence_custom_title">How many consecutive days?</string>
+    <string name="recurrence_end_count">After a number of times</string>
+    <string name="recurrence_end_never">Never</string>
+    <string name="recurrence_end_title">Great! Now - when should the repetition stop?</string>
+    <string name="recurrence_end_until">Until a specific date</string>
+    <string name="recurrence_none">Repeat: Never</string>
+    <string name="recurrence_prefix">Repeat: %1$s</string>
+    <string name="recurrence_title">How often does the event repeat?</string>
+    <string name="recurrence_with_count">Repeat: %1$s (%2$d times)</string>
+    <string name="recurrence_with_until">Repeat: %1$s (until %2$s)</string>
+    <string name="save">Save</string>
+    <string name="saving_event">Saving event…</string>
+    <string name="search_hint">Date (04/12/2026) or event name</string>
+    <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="support_email_hint">info@zoom-out.co.il</string>
+    <string name="support_email_subject">%1$s - App inquiry</string>
+    <string name="update_event_button">Update Event</string>
+    <style name="LightSpinnerTimePickerDialog" parent="Theme.MaterialComponents.Light.Dialog.Alert">
+        <item name="colorPrimary">@color/accent_blue</item>
+        <item name="colorAccent">@color/accent_blue</item>
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:timePickerStyle">@style/SpinnerTimePickerStyle</item>
+        <item name="android:buttonBarPositiveButtonStyle">@style/SpinnerPickerButton</item>
+        <item name="android:buttonBarNegativeButtonStyle">@style/SpinnerPickerButton</item>
+    </style>
+    <style name="SpinnerPickerButton" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textColor">@color/accent_blue</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+    <style name="SpinnerTimePickerStyle" parent="android:Widget.Material.Light.TimePicker">
+        <item name="android:timePickerMode">spinner</item>
+    </style>
+    <style name="Theme.GCalSearchAdd" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/accent_blue</item>
+        <item name="colorPrimaryDark">@color/bg_gradient_1</item>
+        <item name="colorAccent">@color/accent_blue</item>
+        <item name="android:windowBackground">@color/bg_gradient_2</item>
+        <item name="android:statusBarColor">@color/bg_gradient_1</item>
+        <item name="android:navigationBarColor">@color/white</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
+    </style>
+    <style name="ThemeOverlay.App.DatePicker" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
+        <item name="colorPrimary">@color/accent_blue</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSurface">@color/white</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        <item name="colorOnSurfaceVariant">@color/text_primary</item>
+        <item name="android:colorBackground">@color/white</item>
+        <item name="android:textColorSecondary">@color/text_primary</item>
+        <item name="android:textColorPrimary">@color/text_primary</item>
+    </style>
+    <style name="ThemeOverlay.App.TimePicker" parent="ThemeOverlay.MaterialComponents.TimePicker">
+        <item name="colorPrimary">@color/accent_blue</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSurface">@color/white</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        <item name="android:colorBackground">@color/white</item>
+    </style>
+</resources>

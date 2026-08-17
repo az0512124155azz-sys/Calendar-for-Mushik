@@ -8,13 +8,17 @@ import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.BitmapFactory
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import android.view.Gravity
 import android.view.WindowManager
-import android.widget.TextView
+import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -33,11 +37,11 @@ import com.google.api.services.calendar.CalendarScopes
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.Calendar as JavaCalendar
 import java.util.Locale
 import java.util.TimeZone
-import java.net.URL
 
 class MainActivity : AppCompatActivity() {
 
@@ -62,9 +66,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var progressBar: android.widget.ProgressBar
     private lateinit var fabAddEvent: View
     private lateinit var tvLanguageBadge: TextView
-    private lateinit var profileButton: View
-    private lateinit var ivGoogleProfile: ImageView
-    private lateinit var tvProfileInitial: TextView
+    private lateinit var profileButton: FrameLayout
+    private lateinit var profileImage: ImageView
+    private lateinit var profileInitial: TextView
     private var signedInAccount: GoogleSignInAccount? = null
     private var openedSwipeHolder: EventAdapter.EventViewHolder? = null
 
@@ -99,6 +103,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         bindViews()
+        createProfileButton()
         setupGoogleSignIn()
 
         btnSignIn.setOnClickListener { signIn() }
@@ -113,7 +118,6 @@ class MainActivity : AppCompatActivity() {
             LanguagePicker.showDebugInfo(this)
             true
         }
-        profileButton.setOnClickListener { showAccountMenu() }
 
         adapter = EventAdapter(
             emptyList(),
@@ -149,9 +153,6 @@ class MainActivity : AppCompatActivity() {
         progressBar = findViewById(R.id.progressBar)
         fabAddEvent = findViewById(R.id.fabAddEvent)
         tvLanguageBadge = findViewById(R.id.tvLanguageBadge)
-        profileButton = findViewById(R.id.profileButton)
-        ivGoogleProfile = findViewById(R.id.ivGoogleProfile)
-        tvProfileInitial = findViewById(R.id.tvProfileInitial)
     }
 
     private fun setupGoogleSignIn() {
@@ -214,72 +215,150 @@ class MainActivity : AppCompatActivity() {
         etSearch.setText(displayDateFormat.format(selectedDayStartMillis))
     }
 
-    private fun updateProfileButton(account: GoogleSignInAccount) {
-        val fallback = account.displayName?.trim()?.firstOrNull()?.uppercase()
-            ?: account.email?.trim()?.firstOrNull()?.uppercase()
-            ?: "?"
-        tvProfileInitial.text = fallback
-        tvProfileInitial.visibility = View.VISIBLE
-        ivGoogleProfile.visibility = View.INVISIBLE
-        ivGoogleProfile.setImageDrawable(null)
+    /** יוצר את כפתור הפרופיל בקוד כדי שלא יהיה צורך לשנות קובצי XML. */
+    private fun createProfileButton() {
+        val density = resources.displayMetrics.density
+        profileButton = FrameLayout(this).apply {
+            visibility = View.GONE
+            isClickable = true
+            isFocusable = true
+            elevation = 8f * density
+            setOnClickListener { showAccountMenu() }
+        }
+        profileInitial = TextView(this).apply {
+            gravity = Gravity.CENTER
+            setTextColor(Color.WHITE)
+            textSize = 16f
+            setTypeface(typeface, android.graphics.Typeface.BOLD)
+            background = circleDrawable(Color.rgb(54, 152, 245), Color.WHITE, 2f)
+        }
+        profileImage = ImageView(this).apply {
+            scaleType = ImageView.ScaleType.CENTER_CROP
+            background = circleDrawable(Color.rgb(54, 152, 245), Color.WHITE, 2f)
+            clipToOutline = true
+            visibility = View.INVISIBLE
+            contentDescription = accountText("settings")
+        }
+        profileButton.addView(profileInitial, FrameLayout.LayoutParams(-1, -1))
+        profileButton.addView(profileImage, FrameLayout.LayoutParams(-1, -1))
 
+        val size = (40f * density).toInt()
+        val params = FrameLayout.LayoutParams(size, size, Gravity.TOP or Gravity.START).apply {
+            marginStart = (14f * density).toInt()
+            topMargin = (11f * density).toInt()
+        }
+        findViewById<ViewGroup>(android.R.id.content).addView(profileButton, params)
+    }
+
+    private fun circleDrawable(fill: Int, stroke: Int = Color.TRANSPARENT, strokeDp: Float = 0f) =
+        GradientDrawable().apply {
+            shape = GradientDrawable.OVAL
+            setColor(fill)
+            if (strokeDp > 0f) setStroke((strokeDp * resources.displayMetrics.density).toInt(), stroke)
+        }
+
+    private fun roundedDrawable(fill: Int, stroke: Int? = null): GradientDrawable =
+        GradientDrawable().apply {
+            cornerRadius = 16f * resources.displayMetrics.density
+            setColor(fill)
+            stroke?.let { setStroke(resources.displayMetrics.density.toInt().coerceAtLeast(1), it) }
+        }
+
+    private fun updateProfileButton(account: GoogleSignInAccount) {
+        profileInitial.text = account.displayName?.trim()?.firstOrNull()?.uppercase()
+            ?: account.email?.trim()?.firstOrNull()?.uppercase()
+                    ?: "?"
+        profileInitial.visibility = View.VISIBLE
+        profileImage.visibility = View.INVISIBLE
+        profileImage.setImageDrawable(null)
         val photoUrl = account.photoUrl ?: return
         lifecycleScope.launch {
             val bitmap = withContext(Dispatchers.IO) {
                 runCatching {
-                    URL(photoUrl.toString()).openStream().use { input ->
-                        BitmapFactory.decodeStream(input)
-                    }
-                }
-                    .getOrNull()
+                    URL(photoUrl.toString()).openStream().use { BitmapFactory.decodeStream(it) }
+                }.getOrNull()
             }
             if (bitmap != null && signedInAccount?.id == account.id) {
-                ivGoogleProfile.setImageBitmap(bitmap)
-                ivGoogleProfile.visibility = View.VISIBLE
-                tvProfileInitial.visibility = View.GONE
+                profileImage.setImageBitmap(bitmap)
+                profileImage.visibility = View.VISIBLE
+                profileInitial.visibility = View.GONE
             }
         }
     }
 
+    /** חלון חשבון מלא שנוצר בקוד, ללא layout או strings חדשים. */
     private fun showAccountMenu() {
         val account = signedInAccount ?: return
+        val density = resources.displayMetrics.density
+        fun dp(value: Int) = (value * density).toInt()
         val dialog = Dialog(this)
-        dialog.setContentView(R.layout.dialog_account_menu)
+        val root = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            gravity = Gravity.CENTER_HORIZONTAL
+            setPadding(dp(24), dp(24), dp(24), dp(16))
+            background = roundedDrawable(Color.rgb(248, 248, 250), Color.WHITE)
+        }
+        val avatar = FrameLayout(this).apply {
+            background = circleDrawable(Color.rgb(54, 152, 245), Color.WHITE, 2f)
+        }
+        val largeInitial = TextView(this).apply {
+            text = profileInitial.text
+            gravity = Gravity.CENTER
+            textSize = 27f
+            setTextColor(Color.WHITE)
+            setTypeface(typeface, android.graphics.Typeface.BOLD)
+        }
+        val largeImage = ImageView(this).apply {
+            scaleType = ImageView.ScaleType.CENTER_CROP
+            background = circleDrawable(Color.rgb(54, 152, 245), Color.WHITE, 2f)
+            clipToOutline = true
+        }
+        avatar.addView(largeInitial, FrameLayout.LayoutParams(-1, -1))
+        avatar.addView(largeImage, FrameLayout.LayoutParams(-1, -1))
+        if (profileImage.drawable != null && profileImage.visibility == View.VISIBLE) {
+            largeImage.setImageDrawable(profileImage.drawable)
+            largeInitial.visibility = View.GONE
+        } else largeImage.visibility = View.INVISIBLE
+        root.addView(avatar, LinearLayout.LayoutParams(dp(72), dp(72)))
+
+        fun label(textValue: String, size: Float, color: Int, bold: Boolean = false) =
+            TextView(this).apply {
+                text = textValue
+                gravity = Gravity.CENTER
+                textSize = size
+                setTextColor(color)
+                if (bold) setTypeface(typeface, android.graphics.Typeface.BOLD)
+            }
+        root.addView(label(account.displayName ?: accountText("user"), 20f, Color.rgb(32,33,42), true),
+            LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(14) })
+        root.addView(label(account.email.orEmpty(), 14f, Color.rgb(104,107,122)), LinearLayout.LayoutParams(-1, -2))
+
+        val manage = label(accountText("manage"), 15f, Color.rgb(54,152,245), true).apply {
+            background = roundedDrawable(Color.rgb(238,246,255), Color.rgb(54,152,245))
+            isClickable = true
+            gravity = Gravity.CENTER
+            setOnClickListener { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://myaccount.google.com/"))) }
+        }
+        root.addView(manage, LinearLayout.LayoutParams(-1, dp(50)).apply { topMargin = dp(20) })
+
+        val signOutButton = label(accountText("signout"), 15f, Color.WHITE, true).apply {
+            background = roundedDrawable(Color.rgb(255,102,88))
+            isClickable = true
+            gravity = Gravity.CENTER
+            setOnClickListener { dialog.dismiss(); signOut() }
+        }
+        root.addView(signOutButton, LinearLayout.LayoutParams(-1, dp(50)).apply { topMargin = dp(10) })
+        val cancel = label(accountText("cancel"), 14f, Color.rgb(104,107,122), true).apply {
+            isClickable = true
+            gravity = Gravity.CENTER
+            setOnClickListener { dialog.dismiss() }
+        }
+        root.addView(cancel, LinearLayout.LayoutParams(-2, dp(44)).apply { topMargin = dp(6) })
+
+        dialog.setContentView(root)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        dialog.window?.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-        dialog.window?.let { window ->
-            val params = window.attributes
-            params.dimAmount = 0.45f
-            window.attributes = params
-        }
-
-        dialog.findViewById<TextView>(R.id.tvAccountName).text =
-            account.displayName ?: getString(R.string.account_default_name)
-        dialog.findViewById<TextView>(R.id.tvAccountEmail).text = account.email.orEmpty()
-
-        val dialogImage = dialog.findViewById<ImageView>(R.id.ivAccountProfile)
-        val dialogInitial = dialog.findViewById<TextView>(R.id.tvAccountInitial)
-        dialogInitial.text = tvProfileInitial.text
-        if (ivGoogleProfile.drawable != null && ivGoogleProfile.visibility == View.VISIBLE) {
-            dialogImage.setImageDrawable(ivGoogleProfile.drawable)
-            dialogImage.visibility = View.VISIBLE
-            dialogInitial.visibility = View.GONE
-        }
-
-        dialog.findViewById<View>(R.id.btnManageGoogleAccount).setOnClickListener {
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://myaccount.google.com/")))
-        }
-        dialog.findViewById<View>(R.id.btnAccountCancel).setOnClickListener { dialog.dismiss() }
-        dialog.findViewById<View>(R.id.btnSignOut).setOnClickListener {
-            dialog.dismiss()
-            signOut()
-        }
-
         dialog.show()
-        dialog.window?.setLayout(
-            (resources.displayMetrics.widthPixels * 0.9f).toInt(),
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        )
+        dialog.window?.setLayout((resources.displayMetrics.widthPixels * .9f).toInt(), ViewGroup.LayoutParams.WRAP_CONTENT)
     }
 
     private fun signOut() {
@@ -290,10 +369,23 @@ class MainActivity : AppCompatActivity() {
             eventDeleter = null
             openedSwipeHolder = null
             adapter.updateItems(emptyList())
-            ivGoogleProfile.setImageDrawable(null)
+            profileImage.setImageDrawable(null)
             showSignedOutState()
-            Toast.makeText(this, R.string.signed_out_successfully, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, accountText("signedout"), Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun accountText(key: String): String {
+        val lang = resources.configuration.locales[0].language
+        val values = mapOf(
+            "he" to mapOf("settings" to "הגדרות חשבון", "user" to "משתמש Google", "manage" to "ניהול חשבון Google", "signout" to "התנתקות", "signedout" to "התנתקת בהצלחה", "cancel" to "ביטול"),
+            "iw" to mapOf("settings" to "הגדרות חשבון", "user" to "משתמש Google", "manage" to "ניהול חשבון Google", "signout" to "התנתקות", "signedout" to "התנתקת בהצלחה", "cancel" to "ביטול"),
+            "ar" to mapOf("settings" to "إعدادات الحساب", "user" to "مستخدم Google", "manage" to "إدارة حساب Google", "signout" to "تسجيل الخروج", "signedout" to "تم تسجيل الخروج بنجاح", "cancel" to "إلغاء"),
+            "ru" to mapOf("settings" to "Настройки аккаунта", "user" to "Пользователь Google", "manage" to "Управление аккаунтом Google", "signout" to "Выйти", "signedout" to "Вы вышли из аккаунта", "cancel" to "Отмена"),
+            "fr" to mapOf("settings" to "Paramètres du compte", "user" to "Utilisateur Google", "manage" to "Gérer le compte Google", "signout" to "Se déconnecter", "signedout" to "Déconnexion réussie", "cancel" to "Annuler"),
+            "en" to mapOf("settings" to "Account settings", "user" to "Google user", "manage" to "Manage Google Account", "signout" to "Sign out", "signedout" to "Signed out successfully", "cancel" to "Cancel")
+        )
+        return (values[lang] ?: values.getValue("en")).getValue(key)
     }
 
     private fun showDatePicker() {
