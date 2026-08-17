@@ -13,6 +13,9 @@
 - `values/delete_strings.xml`
 - `values-he/delete_strings.xml`
 - `values-iw/delete_strings.xml`
+- `values-ar/delete_strings.xml`
+- `values-fr/delete_strings.xml`
+- `values-ru/delete_strings.xml`
 - `drawable/bg_event_clip.xml`
 
 אין צורך לשנות את `CalendarRepository.kt`; פעולת המחיקה הופרדה לקובץ קטן ועצמאי כדי לא לסכן את פעולות החיפוש, ההוספה והעריכה הקיימות.
