@@ -50,4 +50,6 @@
     <string name="recurrence_custom_days_label">%1$d дней подряд</string>
     <string name="edit_event_title">Редактировать событие</string>
     <string name="update_event_button">Обновить событие</string>
+    <string name="event_queued_offline">Событие сохранено и будет добавлено в календарь при подключении к интернету</string>
+    <string name="event_delete_queued_offline">Удалено офлайн — синхронизация выполнится автоматически</string>
 </resources>

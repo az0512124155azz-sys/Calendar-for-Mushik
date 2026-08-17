@@ -60,9 +60,11 @@
     <string name="error_no_valid_account">No valid Google account found</string>
     <string name="error_reconnect_google">Please reconnect to Google</string>
     <string name="event_date_hint">Event date</string>
+    <string name="event_delete_queued_offline">Deleted offline — it will sync automatically</string>
     <string name="event_deleted">Event deleted from calendar</string>
     <string name="event_end_hint">End time (optional)</string>
     <string name="event_location_hint">Location (optional)</string>
+    <string name="event_queued_offline">Event saved — it will be added to your calendar when you are online</string>
     <string name="event_saved">Event saved to calendar successfully</string>
     <string name="event_start_hint">Start time (optional)</string>
     <string name="event_title_hint">Event title</string>

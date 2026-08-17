@@ -50,4 +50,6 @@
     <string name="recurrence_custom_days_label">%1$d consecutive days</string>
     <string name="edit_event_title">Edit Event</string>
     <string name="update_event_button">Update Event</string>
+    <string name="event_queued_offline">Event saved — it will be added to your calendar when you are online</string>
+    <string name="event_delete_queued_offline">Deleted offline — it will sync automatically</string>
 </resources>

@@ -20,9 +20,11 @@
     <string name="error_no_valid_account">Aucun compte Google valide trouvé</string>
     <string name="error_reconnect_google">Veuillez vous reconnecter à Google</string>
     <string name="event_date_hint">Date de l\'événement</string>
+    <string name="event_delete_queued_offline">Supprimé hors ligne — synchronisation automatique</string>
     <string name="event_deleted">Événement supprimé de l’agenda</string>
     <string name="event_end_hint">Heure de fin (facultatif)</string>
     <string name="event_location_hint">Lieu (facultatif)</string>
+    <string name="event_queued_offline">Événement enregistré — il sera ajouté au calendrier lorsque vous serez en ligne</string>
     <string name="event_saved">Événement enregistré avec succès dans le calendrier</string>
     <string name="event_start_hint">Heure de début (facultatif)</string>
     <string name="event_title_hint">Titre de l\'événement</string>

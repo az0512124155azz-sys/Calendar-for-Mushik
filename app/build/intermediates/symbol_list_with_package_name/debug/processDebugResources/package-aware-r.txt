@@ -4026,9 +4026,11 @@ string error_invalid_number
 string error_no_valid_account
 string error_reconnect_google
 string event_date_hint
+string event_delete_queued_offline
 string event_deleted
 string event_end_hint
 string event_location_hint
+string event_queued_offline
 string event_saved
 string event_start_hint
 string event_title_hint

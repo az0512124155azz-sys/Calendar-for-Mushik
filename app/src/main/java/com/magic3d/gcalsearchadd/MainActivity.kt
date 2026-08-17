@@ -49,7 +49,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var googleSignInClient: GoogleSignInClient
     private var repository: CalendarRepository? = null
-    private var eventDeleter: CalendarEventDeleter? = null
     private lateinit var adapter: EventAdapter
 
     // התאריך הנוכחי שנבחר בחיפוש (ברירת מחדל: היום)
@@ -191,7 +190,11 @@ class MainActivity : AppCompatActivity() {
             return
         }
         repository = CalendarRepository(this, androidAccount)
-        eventDeleter = CalendarEventDeleter(this, androidAccount)
+        OfflineSyncWorker.ensurePeriodicSync(this)
+        OfflineSyncWorker.schedule(this)
+        lifecycleScope.launch {
+            runCatching { repository?.refreshCalendarCache() }
+        }
         signedInAccount = account
         updateProfileButton(account)
         showSignedInState()
@@ -368,7 +371,6 @@ class MainActivity : AppCompatActivity() {
         googleSignInClient.signOut().addOnCompleteListener {
             signedInAccount = null
             repository = null
-            eventDeleter = null
             openedSwipeHolder = null
             adapter.updateItems(emptyList())
             profileImage.setImageDrawable(null)
@@ -620,7 +622,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun deleteEvent(event: com.magic3d.gcalsearchadd.model.EventItem) {
-        val deleter = eventDeleter ?: return
+        val repo = repository ?: return
         if (event.id.isBlank()) {
             Toast.makeText(
                 this,
@@ -633,14 +635,14 @@ class MainActivity : AppCompatActivity() {
         setLoading(true)
         lifecycleScope.launch {
             try {
-                deleter.deleteEvent(event.id)
+                repo.deleteEvent(event.id)
                 adapter.removeItemById(event.id)
                 val isEmpty = adapter.itemCount == 0
                 tvEmpty.visibility = if (isEmpty) View.VISIBLE else View.GONE
                 rvEvents.visibility = if (isEmpty) View.GONE else View.VISIBLE
                 Toast.makeText(
                     this@MainActivity,
-                    R.string.event_deleted,
+                    if (repo.lastOperationQueuedOffline) R.string.event_delete_queued_offline else R.string.event_deleted,
                     Toast.LENGTH_SHORT
                 ).show()
             } catch (e: Exception) {

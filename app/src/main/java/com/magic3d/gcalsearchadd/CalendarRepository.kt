@@ -6,6 +6,7 @@ import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccoun
 import com.google.api.client.http.javanet.NetHttpTransport
 import com.google.api.client.json.gson.GsonFactory
 import com.google.api.client.util.DateTime
+import com.google.api.client.googleapis.json.GoogleJsonResponseException
 import com.google.api.services.calendar.Calendar
 import com.google.api.services.calendar.CalendarScopes
 import com.google.api.services.calendar.model.Event
@@ -13,7 +14,9 @@ import com.google.api.services.calendar.model.EventDateTime
 import com.magic3d.gcalsearchadd.model.EventItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.io.IOException
 import java.text.SimpleDateFormat
+import java.util.UUID
 import java.util.Locale
 import java.util.TimeZone
 
@@ -37,7 +40,12 @@ data class EventDetails(
  * שכבת גישה ל-Google Calendar API.
  * כל קריאה רשתית מבוצעת ב-Dispatchers.IO כי ה-Google API Client הוא סינכרוני (חוסם).
  */
-class CalendarRepository(context: Context, account: Account) {
+class CalendarRepository(context: Context, private val account: Account) {
+
+    private val appContext = context.applicationContext
+    private val offlineStore = OfflineCalendarStore(appContext, account.name)
+    @Volatile var lastOperationQueuedOffline: Boolean = false
+        private set
 
     // קוד ה-scope כאן חייב להתאים בדיוק להרשאה שביקשנו ב-GoogleSignInOptions
     private val credential: GoogleAccountCredential =
@@ -64,34 +72,38 @@ class CalendarRepository(context: Context, account: Account) {
      * שולף את כל האירועים ליום נתון (מ-00:00 עד 23:59:59 של אותו יום, לפי אזור הזמן של המכשיר).
      */
     suspend fun getEventsForDate(dateMillisStartOfDay: Long): List<EventItem> = withContext(Dispatchers.IO) {
-        val tz = TimeZone.getDefault()
-        val timeMin = dateTimeFor(dateMillisStartOfDay, tz)
-        val timeMax = dateTimeFor(dateMillisStartOfDay + 24L * 60 * 60 * 1000 - 1000, tz)
-
-        val events: List<Event> = service.events().list("primary")
-            .setTimeMin(timeMin)
-            .setTimeMax(timeMax)
-            .setOrderBy("startTime")
-            .setSingleEvents(true)
-            .execute()
-            .items ?: emptyList()
-
-        events.map { toEventItem(it) }
+        if (!NetworkStatus.isOnline(appContext)) return@withContext offlineStore.eventsForDay(dateMillisStartOfDay)
+        try {
+            syncPendingActionsInternal()
+            val tz = TimeZone.getDefault()
+            val events: List<Event> = service.events().list("primary")
+                .setTimeMin(dateTimeFor(dateMillisStartOfDay, tz))
+                .setTimeMax(dateTimeFor(dateMillisStartOfDay + 24L * 60 * 60 * 1000 - 1000, tz))
+                .setOrderBy("startTime").setSingleEvents(true).execute().items ?: emptyList()
+            val items = events.map { toEventItem(it) }
+            offlineStore.replaceDay(dateMillisStartOfDay, items)
+            events.forEach { event ->
+                offlineStore.saveItem(dateMillisStartOfDay, toEventItem(event), detailsFromGoogleEvent(event))
+            }
+            items
+        } catch (_: Exception) {
+            offlineStore.eventsForDay(dateMillisStartOfDay)
+        }
     }
 
     /**
      * חיפוש חופשי לפי מילת מפתח (משתמש בפרמטר q של Google Calendar API), על פני חודש קדימה ואחורה.
      */
     suspend fun searchEventsByKeyword(keyword: String): List<EventItem> = withContext(Dispatchers.IO) {
-        val events: List<Event> = service.events().list("primary")
-            .setQ(keyword)
-            .setOrderBy("startTime")
-            .setSingleEvents(true)
-            .setMaxResults(50)
-            .execute()
-            .items ?: emptyList()
-
-        events.map { toEventItem(it) }
+        if (!NetworkStatus.isOnline(appContext)) return@withContext offlineStore.search(keyword)
+        try {
+            syncPendingActionsInternal()
+            val events: List<Event> = service.events().list("primary").setQ(keyword)
+                .setOrderBy("startTime").setSingleEvents(true).setMaxResults(50).execute().items ?: emptyList()
+            events.map { toEventItem(it) }
+        } catch (_: Exception) {
+            offlineStore.search(keyword)
+        }
     }
 
     /**
@@ -108,6 +120,7 @@ class CalendarRepository(context: Context, account: Account) {
         location: String? = null,
         recurrenceRule: String? = null
     ): Event = withContext(Dispatchers.IO) {
+        lastOperationQueuedOffline = false
         val tz = TimeZone.getDefault()
 
         val actualStartHour = startHour ?: 14
@@ -134,15 +147,35 @@ class CalendarRepository(context: Context, account: Account) {
             end = EventDateTime().setDateTime(dateTimeFor(endMillis, tz)).setTimeZone(tz.id)
         }
 
+        if (!NetworkStatus.isOnline(appContext)) return@withContext queueOfflineInsert(
+            event, title, dateMillisStartOfDay, startHour, startMinute,
+            endHour, endMinute, location, recurrenceRule
+        )
+
         // POST -> calendars/primary/events, כפי שמופיע במסמך האיפיון
-        service.events().insert("primary", event).execute()
+        try {
+            val saved = service.events().insert("primary", event).execute()
+            cacheDetails(detailsFromInput(saved.id ?: "", title, dateMillisStartOfDay, startHour, startMinute, endHour, endMinute, location, recurrenceRule))
+            saved
+        } catch (e: Exception) {
+            if (!isConnectivityFailure(e)) throw e
+            queueOfflineInsert(event, title, dateMillisStartOfDay, startHour, startMinute, endHour, endMinute, location, recurrenceRule)
+        }
     }
 
     /**
      * שולף את הפרטים המלאים של אירוע קיים, כדי למלא מראש את מסך העריכה.
      */
     suspend fun getEventDetails(eventId: String): EventDetails = withContext(Dispatchers.IO) {
-        val event = service.events().get("primary", eventId).execute()
+        if (eventId.startsWith("offline:")) return@withContext offlineStore.details(eventId)
+            ?: throw IllegalStateException("Offline event was not found")
+        if (!NetworkStatus.isOnline(appContext)) return@withContext offlineStore.details(eventId)
+            ?: throw IllegalStateException("Event is not available offline yet")
+        val event = try {
+            service.events().get("primary", eventId).execute()
+        } catch (e: Exception) {
+            return@withContext offlineStore.details(eventId) ?: throw e
+        }
         val cal = java.util.Calendar.getInstance()
 
         val startMillis = event.start?.dateTime?.value
@@ -170,7 +203,7 @@ class CalendarRepository(context: Context, account: Account) {
             endMinute = cal.get(java.util.Calendar.MINUTE)
         }
 
-        EventDetails(
+        val details = EventDetails(
             id = event.id ?: eventId,
             title = event.summary ?: "",
             dateMillisStartOfDay = dateMillisStartOfDay,
@@ -181,6 +214,8 @@ class CalendarRepository(context: Context, account: Account) {
             location = event.location,
             recurrenceRule = event.recurrence?.firstOrNull()
         )
+        cacheDetails(details)
+        details
     }
 
     /**
@@ -198,6 +233,7 @@ class CalendarRepository(context: Context, account: Account) {
         location: String? = null,
         recurrenceRule: String? = null
     ): Event = withContext(Dispatchers.IO) {
+        lastOperationQueuedOffline = false
         val tz = TimeZone.getDefault()
 
         val actualStartHour = startHour ?: 14
@@ -224,7 +260,208 @@ class CalendarRepository(context: Context, account: Account) {
             end = EventDateTime().setDateTime(dateTimeFor(endMillis, tz)).setTimeZone(tz.id)
         }
 
-        service.events().update("primary", eventId, event).execute()
+        val details = detailsFromInput(eventId, title, dateMillisStartOfDay, startHour, startMinute, endHour, endMinute, location, recurrenceRule)
+        if (eventId.startsWith("offline:")) {
+            offlineStore.queue("INSERT", eventId, details)
+            cacheDetails(details)
+            OfflineSyncWorker.schedule(appContext)
+            lastOperationQueuedOffline = true
+            event.id = eventId
+            return@withContext event
+        }
+        if (!NetworkStatus.isOnline(appContext)) {
+            queueOfflineUpdate(eventId, details)
+            event.id = eventId
+            return@withContext event
+        }
+        try {
+            val saved = service.events().update("primary", eventId, event).execute()
+            cacheDetails(details)
+            saved
+        } catch (e: Exception) {
+            if (!isConnectivityFailure(e)) throw e
+            queueOfflineUpdate(eventId, details)
+            event.id = eventId
+            event
+        }
+    }
+
+    suspend fun deleteEvent(eventId: String) = withContext(Dispatchers.IO) {
+        lastOperationQueuedOffline = false
+        if (eventId.startsWith("offline:")) {
+            offlineStore.queue("DELETE", eventId, null)
+            return@withContext
+        }
+        if (!NetworkStatus.isOnline(appContext)) {
+            queueOfflineDelete(eventId)
+            return@withContext
+        }
+        try {
+            service.events().delete("primary", eventId).execute()
+            offlineStore.deleteCached(eventId)
+        } catch (e: Exception) {
+            if (!isConnectivityFailure(e)) throw e
+            queueOfflineDelete(eventId)
+        }
+    }
+
+    suspend fun syncPendingActions() = withContext(Dispatchers.IO) { syncPendingActionsInternal() }
+
+    /** מוריד מחדש את כל היומן הראשי ומחליף את המטמון רק לאחר הורדה מלאה ומוצלחת. */
+    suspend fun refreshCalendarCache() = withContext(Dispatchers.IO) {
+        syncPendingActionsInternal()
+        refreshCalendarCacheInternal()
+    }
+
+    private fun refreshCalendarCacheInternal() {
+        var pageToken: String? = null
+        val downloadedEvents = mutableListOf<CachedCalendarEvent>()
+        do {
+            val request = service.events().list("primary")
+                .setSingleEvents(true)
+                .setShowDeleted(false)
+                .setMaxResults(2500)
+            request.pageToken = pageToken
+            val response = request.execute()
+            response.items.orEmpty().forEach { event ->
+                if (event.id.isNullOrBlank() || event.status == "cancelled") return@forEach
+                val details = detailsFromGoogleEvent(event)
+                downloadedEvents += CachedCalendarEvent(
+                    details.dateMillisStartOfDay,
+                    toEventItem(event),
+                    details
+                )
+            }
+            pageToken = response.nextPageToken
+        } while (pageToken != null)
+        offlineStore.replaceAllRemoteEvents(downloadedEvents)
+    }
+
+    private fun syncPendingActionsInternal() {
+        offlineStore.pending().forEach { action ->
+            when (action.operation) {
+                "INSERT" -> {
+                    val details = action.details ?: return@forEach
+                    val stableGoogleId = stableGoogleEventId(action.eventId)
+                    val event = eventFromDetails(details).apply { id = stableGoogleId }
+                    try {
+                        service.events().insert("primary", event).execute()
+                    } catch (e: GoogleJsonResponseException) {
+                        // 409 אומר שהניסיון הקודם הצליח אך האפליקציה נסגרה לפני ניקוי התור.
+                        if (e.statusCode != 409) throw e
+                    }
+                    offlineStore.replaceId(action.eventId, stableGoogleId)
+                }
+                "UPDATE" -> action.details?.let {
+                    service.events().update("primary", action.eventId, eventFromDetails(it)).execute()
+                }
+                "DELETE" -> service.events().delete("primary", action.eventId).execute()
+            }
+            offlineStore.complete(action.rowId)
+        }
+    }
+
+    private fun detailsFromInput(
+        id: String, title: String, day: Long, sh: Int?, sm: Int?, eh: Int?, em: Int?,
+        location: String?, recurrence: String?
+    ) = EventDetails(id, title, day, sh, sm, eh, em, location, recurrence)
+
+    private fun queueOfflineInsert(
+        event: Event, title: String, day: Long, sh: Int?, sm: Int?, eh: Int?, em: Int?,
+        location: String?, recurrence: String?
+    ): Event {
+        val localId = "offline:${UUID.randomUUID()}"
+        val details = detailsFromInput(localId, title, day, sh, sm, eh, em, location, recurrence)
+        offlineStore.queue("INSERT", localId, details)
+        cacheDetails(details)
+        OfflineSyncWorker.schedule(appContext)
+        lastOperationQueuedOffline = true
+        event.id = localId
+        return event
+    }
+
+    private fun queueOfflineUpdate(eventId: String, details: EventDetails) {
+        offlineStore.queue("UPDATE", eventId, details)
+        cacheDetails(details)
+        OfflineSyncWorker.schedule(appContext)
+        lastOperationQueuedOffline = true
+    }
+
+    private fun queueOfflineDelete(eventId: String) {
+        offlineStore.queue("DELETE", eventId, null)
+        offlineStore.deleteCached(eventId)
+        OfflineSyncWorker.schedule(appContext)
+        lastOperationQueuedOffline = true
+    }
+
+    /** מזהה גם חריגות רשת שספריות Google עוטפות בתוך חריגה אחרת. */
+    private fun isConnectivityFailure(error: Throwable): Boolean {
+        if (!NetworkStatus.isOnline(appContext)) return true
+        var current: Throwable? = error
+        while (current != null) {
+            if (current is IOException) return true
+            val message = current.message.orEmpty().lowercase(Locale.US)
+            if (message.contains("unable to resolve host") ||
+                message.contains("unknownhost") ||
+                message.contains("no address associated with hostname")) return true
+            current = current.cause
+        }
+        return false
+    }
+
+    /** Google מקבלת מזהי אירוע באלפבית base32hex; UUID הקסדצימלי מאפשר ניסיון חוזר בטוח. */
+    private fun stableGoogleEventId(localId: String): String =
+        "offline" + localId.substringAfter(':').replace("-", "").lowercase(Locale.US)
+
+    private fun detailsFromGoogleEvent(event: Event): EventDetails {
+        val startMillis = event.start?.dateTime?.value ?: event.start?.date?.value ?: 0L
+        val endMillis = event.end?.dateTime?.value
+        val startCal = java.util.Calendar.getInstance().apply { timeInMillis = startMillis }
+        val dayCal = java.util.Calendar.getInstance().apply {
+            timeInMillis = startMillis
+            set(java.util.Calendar.HOUR_OF_DAY, 0); set(java.util.Calendar.MINUTE, 0)
+            set(java.util.Calendar.SECOND, 0); set(java.util.Calendar.MILLISECOND, 0)
+        }
+        val endCal = endMillis?.let { millis -> java.util.Calendar.getInstance().apply { timeInMillis = millis } }
+        return EventDetails(
+            event.id ?: "", event.summary ?: "", dayCal.timeInMillis,
+            if (event.start?.dateTime != null) startCal.get(java.util.Calendar.HOUR_OF_DAY) else null,
+            if (event.start?.dateTime != null) startCal.get(java.util.Calendar.MINUTE) else null,
+            endCal?.get(java.util.Calendar.HOUR_OF_DAY), endCal?.get(java.util.Calendar.MINUTE),
+            event.location, event.recurrence?.firstOrNull()
+        )
+    }
+
+    private fun eventFromDetails(details: EventDetails): Event {
+        val tz = TimeZone.getDefault()
+        val start = details.dateMillisStartOfDay + ((details.startHour ?: 14) * 60 + (details.startMinute ?: 0)) * 60_000L
+        var end = details.dateMillisStartOfDay + ((details.endHour ?: 23) * 60 + (details.endMinute ?: 59)) * 60_000L
+        if (end <= start) end += 24L * 60 * 60 * 1000
+        return Event().apply {
+            summary = details.title
+            if (!details.location.isNullOrBlank()) location = details.location
+            if (!details.recurrenceRule.isNullOrBlank()) recurrence = listOf(details.recurrenceRule)
+            this.start = EventDateTime().setDateTime(dateTimeFor(start, tz)).setTimeZone(tz.id)
+            this.end = EventDateTime().setDateTime(dateTimeFor(end, tz)).setTimeZone(tz.id)
+        }
+    }
+
+    private fun cacheDetails(details: EventDetails) {
+        val sh = details.startHour ?: 14
+        val sm = details.startMinute ?: 0
+        val eh = details.endHour ?: 23
+        val em = details.endMinute ?: 59
+        offlineStore.saveItem(
+            details.dateMillisStartOfDay,
+            EventItem(
+                details.id,
+                details.title,
+                dateFormat.format(java.util.Date(details.dateMillisStartOfDay)),
+                String.format(Locale.getDefault(), "%02d:%02d-%02d:%02d", sh, sm, eh, em),
+                details.location
+            ),
+            details
+        )
     }
 
     private fun toEventItem(event: Event): EventItem {

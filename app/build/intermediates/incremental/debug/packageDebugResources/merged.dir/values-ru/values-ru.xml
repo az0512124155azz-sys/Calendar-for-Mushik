@@ -20,9 +20,11 @@
     <string name="error_no_valid_account">Действительный аккаунт Google не найден</string>
     <string name="error_reconnect_google">Пожалуйста, переподключитесь к Google</string>
     <string name="event_date_hint">Дата события</string>
+    <string name="event_delete_queued_offline">Удалено офлайн — синхронизация выполнится автоматически</string>
     <string name="event_deleted">Событие удалено из календаря</string>
     <string name="event_end_hint">Время окончания (необязательно)</string>
     <string name="event_location_hint">Место (необязательно)</string>
+    <string name="event_queued_offline">Событие сохранено и будет добавлено в календарь при подключении к интернету</string>
     <string name="event_saved">Событие успешно сохранено в календаре</string>
     <string name="event_start_hint">Время начала (необязательно)</string>
     <string name="event_title_hint">Название события</string>

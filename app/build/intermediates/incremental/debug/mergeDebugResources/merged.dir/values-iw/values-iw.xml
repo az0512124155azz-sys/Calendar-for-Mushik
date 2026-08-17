@@ -86,9 +86,11 @@
     <string name="error_no_valid_account">לא נמצא חשבון Google תקין</string>
     <string name="error_reconnect_google">יש להתחבר מחדש ל-Google</string>
     <string name="event_date_hint">תאריך האירוע</string>
+    <string name="event_delete_queued_offline">נמחק במצב אופליין ויסונכרן אוטומטית</string>
     <string name="event_deleted">האירוע נמחק מהיומן</string>
     <string name="event_end_hint">שעת סיום (אופציונלי)</string>
     <string name="event_location_hint">מיקום (אופציונלי)</string>
+    <string name="event_queued_offline">האירוע נשמר ויתווסף ליומן כשתהיה אונליין</string>
     <string name="event_saved">האירוע נשמר ביומן בהצלחה</string>
     <string name="event_start_hint">שעת התחלה (אופציונלי)</string>
     <string name="event_title_hint">כותרת האירוע</string>

@@ -50,4 +50,6 @@
     <string name="recurrence_custom_days_label">%1$d ימים ברציפות</string>
     <string name="edit_event_title">עריכת אירוע</string>
     <string name="update_event_button">עדכן אירוע</string>
+    <string name="event_queued_offline">האירוע נשמר ויתווסף ליומן כשתהיה אונליין</string>
+    <string name="event_delete_queued_offline">נמחק במצב אופליין ויסונכרן אוטומטית</string>
 </resources>

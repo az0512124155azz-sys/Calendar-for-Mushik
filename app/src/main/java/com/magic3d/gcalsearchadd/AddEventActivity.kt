@@ -230,7 +230,10 @@ class AddEventActivity : AppCompatActivity() {
                     getString(R.string.existing_events_label)
                 }
             } catch (e: Exception) {
-                tvExistingEventsLabel.text = getString(R.string.error_generic, e.message ?: "")
+                // באזור האירועים לעולם לא מציגים שגיאת רשת טכנית למשתמש.
+                existingEventsAdapter.updateItems(emptyList())
+                rvExistingEvents.visibility = View.GONE
+                tvExistingEventsLabel.text = getString(R.string.no_existing_events)
             } finally {
                 progressExistingEvents.visibility = View.GONE
             }
@@ -573,7 +576,11 @@ class AddEventActivity : AppCompatActivity() {
                         recurrenceRule = selectedRecurrenceRule
                     )
                 }
-                Toast.makeText(this@AddEventActivity, getString(R.string.event_saved), Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this@AddEventActivity,
+                    getString(if (repo.lastOperationQueuedOffline) R.string.event_queued_offline else R.string.event_saved),
+                    Toast.LENGTH_SHORT
+                ).show()
                 setResult(Activity.RESULT_OK)
                 finish()
             } catch (e: Exception) {

@@ -20,9 +20,11 @@
     <string name="error_no_valid_account">لم يتم العثور على حساب Google صالح</string>
     <string name="error_reconnect_google">يرجى إعادة الاتصال بـ Google</string>
     <string name="event_date_hint">تاريخ الحدث</string>
+    <string name="event_delete_queued_offline">تم الحذف بلا اتصال وستتم المزامنة تلقائيًا</string>
     <string name="event_deleted">تم حذف الحدث من التقويم</string>
     <string name="event_end_hint">وقت الانتهاء (اختياري)</string>
     <string name="event_location_hint">الموقع (اختياري)</string>
+    <string name="event_queued_offline">تم حفظ الحدث وسيُضاف إلى تقويمك عند الاتصال بالإنترنت</string>
     <string name="event_saved">تم حفظ الحدث في التقويم بنجاح</string>
     <string name="event_start_hint">وقت البدء (اختياري)</string>
     <string name="event_title_hint">عنوان الحدث</string>
