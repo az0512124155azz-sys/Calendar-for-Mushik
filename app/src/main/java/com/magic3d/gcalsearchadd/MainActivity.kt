@@ -6,6 +6,7 @@ import android.animation.ValueAnimator
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Rect
+import android.graphics.BitmapFactory
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
@@ -13,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.TextView
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -29,10 +31,13 @@ import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.api.services.calendar.CalendarScopes
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.Calendar as JavaCalendar
 import java.util.Locale
 import java.util.TimeZone
+import java.net.URL
 
 class MainActivity : AppCompatActivity() {
 
@@ -57,6 +62,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var progressBar: android.widget.ProgressBar
     private lateinit var fabAddEvent: View
     private lateinit var tvLanguageBadge: TextView
+    private lateinit var profileButton: View
+    private lateinit var ivGoogleProfile: ImageView
+    private lateinit var tvProfileInitial: TextView
+    private var signedInAccount: GoogleSignInAccount? = null
     private var openedSwipeHolder: EventAdapter.EventViewHolder? = null
 
     private val signInLauncher = registerForActivityResult(
@@ -104,6 +113,7 @@ class MainActivity : AppCompatActivity() {
             LanguagePicker.showDebugInfo(this)
             true
         }
+        profileButton.setOnClickListener { showAccountMenu() }
 
         adapter = EventAdapter(
             emptyList(),
@@ -139,6 +149,9 @@ class MainActivity : AppCompatActivity() {
         progressBar = findViewById(R.id.progressBar)
         fabAddEvent = findViewById(R.id.fabAddEvent)
         tvLanguageBadge = findViewById(R.id.tvLanguageBadge)
+        profileButton = findViewById(R.id.profileButton)
+        ivGoogleProfile = findViewById(R.id.ivGoogleProfile)
+        tvProfileInitial = findViewById(R.id.tvProfileInitial)
     }
 
     private fun setupGoogleSignIn() {
@@ -176,6 +189,8 @@ class MainActivity : AppCompatActivity() {
         }
         repository = CalendarRepository(this, androidAccount)
         eventDeleter = CalendarEventDeleter(this, androidAccount)
+        signedInAccount = account
+        updateProfileButton(account)
         showSignedInState()
         loadEventsForSelectedDay()
     }
@@ -186,6 +201,8 @@ class MainActivity : AppCompatActivity() {
         rvEvents.visibility = View.GONE
         tvEmpty.visibility = View.GONE
         fabAddEvent.visibility = View.GONE
+        profileButton.visibility = View.GONE
+        progressBar.visibility = View.GONE
     }
 
     private fun showSignedInState() {
@@ -193,7 +210,90 @@ class MainActivity : AppCompatActivity() {
         searchBar.visibility = View.VISIBLE
         rvEvents.visibility = View.VISIBLE
         fabAddEvent.visibility = View.VISIBLE
+        profileButton.visibility = View.VISIBLE
         etSearch.setText(displayDateFormat.format(selectedDayStartMillis))
+    }
+
+    private fun updateProfileButton(account: GoogleSignInAccount) {
+        val fallback = account.displayName?.trim()?.firstOrNull()?.uppercase()
+            ?: account.email?.trim()?.firstOrNull()?.uppercase()
+            ?: "?"
+        tvProfileInitial.text = fallback
+        tvProfileInitial.visibility = View.VISIBLE
+        ivGoogleProfile.visibility = View.INVISIBLE
+        ivGoogleProfile.setImageDrawable(null)
+
+        val photoUrl = account.photoUrl ?: return
+        lifecycleScope.launch {
+            val bitmap = withContext(Dispatchers.IO) {
+                runCatching {
+                    URL(photoUrl.toString()).openStream().use { input ->
+                        BitmapFactory.decodeStream(input)
+                    }
+                }
+                    .getOrNull()
+            }
+            if (bitmap != null && signedInAccount?.id == account.id) {
+                ivGoogleProfile.setImageBitmap(bitmap)
+                ivGoogleProfile.visibility = View.VISIBLE
+                tvProfileInitial.visibility = View.GONE
+            }
+        }
+    }
+
+    private fun showAccountMenu() {
+        val account = signedInAccount ?: return
+        val dialog = Dialog(this)
+        dialog.setContentView(R.layout.dialog_account_menu)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.window?.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+        dialog.window?.let { window ->
+            val params = window.attributes
+            params.dimAmount = 0.45f
+            window.attributes = params
+        }
+
+        dialog.findViewById<TextView>(R.id.tvAccountName).text =
+            account.displayName ?: getString(R.string.account_default_name)
+        dialog.findViewById<TextView>(R.id.tvAccountEmail).text = account.email.orEmpty()
+
+        val dialogImage = dialog.findViewById<ImageView>(R.id.ivAccountProfile)
+        val dialogInitial = dialog.findViewById<TextView>(R.id.tvAccountInitial)
+        dialogInitial.text = tvProfileInitial.text
+        if (ivGoogleProfile.drawable != null && ivGoogleProfile.visibility == View.VISIBLE) {
+            dialogImage.setImageDrawable(ivGoogleProfile.drawable)
+            dialogImage.visibility = View.VISIBLE
+            dialogInitial.visibility = View.GONE
+        }
+
+        dialog.findViewById<View>(R.id.btnManageGoogleAccount).setOnClickListener {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://myaccount.google.com/")))
+        }
+        dialog.findViewById<View>(R.id.btnAccountCancel).setOnClickListener { dialog.dismiss() }
+        dialog.findViewById<View>(R.id.btnSignOut).setOnClickListener {
+            dialog.dismiss()
+            signOut()
+        }
+
+        dialog.show()
+        dialog.window?.setLayout(
+            (resources.displayMetrics.widthPixels * 0.9f).toInt(),
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+    }
+
+    private fun signOut() {
+        setLoading(true)
+        googleSignInClient.signOut().addOnCompleteListener {
+            signedInAccount = null
+            repository = null
+            eventDeleter = null
+            openedSwipeHolder = null
+            adapter.updateItems(emptyList())
+            ivGoogleProfile.setImageDrawable(null)
+            showSignedOutState()
+            Toast.makeText(this, R.string.signed_out_successfully, Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun showDatePicker() {
