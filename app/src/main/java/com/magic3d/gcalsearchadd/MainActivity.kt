@@ -1,16 +1,21 @@
 package com.magic3d.gcalsearchadd
 
 import android.app.Activity
-import android.content.DialogInterface
+import android.app.Dialog
+import android.animation.ValueAnimator
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.Rect
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,7 +27,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.api.services.calendar.CalendarScopes
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -272,7 +276,7 @@ class MainActivity : AppCompatActivity() {
      * המחיקה עצמה מתבצעת רק בלחיצה על הכפתור ולא בזמן ההחלקה.
      */
     private fun setupSwipeToDelete() {
-        val actionWidth = 96f * resources.displayMetrics.density
+        val actionWidth = deleteActionWidth()
         var activeHolder: EventAdapter.EventViewHolder? = null
         var shouldRemainOpen = false
 
@@ -284,9 +288,8 @@ class MainActivity : AppCompatActivity() {
             ): Boolean = false
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                (viewHolder as? EventAdapter.EventViewHolder)
-                    ?.swipeForeground
-                    ?.translationX = actionWidth
+                val holder = viewHolder as? EventAdapter.EventViewHolder ?: return
+                setSwipeReveal(holder, actionWidth, actionWidth)
             }
 
             override fun getSwipeThreshold(viewHolder: RecyclerView.ViewHolder): Float = 1f
@@ -300,11 +303,7 @@ class MainActivity : AppCompatActivity() {
                 if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
                     val holder = viewHolder as? EventAdapter.EventViewHolder ?: return
                     if (openedSwipeHolder !== holder) {
-                        openedSwipeHolder?.swipeForeground
-                            ?.animate()
-                            ?.translationX(0f)
-                            ?.setDuration(150L)
-                            ?.start()
+                        openedSwipeHolder?.let { animateSwipeReveal(it, 0f, actionWidth) }
                         openedSwipeHolder = null
                     }
                     activeHolder = holder
@@ -323,7 +322,7 @@ class MainActivity : AppCompatActivity() {
             ) {
                 val holder = viewHolder as? EventAdapter.EventViewHolder ?: return
                 val translation = dX.coerceIn(0f, actionWidth)
-                holder.swipeForeground.translationX = translation
+                setSwipeReveal(holder, translation, actionWidth)
                 if (isCurrentlyActive) {
                     activeHolder = holder
                     shouldRemainOpen = translation >= actionWidth * 0.4f
@@ -337,16 +336,10 @@ class MainActivity : AppCompatActivity() {
                 super.clearView(recyclerView, viewHolder)
                 val holder = viewHolder as? EventAdapter.EventViewHolder ?: return
                 if (activeHolder === holder && shouldRemainOpen) {
-                    holder.swipeForeground.animate()
-                        .translationX(actionWidth)
-                        .setDuration(150L)
-                        .start()
+                    animateSwipeReveal(holder, actionWidth, actionWidth)
                     openedSwipeHolder = holder
                 } else {
-                    holder.swipeForeground.animate()
-                        .translationX(0f)
-                        .setDuration(150L)
-                        .start()
+                    animateSwipeReveal(holder, 0f, actionWidth)
                     if (openedSwipeHolder === holder) openedSwipeHolder = null
                 }
                 activeHolder = null
@@ -357,27 +350,66 @@ class MainActivity : AppCompatActivity() {
         ItemTouchHelper(callback).attachToRecyclerView(rvEvents)
     }
 
+    private fun deleteActionWidth(): Float = 120f * resources.displayMetrics.density
+
+    /** מציג רק את החלק האדום שנחשף בפועל, גם כשהכרטיס הקדמי שקוף. */
+    private fun setSwipeReveal(
+        holder: EventAdapter.EventViewHolder,
+        translation: Float,
+        actionWidth: Float
+    ) {
+        val revealedWidth = translation.coerceIn(0f, actionWidth)
+        holder.swipeForeground.translationX = revealedWidth
+        holder.deleteButton.visibility = if (revealedWidth > 0f) View.VISIBLE else View.INVISIBLE
+        holder.deleteButton.clipBounds = Rect(
+            0,
+            0,
+            revealedWidth.toInt(),
+            holder.deleteButton.height.coerceAtLeast(holder.itemView.height)
+        )
+    }
+
+    private fun animateSwipeReveal(
+        holder: EventAdapter.EventViewHolder,
+        target: Float,
+        actionWidth: Float
+    ) {
+        ValueAnimator.ofFloat(holder.swipeForeground.translationX, target).apply {
+            duration = 150L
+            addUpdateListener {
+                setSwipeReveal(holder, it.animatedValue as Float, actionWidth)
+            }
+            start()
+        }
+    }
+
     private fun showDeleteConfirmation(event: com.magic3d.gcalsearchadd.model.EventItem) {
-        openedSwipeHolder?.swipeForeground
-            ?.animate()
-            ?.translationX(0f)
-            ?.setDuration(150L)
-            ?.start()
+        openedSwipeHolder?.let { animateSwipeReveal(it, 0f, deleteActionWidth()) }
         openedSwipeHolder = null
 
-        val dialog = MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.delete_event_title)
-            .setMessage(getString(R.string.delete_event_message, event.title))
-            .setNegativeButton(R.string.cancel, null)
-            .setPositiveButton(R.string.delete_event_action) { _, _ -> deleteEvent(event) }
-            .create()
-
-        dialog.setOnShowListener {
-            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
-                ContextCompat.getColor(this, R.color.accent_red)
-            )
+        val dialog = Dialog(this)
+        dialog.setContentView(R.layout.dialog_delete_event)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.window?.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+        dialog.window?.let { window ->
+            val params = window.attributes
+            params.dimAmount = 0.45f
+            window.attributes = params
+        }
+        dialog.findViewById<TextView>(R.id.tvDeleteEventTitle).text =
+            getString(R.string.delete_event_title)
+        dialog.findViewById<TextView>(R.id.tvDeleteEventMessage).text =
+            getString(R.string.delete_event_message, event.title)
+        dialog.findViewById<View>(R.id.btnDeleteCancel).setOnClickListener { dialog.dismiss() }
+        dialog.findViewById<View>(R.id.btnDeleteConfirm).setOnClickListener {
+            dialog.dismiss()
+            deleteEvent(event)
         }
         dialog.show()
+        dialog.window?.setLayout(
+            (resources.displayMetrics.widthPixels * 0.9f).toInt(),
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
     }
 
     private fun deleteEvent(event: com.magic3d.gcalsearchadd.model.EventItem) {
