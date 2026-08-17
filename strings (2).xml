@@ -1,53 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">EventSpot</string>
-    <string name="sign_in_with_google">התחבר עם Google</string>
-    <string name="search_hint">תאריך (12.04.2026) או שם האירוע</string>
-    <string name="no_events_found">אין אירועים ביום זה</string>
-    <string name="add_event_title">הוספת אירוע חדש</string>
-    <string name="event_title_hint">כותרת האירוע</string>
-    <string name="event_date_hint">תאריך האירוע</string>
-    <string name="event_start_hint">שעת התחלה (אופציונלי)</string>
-    <string name="event_end_hint">שעת סיום (אופציונלי)</string>
-    <string name="event_location_hint">מיקום (אופציונלי)</string>
-    <string name="recurrence_none">חזרה: לא חוזר</string>
-    <string name="recurrence_title">כל כמה זמן האירוע חוזר?</string>
+    <string name="sign_in_with_google">تسجيل الدخول عبر Google</string>
+    <string name="search_hint">التاريخ (12.04.2026) أو اسم الحدث</string>
+    <string name="no_events_found">لا توجد أحداث في هذا اليوم</string>
+    <string name="add_event_title">إضافة حدث جديد</string>
+    <string name="event_title_hint">عنوان الحدث</string>
+    <string name="event_date_hint">تاريخ الحدث</string>
+    <string name="event_start_hint">وقت البدء (اختياري)</string>
+    <string name="event_end_hint">وقت الانتهاء (اختياري)</string>
+    <string name="event_location_hint">الموقع (اختياري)</string>
+    <string name="recurrence_none">التكرار: لا يتكرر</string>
+    <string name="recurrence_title">كم مرة يتكرر هذا الحدث؟</string>
     <string-array name="recurrence_options">
-        <item>לא חוזר</item>
-        <item>כל יום</item>
-        <item>כל שבוע</item>
-        <item>כל חודש</item>
-        <item>כל שנה</item>
-        <item>מותאם אישית (ימים)</item>
+        <item>لا يتكرر</item>
+        <item>كل يوم</item>
+        <item>كل أسبوع</item>
+        <item>كل شهر</item>
+        <item>كل سنة</item>
+        <item>مخصص (أيام)</item>
     </string-array>
-    <string name="recurrence_custom_title">כמה ימים ברציפות?</string>
-    <string name="recurrence_end_title">מצוין! עכשיו - מתי לעצור את החזרה?</string>
-    <string name="recurrence_end_never">אף פעם</string>
-    <string name="recurrence_end_count">אחרי מספר פעמים</string>
-    <string name="recurrence_end_until">עד תאריך מסוים</string>
+    <string name="recurrence_custom_title">كم عدد الأيام المتتالية؟</string>
+    <string name="recurrence_end_title">ممتاز! الآن - متى يتوقف التكرار؟</string>
+    <string name="recurrence_end_never">أبدًا</string>
+    <string name="recurrence_end_count">بعد عدد معين من المرات</string>
+    <string name="recurrence_end_until">حتى تاريخ محدد</string>
     <string name="support_email_hint">info@zoom-out.co.il</string>
-    <string name="support_email_subject">%1$s - App inquiry</string>
-    <string name="save">שמור</string>
-    <string name="cancel">ביטול</string>
+    <string name="support_email_subject">%1$s - استفسار من التطبيق</string>
+    <string name="save">حفظ</string>
+    <string name="cancel">إلغاء</string>
 
-    <string name="saving_event">שומר אירוע…</string>
-    <string name="event_saved">האירוע נשמר ביומן בהצלחה</string>
-    <string name="existing_events_label">אירועים קיימים ביום זה:</string>
-    <string name="no_existing_events">אין אירועים אחרים ביום זה</string>
-    <string name="error_generic">שגיאה: %1$s</string>
-    <string name="error_invalid_number">יש להזין מספר תקין</string>
-    <string name="error_reconnect_google">יש להתחבר מחדש ל-Google</string>
-    <string name="error_no_valid_account">לא נמצא חשבון Google תקין</string>
-    <string name="recurrence_custom_message">לדוגמה: תזין 3 כדי שהאירוע יחזור כל יום במשך 3 ימים ברציפות, החל מתאריך האירוע</string>
-    <string name="recurrence_count_message">לדוגמה: תזין 10 כדי שהאירוע יחזור 10 פעמים ואז ייפסק</string>
-    <string name="every_day">כל יום</string>
-    <string name="every_n_days">כל %1$d ימים</string>
-    <string name="recurrence_prefix">חזרה: %1$s</string>
-    <string name="recurrence_with_count">חזרה: %1$s (%2$d פעמים)</string>
-    <string name="recurrence_with_until">חזרה: %1$s (עד %2$s)</string>
-    <string name="language_picker_title">שפת האפליקציה</string>
-    <string name="language_system_default">שפת מערכת</string>
-    <string name="recurrence_custom_days_label">%1$d ימים ברציפות</string>
-    <string name="event_queued_offline">האירוע נשמר ויתווסף ליומן כשתהיה אונליין</string>
-    <string name="event_delete_queued_offline">נמחק במצב אופליין ויסונכרן אוטומטית</string>
+    <string name="saving_event">جارٍ حفظ الحدث…</string>
+    <string name="event_saved">تم حفظ الحدث في التقويم بنجاح</string>
+    <string name="existing_events_label">الأحداث الموجودة في هذا اليوم:</string>
+    <string name="no_existing_events">لا توجد أحداث أخرى في هذا اليوم</string>
+    <string name="error_generic">خطأ: %1$s</string>
+    <string name="error_invalid_number">يرجى إدخال رقم صحيح</string>
+    <string name="error_reconnect_google">يرجى إعادة الاتصال بـ Google</string>
+    <string name="error_no_valid_account">لم يتم العثور على حساب Google صالح</string>
+    <string name="recurrence_custom_message">مثال: أدخل 3 ليتكرر الحدث يوميًا لمدة 3 أيام متتالية، بدءًا من تاريخ الحدث</string>
+    <string name="recurrence_count_message">مثال: أدخل 10 ليتكرر الحدث 10 مرات ثم يتوقف</string>
+    <string name="every_day">كل يوم</string>
+    <string name="every_n_days">كل %1$d أيام</string>
+    <string name="recurrence_prefix">التكرار: %1$s</string>
+    <string name="recurrence_with_count">التكرار: %1$s (%2$d مرات)</string>
+    <string name="recurrence_with_until">التكرار: %1$s (حتى %2$s)</string>
+    <string name="language_picker_title">لغة التطبيق</string>
+    <string name="language_system_default">كما في الهاتف</string>
+    <string name="recurrence_custom_days_label">%1$d أيام متتالية</string>
+    <string name="edit_event_title">تعديل الحدث</string>
+    <string name="update_event_button">تحديث الحدث</string>
+    <string name="event_queued_offline">تم حفظ الحدث وسيُضاف إلى تقويمك عند الاتصال بالإنترنت</string>
+    <string name="event_delete_queued_offline">تم الحذف بلا اتصال وستتم المزامنة تلقائيًا</string>
 </resources>
