@@ -68,22 +68,35 @@
                 android:layout_width="12dp"
                 android:layout_height="1dp" />
 
-            <TextView
+            <LinearLayout
                 android:id="@+id/btnDeleteConfirm"
                 android:layout_width="0dp"
                 android:layout_height="52dp"
                 android:layout_weight="1"
                 android:background="@drawable/bg_delete_button"
                 android:clickable="true"
-                android:drawableStart="@android:drawable/ic_menu_delete"
-                android:drawablePadding="8dp"
-                android:drawableTint="@color/white"
                 android:focusable="true"
                 android:gravity="center"
-                android:text="@string/delete_event_action"
-                android:textColor="@color/white"
-                android:textSize="15sp"
-                android:textStyle="bold" />
+                android:layoutDirection="ltr"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/delete_event_action"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_marginStart="8dp"
+                    android:contentDescription="@null"
+                    android:src="@android:drawable/ic_menu_delete"
+                    app:tint="@color/white" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
