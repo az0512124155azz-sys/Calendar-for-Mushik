@@ -11,8 +11,8 @@ android {
         applicationId = "com.magic3d.gcalsearchadd"
         minSdk = 24
         targetSdk = 34
-        versionCode = 7
-        versionName = "1.6"
+        versionCode = 9
+        versionName = "1.8"
     }
 
     buildTypes {
