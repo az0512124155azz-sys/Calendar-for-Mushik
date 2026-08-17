@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="delete_event_action">Удалить</string>
+    <string name="delete_event_title">Удалить событие?</string>
+    <string name="delete_event_message">Вы уверены, что хотите удалить «%1$s» из календаря?</string>
+    <string name="event_deleted">Событие удалено из календаря</string>
+</resources>
