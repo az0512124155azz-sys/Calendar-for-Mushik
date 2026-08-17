@@ -1,6 +1,7 @@
 package com.magic3d.gcalsearchadd
 
 import android.app.Activity
+import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -9,8 +10,11 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -18,6 +22,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.api.services.calendar.CalendarScopes
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -29,6 +34,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var googleSignInClient: GoogleSignInClient
     private var repository: CalendarRepository? = null
+    private var eventDeleter: CalendarEventDeleter? = null
     private lateinit var adapter: EventAdapter
 
     // התאריך הנוכחי שנבחר בחיפוש (ברירת מחדל: היום)
@@ -47,6 +53,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var progressBar: android.widget.ProgressBar
     private lateinit var fabAddEvent: View
     private lateinit var tvLanguageBadge: TextView
+    private var openedSwipeHolder: EventAdapter.EventViewHolder? = null
 
     private val signInLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -86,9 +93,14 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
-        adapter = EventAdapter(emptyList(), onEditClick = { event -> openEditEvent(event) })
+        adapter = EventAdapter(
+            emptyList(),
+            onEditClick = { event -> openEditEvent(event) },
+            onDeleteClick = { event -> showDeleteConfirmation(event) }
+        )
         rvEvents.layoutManager = LinearLayoutManager(this)
         rvEvents.adapter = adapter
+        setupSwipeToDelete()
 
         // ניסיון התחברות שקטה אם המשתמש כבר התחבר בעבר
         val account = GoogleSignIn.getLastSignedInAccount(this)
@@ -146,6 +158,7 @@ class MainActivity : AppCompatActivity() {
             return
         }
         repository = CalendarRepository(this, androidAccount)
+        eventDeleter = CalendarEventDeleter(this, androidAccount)
         showSignedInState()
         loadEventsForSelectedDay()
     }
@@ -252,6 +265,156 @@ class MainActivity : AppCompatActivity() {
 
     private fun setLoading(loading: Boolean) {
         progressBar.visibility = if (loading) View.VISIBLE else View.GONE
+    }
+
+    /**
+     * החלקה פיזית ימינה מזיזה רק את הכרטיס הקדמי וחושפת את כפתור המחיקה האדום.
+     * המחיקה עצמה מתבצעת רק בלחיצה על הכפתור ולא בזמן ההחלקה.
+     */
+    private fun setupSwipeToDelete() {
+        val actionWidth = 96f * resources.displayMetrics.density
+        var activeHolder: EventAdapter.EventViewHolder? = null
+        var shouldRemainOpen = false
+
+        val callback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean = false
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                (viewHolder as? EventAdapter.EventViewHolder)
+                    ?.swipeForeground
+                    ?.translationX = actionWidth
+            }
+
+            override fun getSwipeThreshold(viewHolder: RecyclerView.ViewHolder): Float = 1f
+
+            override fun getSwipeEscapeVelocity(defaultValue: Float): Float = Float.MAX_VALUE
+
+            override fun getSwipeVelocityThreshold(defaultValue: Float): Float = Float.MAX_VALUE
+
+            override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
+                super.onSelectedChanged(viewHolder, actionState)
+                if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+                    val holder = viewHolder as? EventAdapter.EventViewHolder ?: return
+                    if (openedSwipeHolder !== holder) {
+                        openedSwipeHolder?.swipeForeground
+                            ?.animate()
+                            ?.translationX(0f)
+                            ?.setDuration(150L)
+                            ?.start()
+                        openedSwipeHolder = null
+                    }
+                    activeHolder = holder
+                    shouldRemainOpen = false
+                }
+            }
+
+            override fun onChildDraw(
+                canvas: android.graphics.Canvas,
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                dX: Float,
+                dY: Float,
+                actionState: Int,
+                isCurrentlyActive: Boolean
+            ) {
+                val holder = viewHolder as? EventAdapter.EventViewHolder ?: return
+                val translation = dX.coerceIn(0f, actionWidth)
+                holder.swipeForeground.translationX = translation
+                if (isCurrentlyActive) {
+                    activeHolder = holder
+                    shouldRemainOpen = translation >= actionWidth * 0.4f
+                }
+            }
+
+            override fun clearView(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder
+            ) {
+                super.clearView(recyclerView, viewHolder)
+                val holder = viewHolder as? EventAdapter.EventViewHolder ?: return
+                if (activeHolder === holder && shouldRemainOpen) {
+                    holder.swipeForeground.animate()
+                        .translationX(actionWidth)
+                        .setDuration(150L)
+                        .start()
+                    openedSwipeHolder = holder
+                } else {
+                    holder.swipeForeground.animate()
+                        .translationX(0f)
+                        .setDuration(150L)
+                        .start()
+                    if (openedSwipeHolder === holder) openedSwipeHolder = null
+                }
+                activeHolder = null
+                shouldRemainOpen = false
+            }
+        }
+
+        ItemTouchHelper(callback).attachToRecyclerView(rvEvents)
+    }
+
+    private fun showDeleteConfirmation(event: com.magic3d.gcalsearchadd.model.EventItem) {
+        openedSwipeHolder?.swipeForeground
+            ?.animate()
+            ?.translationX(0f)
+            ?.setDuration(150L)
+            ?.start()
+        openedSwipeHolder = null
+
+        val dialog = MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.delete_event_title)
+            .setMessage(getString(R.string.delete_event_message, event.title))
+            .setNegativeButton(R.string.cancel, null)
+            .setPositiveButton(R.string.delete_event_action) { _, _ -> deleteEvent(event) }
+            .create()
+
+        dialog.setOnShowListener {
+            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
+                ContextCompat.getColor(this, R.color.accent_red)
+            )
+        }
+        dialog.show()
+    }
+
+    private fun deleteEvent(event: com.magic3d.gcalsearchadd.model.EventItem) {
+        val deleter = eventDeleter ?: return
+        if (event.id.isBlank()) {
+            Toast.makeText(
+                this,
+                getString(R.string.error_generic, "Missing event ID"),
+                Toast.LENGTH_LONG
+            ).show()
+            return
+        }
+
+        setLoading(true)
+        lifecycleScope.launch {
+            try {
+                deleter.deleteEvent(event.id)
+                adapter.removeItemById(event.id)
+                val isEmpty = adapter.itemCount == 0
+                tvEmpty.visibility = if (isEmpty) View.VISIBLE else View.GONE
+                rvEvents.visibility = if (isEmpty) View.GONE else View.VISIBLE
+                Toast.makeText(
+                    this@MainActivity,
+                    R.string.event_deleted,
+                    Toast.LENGTH_SHORT
+                ).show()
+            } catch (e: Exception) {
+                adapter.closeAllSwipeActions()
+                Toast.makeText(
+                    this@MainActivity,
+                    getString(R.string.error_generic, e.message ?: ""),
+                    Toast.LENGTH_LONG
+                ).show()
+            } finally {
+                setLoading(false)
+            }
+        }
     }
 
     private fun openSupportEmail() {

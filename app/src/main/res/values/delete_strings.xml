@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="delete_event_action">Delete</string>
+    <string name="delete_event_title">Delete event?</string>
+    <string name="delete_event_message">Are you sure you want to delete “%1$s” from your calendar?</string>
+    <string name="event_deleted">Event deleted from calendar</string>
+</resources>
