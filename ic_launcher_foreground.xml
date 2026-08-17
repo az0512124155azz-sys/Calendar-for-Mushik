@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- לוגו עתידני: מסגרת יומן בקו ניאון ציאן, עם זכוכית חיפוש מגנטה חופפת בפינה -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- מתאר יומן - קו בלבד, לא מלא, לתחושה טכנולוגית -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#8AB4F8"
+        android:strokeWidth="3.2"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M32,32 L74,32 A6,6 0 0 1 80,38 L80,76 A6,6 0 0 1 74,82 L32,82 A6,6 0 0 1 26,76 L26,38 A6,6 0 0 1 32,32 Z" />
+
+    <!-- קו כותרת פנימי -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#8AB4F8"
+        android:strokeWidth="2"
+        android:pathData="M26,44 L80,44" />
+
+    <!-- תפסים -->
+    <path android:fillColor="#00000000" android:strokeColor="#8AB4F8" android:strokeWidth="3" android:strokeLineCap="round" android:pathData="M38,26 L38,36" />
+    <path android:fillColor="#00000000" android:strokeColor="#8AB4F8" android:strokeWidth="3" android:strokeLineCap="round" android:pathData="M68,26 L68,36" />
+
+    <!-- נקודות רשת פנימיות (ימים) -->
+    <path android:fillColor="#8AB4F8" android:pathData="M35,54 h6 v6 h-6 z" />
+    <path android:fillColor="#8AB4F833" android:pathData="M47,54 h6 v6 h-6 z" />
+    <path android:fillColor="#8AB4F833" android:pathData="M35,66 h6 v6 h-6 z" />
+
+    <!-- עדשת חיפוש מגנטה, חופפת פינה -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#F28B82"
+        android:strokeWidth="4"
+        android:pathData="M64,64 A11,11 0 1 0 86,64 A11,11 0 1 0 64,64 Z" />
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#F28B82"
+        android:strokeWidth="4"
+        android:strokeLineCap="round"
+        android:pathData="M83,81 L91,89" />
+
+</vector>

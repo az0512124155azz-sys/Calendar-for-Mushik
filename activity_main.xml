@@ -1,26 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_app_background">
 
+    <!-- כרטיס כותרת - זכוכית כהה למחצה, פינות תחתונות מעוגלות -->
     <LinearLayout
         android:id="@+id/headerBg"
         android:layout_width="0dp"
         android:layout_height="150dp"
         android:background="@drawable/bg_header_gradient"
-        android:gravity="center"
         android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintEnd_toEndOf="parent">
 
         <ImageView
             android:id="@+id/ivHeaderIcon"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:contentDescription="@string/app_name"
             android:src="@drawable/ic_app_badge" />
 
         <TextView
@@ -33,6 +34,7 @@
             android:textStyle="bold" />
     </LinearLayout>
 
+    <!-- תג שפה קטן - לוחצים ובוחרים שפת אפליקציה, בלי קשר לשפת המכשיר -->
     <TextView
         android:id="@+id/tvLanguageBadge"
         android:layout_width="34dp"
@@ -49,48 +51,14 @@
         android:textColor="@color/white"
         android:textSize="12sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- תמונת החשבון בצד הנגדי לבורר השפה -->
-    <FrameLayout
-        android:id="@+id/profileButton"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="14dp"
-        android:layout_marginTop="11dp"
-        android:background="@drawable/bg_profile_circle"
-        android:clickable="true"
-        android:focusable="true"
-        android:foreground="?attr/selectableItemBackgroundBorderless"
-        android:visibility="gone"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:id="@+id/tvProfileInitial"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-        <ImageView
-            android:id="@+id/ivGoogleProfile"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/bg_profile_circle"
-            android:clipToOutline="true"
-            android:contentDescription="@string/account_settings"
-            android:scaleType="centerCrop"
-            android:visibility="invisible" />
-    </FrameLayout>
-
+    <!-- כפתור התחברות - מוצג רק כשהמשתמש עדיין לא מחובר -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSignIn"
-        android:layout_width="250dp"
-        android:layout_height="86dp"
+        android:layout_width="232dp"
+        android:layout_height="70dp"
         android:background="@drawable/bg_save_gradient"
         android:text="@string/sign_in_with_google"
         android:textColor="@color/white"
@@ -102,30 +70,31 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- שורת חיפוש - זכוכית לבנה, גלולה מלאה -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/searchBar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="128dp"
         android:layout_marginEnd="20dp"
+        android:layout_marginTop="128dp"
         android:visibility="gone"
-        app:cardBackgroundColor="@color/glass_card"
         app:cardCornerRadius="28dp"
         app:cardElevation="6dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:strokeWidth="0dp"
+        app:cardBackgroundColor="@color/glass_card"
         app:layout_constraintTop_toTopOf="parent"
-        app:strokeWidth="0dp">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
             android:orientation="horizontal"
+            android:gravity="center_vertical"
             android:paddingStart="10dp"
-            android:paddingTop="6dp"
             android:paddingEnd="6dp"
+            android:paddingTop="6dp"
             android:paddingBottom="6dp">
 
             <EditText
@@ -135,43 +104,45 @@
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:hint="@string/search_hint"
+                android:textColor="@color/text_primary"
+                android:textColorHint="@color/text_secondary"
                 android:inputType="text"
                 android:maxLines="1"
                 android:paddingStart="10dp"
-                android:paddingEnd="10dp"
-                android:textColor="@color/text_primary"
-                android:textColorHint="@color/text_secondary" />
+                android:paddingEnd="10dp" />
 
             <ImageButton
                 android:id="@+id/btnPickDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
-                android:contentDescription="@string/event_date_hint"
                 android:src="@android:drawable/ic_menu_my_calendar"
-                app:tint="@color/accent_blue" />
+                app:tint="@color/accent_blue"
+                android:contentDescription="@string/event_date_hint" />
 
             <ImageButton
                 android:id="@+id/btnSearch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
-                android:contentDescription="@string/search_hint"
                 android:src="@android:drawable/ic_menu_search"
-                app:tint="@color/accent_red" />
+                app:tint="@color/accent_red"
+                android:contentDescription="@string/search_hint" />
+
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
+    <!-- רשימת אירועים ליום הנבחר -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvEvents"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:visibility="gone"
         android:clipToPadding="false"
         android:paddingTop="16dp"
         android:paddingBottom="88dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/searchBar" />
+        app:layout_constraintTop_toBottomOf="@id/searchBar"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
     <TextView
         android:id="@+id/tvEmpty"
@@ -181,10 +152,10 @@
         android:textColor="@color/text_secondary"
         android:textSize="15sp"
         android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/searchBar"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/searchBar" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -192,25 +163,26 @@
         android:layout_height="wrap_content"
         android:indeterminateTint="@color/accent_blue"
         android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- כפתור פלוס צף - גרדיאנט כחול-טורקיז -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAddEvent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="24dp"
         android:src="@android:drawable/ic_input_add"
-        android:visibility="gone"
+        app:tint="@color/white"
         app:backgroundTint="@color/accent_blue"
         app:borderWidth="0dp"
         app:elevation="6dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:tint="@color/white" />
-
+        app:layout_constraintEnd_toEndOf="parent" />
+    <!-- מעטפה קטנה לתמיכה, בתחתית המסך -->
     <LinearLayout
         android:id="@+id/supportRow"
         android:layout_width="wrap_content"
@@ -219,8 +191,8 @@
         android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <ImageView
             android:id="@+id/btnSupportEmail"
@@ -228,11 +200,11 @@
             android:layout_height="16dp"
             android:alpha="0.55"
             android:clickable="true"
-            android:contentDescription="@string/support_email_hint"
             android:focusable="true"
             android:foreground="?attr/selectableItemBackgroundBorderless"
             android:src="@android:drawable/ic_dialog_email"
-            app:tint="@color/text_secondary" />
+            app:tint="@color/text_secondary"
+            android:contentDescription="@string/support_email_hint" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -242,5 +214,7 @@
             android:text="@string/support_email_hint"
             android:textColor="@color/text_secondary"
             android:textSize="11sp" />
+
     </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

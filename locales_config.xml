@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- מצהיר במפורש אילו שפות האפליקציה תומכת בהן, כדי שמערכת ההפעלה (אנדרואיד 13+)
+     תזהה נכון את כולן - כולל עברית - ולא תסתמך על זיהוי אוטומטי שעלול לפספס אותה. -->
+<locale-config xmlns:android="http://schemas.android.com/apk/res/android">
+    <locale android:name="he" />
+    <locale android:name="en" />
+    <locale android:name="fr" />
+    <locale android:name="ru" />
+    <locale android:name="ar" />
+</locale-config>

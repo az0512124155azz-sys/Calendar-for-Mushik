@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- זכוכית בהירה (Glassmorphism) על רקע גרדיאנט מטושטש -->
+    <color name="white">#FFFFFF</color>
+    <color name="glass_card">#E8FFFFFF</color>
+    <color name="glass_header">#992F3B52</color>
+
+    <color name="text_primary">#23262B</color>
+    <color name="text_secondary">#6B7280</color>
+
+    <color name="accent_blue">#4F8EF7</color>
+    <color name="accent_green">#34C759</color>
+    <color name="accent_red">#FF6B57</color>
+    <color name="accent_purple">#A66BF5</color>
+    <color name="accent_teal">#22C1D6</color>
+    <color name="accent_yellow">#FFB020</color>
+    <color name="accent_orange">#FF9F43</color>
+
+    <color name="gradient_btn_start">#4F8EF7</color>
+    <color name="gradient_btn_end">#00D4FF</color>
+
+    <color name="bg_gradient_1">#BBD3F7</color>
+    <color name="bg_gradient_2">#D6C6F2</color>
+    <color name="bg_gradient_3">#F3CBDD</color>
+
+    <!-- legacy aliases כדי לא לשבור קוד/משאבים קיימים -->
+    <color name="app_background">@color/bg_gradient_2</color>
+    <color name="surface">@color/glass_card</color>
+    <color name="surface_alt">#F0F2F8</color>
+    <color name="hairline">#22FFFFFF</color>
+    <color name="fab_color">@color/accent_blue</color>
+    <color name="field_bg">@color/glass_card</color>
+    <color name="pill_bg">#F0F2F8</color>
+    <color name="bg_deep">@color/glass_header</color>
+
+    <color name="google_blue">@color/accent_blue</color>
+    <color name="google_blue_dark">@color/accent_blue</color>
+    <color name="gradient_start">@color/glass_header</color>
+    <color name="gradient_end">@color/glass_header</color>
+    <color name="light_gray">@color/glass_card</color>
+    <color name="event_bar_default">@color/accent_blue</color>
+    <color name="ic_launcher_background">@color/accent_blue</color>
+
+    <color name="neon_cyan">@color/accent_blue</color>
+    <color name="neon_magenta">@color/accent_red</color>
+    <color name="neon_lime">@color/accent_green</color>
+    <color name="neon_orange">@color/accent_orange</color>
+    <color name="neon_violet">@color/accent_purple</color>
+    <color name="neon_yellow">@color/accent_yellow</color>
+    <color name="accent_coral">@color/accent_red</color>
+    <color name="accent_teal_legacy">@color/accent_teal</color>
+</resources>

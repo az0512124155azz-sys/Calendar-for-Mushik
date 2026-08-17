@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="delete_event_action">حذف</string>
+    <string name="delete_event_title">حذف الحدث؟</string>
+    <string name="delete_event_message">هل أنت متأكد أنك تريد حذف \"%1$s\" من تقويمك؟</string>
+    <string name="event_deleted">تم حذف الحدث من التقويم</string>
+</resources>

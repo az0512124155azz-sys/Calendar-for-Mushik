@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="delete_event_action">Supprimer</string>
+    <string name="delete_event_title">Supprimer l’événement ?</string>
+    <string name="delete_event_message">Voulez-vous vraiment supprimer \"%1$s\" de votre agenda ?</string>
+    <string name="event_deleted">Événement supprimé de l’agenda</string>
+</resources>
