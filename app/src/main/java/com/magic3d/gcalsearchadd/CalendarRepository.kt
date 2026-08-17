@@ -116,7 +116,11 @@ class CalendarRepository(context: Context, account: Account) {
         val actualEndMinute = endMinute ?: 59
 
         val startMillis = dateMillisStartOfDay + (actualStartHour * 60 + actualStartMinute) * 60_000L
-        val endMillis = dateMillisStartOfDay + (actualEndHour * 60 + actualEndMinute) * 60_000L
+        var endMillis = dateMillisStartOfDay + (actualEndHour * 60 + actualEndMinute) * 60_000L
+        // אם שעת הסיום "לפני" שעת ההתחלה (למשל 14:00-01:59), האירוע חוצה חצות - מזיזים ליום למחרת
+        if (endMillis <= startMillis) {
+            endMillis += 24L * 60 * 60 * 1000
+        }
 
         val event = Event().apply {
             summary = title
@@ -202,7 +206,11 @@ class CalendarRepository(context: Context, account: Account) {
         val actualEndMinute = endMinute ?: 59
 
         val startMillis = dateMillisStartOfDay + (actualStartHour * 60 + actualStartMinute) * 60_000L
-        val endMillis = dateMillisStartOfDay + (actualEndHour * 60 + actualEndMinute) * 60_000L
+        var endMillis = dateMillisStartOfDay + (actualEndHour * 60 + actualEndMinute) * 60_000L
+        // אם שעת הסיום "לפני" שעת ההתחלה (למשל 14:00-01:59), האירוע חוצה חצות - מזיזים ליום למחרת
+        if (endMillis <= startMillis) {
+            endMillis += 24L * 60 * 60 * 1000
+        }
 
         val event = Event().apply {
             summary = title

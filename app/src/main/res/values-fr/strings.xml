@@ -49,4 +49,5 @@
     <string name="language_system_default">Langue du système</string>
     <string name="recurrence_custom_days_label">%1$d jours consécutifs</string>
     <string name="edit_event_title">Modifier l\'événement</string>
+    <string name="update_event_button">Mettre à jour l\'événement</string>
 </resources>

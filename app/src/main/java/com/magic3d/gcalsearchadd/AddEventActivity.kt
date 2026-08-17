@@ -116,7 +116,7 @@ class AddEventActivity : AppCompatActivity() {
         }
 
         if (editingEventId != null) {
-            findViewById<TextView>(R.id.tvScreenTitle).text = getString(R.string.edit_event_title)
+            updateUiForEditMode()
         }
 
         tvDatePicker.text = displayDateFormat.format(dateMillis)
@@ -186,9 +186,18 @@ class AddEventActivity : AppCompatActivity() {
      * מאפשר לעבור למצב עריכה של אירוע אחר בלי לפתוח מסך חדש - נקרא מהעיפרון ברשימת
      * "אירועים קיימים ביום זה" שבתוך מסך ההוספה עצמו.
      */
+    /**
+     * הופך את זה לברור לגמרי שאנחנו במצב עריכה: כותרת המסך וגם טקסט כפתור השמירה משתנים,
+     * כדי שלא יהיה ספק שהשמירה מעדכנת אירוע קיים ולא יוצרת חדש.
+     */
+    private fun updateUiForEditMode() {
+        findViewById<TextView>(R.id.tvScreenTitle).text = getString(R.string.edit_event_title)
+        findViewById<TextView>(R.id.btnSave).text = getString(R.string.update_event_button)
+    }
+
     private fun switchToEditingEvent(eventId: String) {
         editingEventId = eventId
-        findViewById<TextView>(R.id.tvScreenTitle).text = getString(R.string.edit_event_title)
+        updateUiForEditMode()
         loadEventForEditing(eventId)
     }
 

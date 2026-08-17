@@ -49,4 +49,5 @@
     <string name="language_system_default">שפת מערכת</string>
     <string name="recurrence_custom_days_label">%1$d ימים ברציפות</string>
     <string name="edit_event_title">עריכת אירוע</string>
+    <string name="update_event_button">עדכן אירוע</string>
 </resources>
