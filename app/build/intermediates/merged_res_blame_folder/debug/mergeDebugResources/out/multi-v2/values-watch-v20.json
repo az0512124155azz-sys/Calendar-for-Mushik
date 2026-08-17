@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.magic3d.gcalsearchadd.app-mergeDebugResources-33:/values-watch-v20/values-watch-v20.xml",
+            "outputFile": "com.magic3d.gcalsearchadd.app-mergeDebugResources-42:/values-watch-v20/values-watch-v20.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\az051\\.gradle\\caches\\9.0.0\\transforms\\b87b43dbd9b152e90d14e23f25f2f918\\transformed\\play-services-auth-21.2.0\\res\\values-watch-v20\\values.xml",
+                    "source": "C:\\Users\\az051\\.gradle\\caches\\8.13\\transforms\\718357ef9338eb4cc319eac45ec82ad9\\transformed\\play-services-auth-21.2.0\\res\\values-watch-v20\\values.xml",
                     "from": {
                         "startLines": "4,5,6,7,8,9,10,11",
                         "startColumns": "0,0,0,0,0,0,0,0",
@@ -21,7 +21,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\az051\\.gradle\\caches\\9.0.0\\transforms\\49dc12deba1d7ecf656fb8bb49a47076\\transformed\\appcompat-1.7.0\\res\\values-watch-v20\\values-watch-v20.xml",
+                    "source": "C:\\Users\\az051\\.gradle\\caches\\8.13\\transforms\\cf12ef46b4dbf9551c4c1a5fea088f81\\transformed\\appcompat-1.7.0\\res\\values-watch-v20\\values-watch-v20.xml",
                     "from": {
                         "startLines": "2,5,8",
                         "startColumns": "4,4,4",

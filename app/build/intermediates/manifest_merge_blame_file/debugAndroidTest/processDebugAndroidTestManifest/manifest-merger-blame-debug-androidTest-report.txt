@@ -3,36 +3,36 @@
 3    package="com.magic3d.gcalsearchadd.test" >
 4
 5    <uses-sdk
-5-->C:\Users\az051\AndroidStudioProjects\Calendar-for-Mushik\app\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest16573657427686145140.xml:5:5-74
+5-->C:\Users\az051\AndroidStudioProjects\Calendar-for-Mushik\app\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest18316005617184061399.xml:5:5-74
 6        android:minSdkVersion="24"
-6-->C:\Users\az051\AndroidStudioProjects\Calendar-for-Mushik\app\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest16573657427686145140.xml:5:15-41
-7        android:targetSdkVersion="34" />
-7-->C:\Users\az051\AndroidStudioProjects\Calendar-for-Mushik\app\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest16573657427686145140.xml:5:42-71
+6-->C:\Users\az051\AndroidStudioProjects\Calendar-for-Mushik\app\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest18316005617184061399.xml:5:15-41
+7        android:targetSdkVersion="36" />
+7-->C:\Users\az051\AndroidStudioProjects\Calendar-for-Mushik\app\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest18316005617184061399.xml:5:42-71
 8
 9    <instrumentation
-9-->C:\Users\az051\AndroidStudioProjects\Calendar-for-Mushik\app\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest16573657427686145140.xml:11:5-15:75
+9-->C:\Users\az051\AndroidStudioProjects\Calendar-for-Mushik\app\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest18316005617184061399.xml:11:5-15:75
 10        android:name="android.test.InstrumentationTestRunner"
-10-->C:\Users\az051\AndroidStudioProjects\Calendar-for-Mushik\app\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest16573657427686145140.xml:11:22-75
+10-->C:\Users\az051\AndroidStudioProjects\Calendar-for-Mushik\app\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest18316005617184061399.xml:11:22-75
 11        android:functionalTest="false"
-11-->C:\Users\az051\AndroidStudioProjects\Calendar-for-Mushik\app\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest16573657427686145140.xml:14:22-52
+11-->C:\Users\az051\AndroidStudioProjects\Calendar-for-Mushik\app\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest18316005617184061399.xml:14:22-52
 12        android:handleProfiling="false"
-12-->C:\Users\az051\AndroidStudioProjects\Calendar-for-Mushik\app\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest16573657427686145140.xml:13:22-53
+12-->C:\Users\az051\AndroidStudioProjects\Calendar-for-Mushik\app\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest18316005617184061399.xml:13:22-53
 13        android:label="Tests for com.magic3d.gcalsearchadd"
-13-->C:\Users\az051\AndroidStudioProjects\Calendar-for-Mushik\app\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest16573657427686145140.xml:15:22-73
+13-->C:\Users\az051\AndroidStudioProjects\Calendar-for-Mushik\app\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest18316005617184061399.xml:15:22-73
 14        android:targetPackage="com.magic3d.gcalsearchadd" />
-14-->C:\Users\az051\AndroidStudioProjects\Calendar-for-Mushik\app\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest16573657427686145140.xml:12:22-71
+14-->C:\Users\az051\AndroidStudioProjects\Calendar-for-Mushik\app\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest18316005617184061399.xml:12:22-71
 15
 16    <uses-permission android:name="android.permission.REORDER_TASKS" />
 16-->[androidx.test:core:1.6.1] C:\Users\az051\.gradle\caches\9.0.0\transforms\3965e295a6068e88923c9a5fcb466425\transformed\core-1.6.1\AndroidManifest.xml:24:5-72
 16-->[androidx.test:core:1.6.1] C:\Users\az051\.gradle\caches\9.0.0\transforms\3965e295a6068e88923c9a5fcb466425\transformed\core-1.6.1\AndroidManifest.xml:24:22-69
 17
 18    <application
-18-->C:\Users\az051\AndroidStudioProjects\Calendar-for-Mushik\app\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest16573657427686145140.xml:7:5-9:19
+18-->C:\Users\az051\AndroidStudioProjects\Calendar-for-Mushik\app\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest18316005617184061399.xml:7:5-9:19
 19        android:debuggable="true"
 20        android:extractNativeLibs="false" >
 21        <uses-library android:name="android.test.runner" />
-21-->C:\Users\az051\AndroidStudioProjects\Calendar-for-Mushik\app\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest16573657427686145140.xml:8:9-60
-21-->C:\Users\az051\AndroidStudioProjects\Calendar-for-Mushik\app\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest16573657427686145140.xml:8:23-57
+21-->C:\Users\az051\AndroidStudioProjects\Calendar-for-Mushik\app\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest18316005617184061399.xml:8:9-60
+21-->C:\Users\az051\AndroidStudioProjects\Calendar-for-Mushik\app\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest18316005617184061399.xml:8:23-57
 22
 23        <activity
 23-->[androidx.test:core:1.6.1] C:\Users\az051\.gradle\caches\9.0.0\transforms\3965e295a6068e88923c9a5fcb466425\transformed\core-1.6.1\AndroidManifest.xml:27:9-34:20

@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.magic3d.gcalsearchadd.app-mergeDebugResources-33:/values-h720dp-v13/values-h720dp-v13.xml",
+            "outputFile": "com.magic3d.gcalsearchadd.app-mergeDebugResources-42:/values-h720dp-v13/values-h720dp-v13.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\az051\\.gradle\\caches\\9.0.0\\transforms\\49dc12deba1d7ecf656fb8bb49a47076\\transformed\\appcompat-1.7.0\\res\\values-h720dp-v13\\values-h720dp-v13.xml",
+                    "source": "C:\\Users\\az051\\.gradle\\caches\\8.13\\transforms\\cf12ef46b4dbf9551c4c1a5fea088f81\\transformed\\appcompat-1.7.0\\res\\values-h720dp-v13\\values-h720dp-v13.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

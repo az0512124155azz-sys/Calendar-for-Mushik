@@ -1,34 +1,34 @@
 [
     {
-        "merged": "com.magic3d.gcalsearchadd.app-mergeDebugResources-34:/layout/activity_add_event.xml",
-        "source": "com.magic3d.gcalsearchadd.app-main-37:/layout/activity_add_event.xml"
+        "merged": "com.magic3d.gcalsearchadd.app-mergeDebugResources-43:/layout/dialog_delete_event.xml",
+        "source": "com.magic3d.gcalsearchadd.app-main-46:/layout/dialog_delete_event.xml"
     },
     {
-        "merged": "com.magic3d.gcalsearchadd.app-mergeDebugResources-34:/layout/dialog_number_input.xml",
-        "source": "com.magic3d.gcalsearchadd.app-main-37:/layout/dialog_number_input.xml"
+        "merged": "com.magic3d.gcalsearchadd.app-mergeDebugResources-43:/layout/activity_main.xml",
+        "source": "com.magic3d.gcalsearchadd.app-main-46:/layout/activity_main.xml"
     },
     {
-        "merged": "com.magic3d.gcalsearchadd.app-mergeDebugResources-34:/layout/item_event.xml",
-        "source": "com.magic3d.gcalsearchadd.app-main-37:/layout/item_event.xml"
+        "merged": "com.magic3d.gcalsearchadd.app-mergeDebugResources-43:/layout/item_location_suggestion.xml",
+        "source": "com.magic3d.gcalsearchadd.app-main-46:/layout/item_location_suggestion.xml"
     },
     {
-        "merged": "com.magic3d.gcalsearchadd.app-mergeDebugResources-34:/layout/dialog_option_list.xml",
-        "source": "com.magic3d.gcalsearchadd.app-main-37:/layout/dialog_option_list.xml"
+        "merged": "com.magic3d.gcalsearchadd.app-mergeDebugResources-43:/layout/item_event.xml",
+        "source": "com.magic3d.gcalsearchadd.app-main-46:/layout/item_event.xml"
     },
     {
-        "merged": "com.magic3d.gcalsearchadd.app-mergeDebugResources-34:/layout/dialog_delete_event.xml",
-        "source": "com.magic3d.gcalsearchadd.app-main-37:/layout/dialog_delete_event.xml"
+        "merged": "com.magic3d.gcalsearchadd.app-mergeDebugResources-43:/layout/widget_add_event.xml",
+        "source": "com.magic3d.gcalsearchadd.app-main-46:/layout/widget_add_event.xml"
     },
     {
-        "merged": "com.magic3d.gcalsearchadd.app-mergeDebugResources-34:/layout/widget_add_event.xml",
-        "source": "com.magic3d.gcalsearchadd.app-main-37:/layout/widget_add_event.xml"
+        "merged": "com.magic3d.gcalsearchadd.app-mergeDebugResources-43:/layout/activity_add_event.xml",
+        "source": "com.magic3d.gcalsearchadd.app-main-46:/layout/activity_add_event.xml"
     },
     {
-        "merged": "com.magic3d.gcalsearchadd.app-mergeDebugResources-34:/layout/activity_main.xml",
-        "source": "com.magic3d.gcalsearchadd.app-main-37:/layout/activity_main.xml"
+        "merged": "com.magic3d.gcalsearchadd.app-mergeDebugResources-43:/layout/dialog_option_list.xml",
+        "source": "com.magic3d.gcalsearchadd.app-main-46:/layout/dialog_option_list.xml"
     },
     {
-        "merged": "com.magic3d.gcalsearchadd.app-mergeDebugResources-34:/layout/item_location_suggestion.xml",
-        "source": "com.magic3d.gcalsearchadd.app-main-37:/layout/item_location_suggestion.xml"
+        "merged": "com.magic3d.gcalsearchadd.app-mergeDebugResources-43:/layout/dialog_number_input.xml",
+        "source": "com.magic3d.gcalsearchadd.app-main-46:/layout/dialog_number_input.xml"
     }
 ]
