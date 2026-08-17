@@ -2,6 +2,6 @@
 <resources>
     <string name="delete_event_action">מחיקה</string>
     <string name="delete_event_title">למחוק את האירוע?</string>
-    <string name="delete_event_message">האם למחוק את „%1$s” מהיומן?</string>
+    <string name="delete_event_message">האם למחוק את \"%1$s\" מהיומן?</string>
     <string name="event_deleted">האירוע נמחק מהיומן</string>
 </resources>
