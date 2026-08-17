@@ -1,5 +1,6 @@
 package com.magic3d.gcalsearchadd
 
+import android.graphics.Rect
 import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.View
@@ -55,6 +56,8 @@ class EventAdapter(
         )
 
         holder.swipeForeground.translationX = 0f
+        holder.deleteButton.visibility = View.INVISIBLE
+        holder.deleteButton.clipBounds = Rect(0, 0, 0, holder.itemView.height)
         holder.title.text = item.title
         holder.time.text = if (showDate) {
             "${item.timeLabel}  •  ${item.dateLabel}"
@@ -91,7 +94,6 @@ class EventAdapter(
         }
 
         holder.deleteButton.setOnClickListener {
-            holder.swipeForeground.animate().translationX(0f).setDuration(150L).start()
             onDeleteClick?.invoke(item)
         }
     }
