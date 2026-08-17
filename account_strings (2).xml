@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?><resources>
+    <string name="account_settings">إعدادات الحساب</string>
+    <string name="account_default_name">مستخدم Google</string>
+    <string name="manage_google_account">إدارة حساب Google</string>
+    <string name="sign_out">تسجيل الخروج</string>
+    <string name="signed_out_successfully">تم تسجيل الخروج بنجاح</string>
+</resources>
