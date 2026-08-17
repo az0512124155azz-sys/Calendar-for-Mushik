@@ -72,6 +72,7 @@ class CalendarRepository(context: Context, private val account: Account) {
      * שולף את כל האירועים ליום נתון (מ-00:00 עד 23:59:59 של אותו יום, לפי אזור הזמן של המכשיר).
      */
     suspend fun getEventsForDate(dateMillisStartOfDay: Long): List<EventItem> = withContext(Dispatchers.IO) {
+        if (!NetworkStatus.isOnline(appContext)) return@withContext offlineStore.eventsForDay(dateMillisStartOfDay)
         try {
             syncPendingActionsInternal()
             val tz = TimeZone.getDefault()
@@ -94,6 +95,7 @@ class CalendarRepository(context: Context, private val account: Account) {
      * חיפוש חופשי לפי מילת מפתח (משתמש בפרמטר q של Google Calendar API), על פני חודש קדימה ואחורה.
      */
     suspend fun searchEventsByKeyword(keyword: String): List<EventItem> = withContext(Dispatchers.IO) {
+        if (!NetworkStatus.isOnline(appContext)) return@withContext offlineStore.search(keyword)
         try {
             syncPendingActionsInternal()
             val events: List<Event> = service.events().list("primary").setQ(keyword)
@@ -145,20 +147,18 @@ class CalendarRepository(context: Context, private val account: Account) {
             end = EventDateTime().setDateTime(dateTimeFor(endMillis, tz)).setTimeZone(tz.id)
         }
 
+        if (!NetworkStatus.isOnline(appContext)) return@withContext queueOfflineInsert(
+            event, title, dateMillisStartOfDay, startHour, startMinute,
+            endHour, endMinute, location, recurrenceRule
+        )
+
         // POST -> calendars/primary/events, כפי שמופיע במסמך האיפיון
         try {
             val saved = service.events().insert("primary", event).execute()
             cacheDetails(detailsFromInput(saved.id ?: "", title, dateMillisStartOfDay, startHour, startMinute, endHour, endMinute, location, recurrenceRule))
             saved
         } catch (e: IOException) {
-            val localId = "offline:${UUID.randomUUID()}"
-            val details = detailsFromInput(localId, title, dateMillisStartOfDay, startHour, startMinute, endHour, endMinute, location, recurrenceRule)
-            offlineStore.queue("INSERT", localId, details)
-            cacheDetails(details)
-            OfflineSyncWorker.schedule(appContext)
-            lastOperationQueuedOffline = true
-            event.id = localId
-            event
+            queueOfflineInsert(event, title, dateMillisStartOfDay, startHour, startMinute, endHour, endMinute, location, recurrenceRule)
         }
     }
 
@@ -168,6 +168,8 @@ class CalendarRepository(context: Context, private val account: Account) {
     suspend fun getEventDetails(eventId: String): EventDetails = withContext(Dispatchers.IO) {
         if (eventId.startsWith("offline:")) return@withContext offlineStore.details(eventId)
             ?: throw IllegalStateException("Offline event was not found")
+        if (!NetworkStatus.isOnline(appContext)) return@withContext offlineStore.details(eventId)
+            ?: throw IllegalStateException("Event is not available offline yet")
         val event = try {
             service.events().get("primary", eventId).execute()
         } catch (e: IOException) {
@@ -266,15 +268,17 @@ class CalendarRepository(context: Context, private val account: Account) {
             event.id = eventId
             return@withContext event
         }
+        if (!NetworkStatus.isOnline(appContext)) {
+            queueOfflineUpdate(eventId, details)
+            event.id = eventId
+            return@withContext event
+        }
         try {
             val saved = service.events().update("primary", eventId, event).execute()
             cacheDetails(details)
             saved
         } catch (e: IOException) {
-            offlineStore.queue("UPDATE", eventId, details)
-            cacheDetails(details)
-            OfflineSyncWorker.schedule(appContext)
-            lastOperationQueuedOffline = true
+            queueOfflineUpdate(eventId, details)
             event.id = eventId
             event
         }
@@ -286,14 +290,15 @@ class CalendarRepository(context: Context, private val account: Account) {
             offlineStore.queue("DELETE", eventId, null)
             return@withContext
         }
+        if (!NetworkStatus.isOnline(appContext)) {
+            queueOfflineDelete(eventId)
+            return@withContext
+        }
         try {
             service.events().delete("primary", eventId).execute()
             offlineStore.deleteCached(eventId)
         } catch (e: IOException) {
-            offlineStore.queue("DELETE", eventId, null)
-            offlineStore.deleteCached(eventId)
-            OfflineSyncWorker.schedule(appContext)
-            lastOperationQueuedOffline = true
+            queueOfflineDelete(eventId)
         }
     }
 
@@ -372,6 +377,34 @@ class CalendarRepository(context: Context, private val account: Account) {
         id: String, title: String, day: Long, sh: Int?, sm: Int?, eh: Int?, em: Int?,
         location: String?, recurrence: String?
     ) = EventDetails(id, title, day, sh, sm, eh, em, location, recurrence)
+
+    private fun queueOfflineInsert(
+        event: Event, title: String, day: Long, sh: Int?, sm: Int?, eh: Int?, em: Int?,
+        location: String?, recurrence: String?
+    ): Event {
+        val localId = "offline:${UUID.randomUUID()}"
+        val details = detailsFromInput(localId, title, day, sh, sm, eh, em, location, recurrence)
+        offlineStore.queue("INSERT", localId, details)
+        cacheDetails(details)
+        OfflineSyncWorker.schedule(appContext)
+        lastOperationQueuedOffline = true
+        event.id = localId
+        return event
+    }
+
+    private fun queueOfflineUpdate(eventId: String, details: EventDetails) {
+        offlineStore.queue("UPDATE", eventId, details)
+        cacheDetails(details)
+        OfflineSyncWorker.schedule(appContext)
+        lastOperationQueuedOffline = true
+    }
+
+    private fun queueOfflineDelete(eventId: String) {
+        offlineStore.queue("DELETE", eventId, null)
+        offlineStore.deleteCached(eventId)
+        OfflineSyncWorker.schedule(appContext)
+        lastOperationQueuedOffline = true
+    }
 
     /** Google מקבלת מזהי אירוע באלפבית base32hex; UUID הקסדצימלי מאפשר ניסיון חוזר בטוח. */
     private fun stableGoogleEventId(localId: String): String =
