@@ -5,14 +5,14 @@ plugins {
 
 android {
     namespace 'com.magic3d.gcalsearchadd'
-    compileSdk 34
+    compileSdk 36
 
     defaultConfig {
         applicationId "com.magic3d.gcalsearchadd"
         minSdk 24
-        targetSdk 34
-        versionCode 1
-        versionName "1.0"
+        targetSdk 36
+        versionCode 2
+        versionName "1.1"
     }
 
     buildTypes {
@@ -21,20 +21,28 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
+
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
     }
+
     buildFeatures {
         viewBinding true
         buildConfig true
     }
+
     packagingOptions {
         resources {
-            excludes += ['META-INF/INDEX.LIST', 'META-INF/DEPENDENCIES', 'META-INF/*.kotlin_module']
+            excludes += [
+                    'META-INF/INDEX.LIST',
+                    'META-INF/DEPENDENCIES',
+                    'META-INF/*.kotlin_module'
+            ]
         }
     }
 }
@@ -47,17 +55,15 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.3.2'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.8.4'
 
-    // Google Sign-In
+    // חובה עבור OfflineSyncWorker.kt
+    implementation 'androidx.work:work-runtime-ktx:2.9.0'
+
     implementation 'com.google.android.gms:play-services-auth:21.2.0'
 
-    // (הוסר) Places SDK - דורש חיוב מחובר. הוחלף בחיפוש מיקומים חינמי דרך NominatimClient.kt
-
-    // Google Calendar API (REST client)
     implementation 'com.google.api-client:google-api-client-android:2.7.0'
     implementation 'com.google.apis:google-api-services-calendar:v3-rev20250404-2.0.0'
     implementation 'com.google.http-client:google-http-client-gson:1.44.2'
 
-    // Coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1'
 
     testImplementation 'junit:junit:4.13.2'

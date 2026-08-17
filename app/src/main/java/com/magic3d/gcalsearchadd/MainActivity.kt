@@ -7,7 +7,6 @@ import android.app.Dialog
 import android.animation.ValueAnimator
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.Rect
 import android.graphics.BitmapFactory
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.GradientDrawable
@@ -24,6 +23,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -105,6 +106,7 @@ class MainActivity : AppCompatActivity() {
 
         bindViews()
         createProfileButton()
+        applySystemBarInsets()
         setupGoogleSignIn()
 
         btnSignIn.setOnClickListener { signIn() }
@@ -141,6 +143,46 @@ class MainActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putLong(STATE_SELECTED_DAY_START_MILLIS, selectedDayStartMillis)
         super.onSaveInstanceState(outState)
+    }
+
+private fun applySystemBarInsets() {
+        val contentContainer = findViewById<ViewGroup>(android.R.id.content)
+        val appRoot = contentContainer.getChildAt(0) ?: return
+
+        val initialLeft = appRoot.paddingLeft
+        val initialTop = appRoot.paddingTop
+        val initialRight = appRoot.paddingRight
+        val initialBottom = appRoot.paddingBottom
+
+        ViewCompat.setOnApplyWindowInsetsListener(appRoot) { view, windowInsets ->
+            val systemBars = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+
+            view.setPadding(
+                initialLeft + systemBars.left,
+                initialTop + systemBars.top,
+                initialRight + systemBars.right,
+                initialBottom + systemBars.bottom
+            )
+
+            val startInset = if (
+                resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_RTL
+            ) {
+                systemBars.right
+            } else {
+                systemBars.left
+            }
+
+            (profileButton.layoutParams as? FrameLayout.LayoutParams)?.let { params ->
+                val density = resources.displayMetrics.density
+                params.marginStart = (14f * density).toInt() + startInset
+                params.topMargin = (11f * density).toInt() + systemBars.top
+                profileButton.layoutParams = params
+            }
+
+            windowInsets
+        }
+
+        ViewCompat.requestApplyInsets(appRoot)
     }
 
     private fun bindViews() {
@@ -568,14 +610,13 @@ class MainActivity : AppCompatActivity() {
         actionWidth: Float
     ) {
         val revealedWidth = translation.coerceIn(0f, actionWidth)
+
         holder.swipeForeground.translationX = revealedWidth
-        holder.deleteButton.visibility = if (revealedWidth > 0f) View.VISIBLE else View.INVISIBLE
-        holder.deleteButton.clipBounds = Rect(
-            0,
-            0,
-            revealedWidth.toInt(),
-            holder.deleteButton.height.coerceAtLeast(holder.itemView.height)
-        )
+        holder.deleteButton.alpha = if (actionWidth > 0f) {
+            (revealedWidth / actionWidth).coerceIn(0f, 1f)
+        } else {
+            0f
+        }
     }
 
     private fun animateSwipeReveal(
