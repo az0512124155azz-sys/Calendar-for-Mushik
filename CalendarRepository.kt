@@ -86,7 +86,7 @@ class CalendarRepository(context: Context, private val account: Account) {
                 offlineStore.saveItem(dateMillisStartOfDay, toEventItem(event), detailsFromGoogleEvent(event))
             }
             items
-        } catch (e: IOException) {
+        } catch (_: Exception) {
             offlineStore.eventsForDay(dateMillisStartOfDay)
         }
     }
@@ -101,7 +101,7 @@ class CalendarRepository(context: Context, private val account: Account) {
             val events: List<Event> = service.events().list("primary").setQ(keyword)
                 .setOrderBy("startTime").setSingleEvents(true).setMaxResults(50).execute().items ?: emptyList()
             events.map { toEventItem(it) }
-        } catch (e: IOException) {
+        } catch (_: Exception) {
             offlineStore.search(keyword)
         }
     }
@@ -157,7 +157,8 @@ class CalendarRepository(context: Context, private val account: Account) {
             val saved = service.events().insert("primary", event).execute()
             cacheDetails(detailsFromInput(saved.id ?: "", title, dateMillisStartOfDay, startHour, startMinute, endHour, endMinute, location, recurrenceRule))
             saved
-        } catch (e: IOException) {
+        } catch (e: Exception) {
+            if (!isConnectivityFailure(e)) throw e
             queueOfflineInsert(event, title, dateMillisStartOfDay, startHour, startMinute, endHour, endMinute, location, recurrenceRule)
         }
     }
@@ -172,7 +173,7 @@ class CalendarRepository(context: Context, private val account: Account) {
             ?: throw IllegalStateException("Event is not available offline yet")
         val event = try {
             service.events().get("primary", eventId).execute()
-        } catch (e: IOException) {
+        } catch (e: Exception) {
             return@withContext offlineStore.details(eventId) ?: throw e
         }
         val cal = java.util.Calendar.getInstance()
@@ -277,7 +278,8 @@ class CalendarRepository(context: Context, private val account: Account) {
             val saved = service.events().update("primary", eventId, event).execute()
             cacheDetails(details)
             saved
-        } catch (e: IOException) {
+        } catch (e: Exception) {
+            if (!isConnectivityFailure(e)) throw e
             queueOfflineUpdate(eventId, details)
             event.id = eventId
             event
@@ -297,7 +299,8 @@ class CalendarRepository(context: Context, private val account: Account) {
         try {
             service.events().delete("primary", eventId).execute()
             offlineStore.deleteCached(eventId)
-        } catch (e: IOException) {
+        } catch (e: Exception) {
+            if (!isConnectivityFailure(e)) throw e
             queueOfflineDelete(eventId)
         }
     }
@@ -404,6 +407,21 @@ class CalendarRepository(context: Context, private val account: Account) {
         offlineStore.deleteCached(eventId)
         OfflineSyncWorker.schedule(appContext)
         lastOperationQueuedOffline = true
+    }
+
+    /** מזהה גם חריגות רשת שספריות Google עוטפות בתוך חריגה אחרת. */
+    private fun isConnectivityFailure(error: Throwable): Boolean {
+        if (!NetworkStatus.isOnline(appContext)) return true
+        var current: Throwable? = error
+        while (current != null) {
+            if (current is IOException) return true
+            val message = current.message.orEmpty().lowercase(Locale.US)
+            if (message.contains("unable to resolve host") ||
+                message.contains("unknownhost") ||
+                message.contains("no address associated with hostname")) return true
+            current = current.cause
+        }
+        return false
     }
 
     /** Google מקבלת מזהי אירוע באלפבית base32hex; UUID הקסדצימלי מאפשר ניסיון חוזר בטוח. */
