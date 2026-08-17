@@ -14,12 +14,15 @@ data class PendingCalendarAction(
     val details: EventDetails?
 )
 
+data class CachedCalendarEvent(
+    val day: Long,
+    val item: EventItem,
+    val details: EventDetails
+)
+
 /** מסד מקומי קטן ללא הרשאות נוספות: מטמון אירועים ותור פעולות לסנכרון. */
 class OfflineCalendarStore(context: Context, private val accountName: String) :
     SQLiteOpenHelper(context.applicationContext, "eventspot_offline.db", null, 1) {
-
-    private val preferences = context.applicationContext.getSharedPreferences("calendar_sync", Context.MODE_PRIVATE)
-    private val tokenKey = "primary_sync_token_$accountName"
 
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL("CREATE TABLE events(account TEXT NOT NULL,id TEXT NOT NULL,day INTEGER NOT NULL,title TEXT NOT NULL,date_label TEXT NOT NULL,time_label TEXT NOT NULL,location TEXT,details TEXT,PRIMARY KEY(account,id))")
@@ -34,6 +37,20 @@ class OfflineCalendarStore(context: Context, private val accountName: String) :
         try {
             writableDatabase.delete("events", "account=? AND day=? AND id NOT LIKE 'offline:%'", arrayOf(accountName, day.toString()))
             items.forEach { saveItem(day, it, null) }
+            writableDatabase.setTransactionSuccessful()
+        } finally {
+            writableDatabase.endTransaction()
+        }
+    }
+
+    /** מחליף את כל עותק Google רק לאחר שכל ההורדה הושלמה; אירועי offline נשמרים. */
+    fun replaceAllRemoteEvents(events: List<CachedCalendarEvent>) {
+        writableDatabase.beginTransaction()
+        try {
+            writableDatabase.delete("events", "account=? AND id NOT LIKE 'offline:%'", arrayOf(accountName))
+            events.forEach { cached ->
+                saveItem(cached.day, cached.item, cached.details)
+            }
             writableDatabase.setTransactionSuccessful()
         } finally {
             writableDatabase.endTransaction()
@@ -106,15 +123,6 @@ class OfflineCalendarStore(context: Context, private val accountName: String) :
 
     fun complete(rowId: Long) { writableDatabase.delete("pending", "row_id=?", arrayOf(rowId.toString())) }
     fun deleteCached(eventId: String) { writableDatabase.delete("events", "account=? AND id=?", arrayOf(accountName, eventId)) }
-
-    fun syncToken(): String? = preferences.getString(tokenKey, null)
-    fun saveSyncToken(token: String?) { preferences.edit().putString(tokenKey, token).commit() }
-
-    /** ניקוי סנכרון מלא שומר אירועים מקומיים שעדיין ממתינים להעלאה. */
-    fun clearRemoteEvents() {
-        writableDatabase.delete("events", "account=? AND id NOT LIKE 'offline:%'", arrayOf(accountName))
-        preferences.edit().remove(tokenKey).apply()
-    }
 
     fun replaceId(oldId: String, newId: String) {
         writableDatabase.execSQL("UPDATE events SET id=? WHERE account=? AND id=?", arrayOf(newId, accountName, oldId))

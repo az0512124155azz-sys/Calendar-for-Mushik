@@ -307,49 +307,34 @@ class CalendarRepository(context: Context, private val account: Account) {
 
     suspend fun syncPendingActions() = withContext(Dispatchers.IO) { syncPendingActionsInternal() }
 
-    /**
-     * מסנכרן את כל המטמון מול היומן הראשי. בפעם הראשונה מתבצע סנכרון מלא,
-     * ובהמשך Google מחזירה רק אירועים שהשתנו או נמחקו מאז ה-syncToken האחרון.
-     */
+    /** מוריד מחדש את כל היומן הראשי ומחליף את המטמון רק לאחר הורדה מלאה ומוצלחת. */
     suspend fun refreshCalendarCache() = withContext(Dispatchers.IO) {
         syncPendingActionsInternal()
-        try {
-            refreshCalendarCacheInternal()
-        } catch (e: GoogleJsonResponseException) {
-            if (e.statusCode == 410) {
-                offlineStore.clearRemoteEvents()
-                refreshCalendarCacheInternal()
-            } else throw e
-        }
+        refreshCalendarCacheInternal()
     }
 
     private fun refreshCalendarCacheInternal() {
-        val savedToken = offlineStore.syncToken()
         var pageToken: String? = null
-        var nextSyncToken: String? = null
+        val downloadedEvents = mutableListOf<CachedCalendarEvent>()
         do {
             val request = service.events().list("primary")
                 .setSingleEvents(true)
-                .setShowDeleted(true)
+                .setShowDeleted(false)
                 .setMaxResults(2500)
-            if (savedToken != null) {
-                request.syncToken = savedToken
-            }
             request.pageToken = pageToken
             val response = request.execute()
             response.items.orEmpty().forEach { event ->
-                val id = event.id ?: return@forEach
-                if (event.status == "cancelled") {
-                    offlineStore.deleteCached(id)
-                } else {
-                    val details = detailsFromGoogleEvent(event)
-                    offlineStore.saveItem(details.dateMillisStartOfDay, toEventItem(event), details)
-                }
+                if (event.id.isNullOrBlank() || event.status == "cancelled") return@forEach
+                val details = detailsFromGoogleEvent(event)
+                downloadedEvents += CachedCalendarEvent(
+                    details.dateMillisStartOfDay,
+                    toEventItem(event),
+                    details
+                )
             }
             pageToken = response.nextPageToken
-            nextSyncToken = response.nextSyncToken ?: nextSyncToken
         } while (pageToken != null)
-        if (nextSyncToken != null) offlineStore.saveSyncToken(nextSyncToken)
+        offlineStore.replaceAllRemoteEvents(downloadedEvents)
     }
 
     private fun syncPendingActionsInternal() {
